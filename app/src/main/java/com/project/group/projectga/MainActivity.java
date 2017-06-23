@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.google.firebase.database.*;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_MESSAGE = "com.example.ProjectGA.MESSAGE";
 
     String message; // input used for the test, this is saved to the database by the save button
     String result;  // string retrieved from the database, this is displayed by the load button
