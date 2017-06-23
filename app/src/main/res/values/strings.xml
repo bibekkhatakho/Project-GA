@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">ProjectGA</string>
+    <string name="edit_test">Enter a test string</string>
+    <string name="button_save_test">Save</string>
+    <string name="button_load_test">Load</string>
 </resources>
