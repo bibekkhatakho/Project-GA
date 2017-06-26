@@ -20,6 +20,7 @@
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.SplashScreen" />
         <activity android:name=".activities.SignInActivity" />
+        <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.ContactDetailsActivity" />
         <activity android:name=".activities.AddGuardianActivity" />
