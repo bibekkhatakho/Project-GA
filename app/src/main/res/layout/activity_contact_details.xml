@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ls="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+       <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="80dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/phoneNumberTextInputLayout"
+            style="@style/textfieldbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/phoneNumberTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_phone_black_24dp"
+                android:drawableTint="@color/colorPrimaryDark"
+                android:hint="@string/contactNumber"
+                android:inputType="number"
+                android:maxLength="10"
+                tools:ignore="MissingPrefix,UnusedAttribute" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/dateOfBirthTextInputLayout"
+            style="@style/textfieldbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/dateofBirthTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_cake_black_24dp"
+                android:drawableTint="@color/colorPrimaryDark"
+                android:hint="@string/dateOfBirth"
+                android:inputType="date"
+                tools:ignore="MissingPrefix,UnusedAttribute" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <com.satsuware.usefulviews.LabelledSpinner
+            android:id="@+id/genderSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:spinnerEntries="@array/securityQuestionsArray"
+            ls:labelText="@string/securityQuestion" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/securityQuestionTextInputLayout"
+            style="@style/textfieldbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/securityQuestionTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                android:drawableTint="@color/colorPrimaryDark"
+                android:hint="@string/securityQuestion"
+                android:inputType="textEmailAddress"
+                tools:ignore="MissingPrefix,UnusedAttribute" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/securityAnswerTextInputLayout"
+            style="@style/textfieldbox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/securityAnswerTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_lock_open_black_24dp"
+                android:drawableTint="@color/colorPrimaryDark"
+                android:hint="@string/securityAnswer"
+                android:inputType="textPassword"
+                tools:ignore="MissingPrefix,UnusedAttribute" />
+
+        </android.support.design.widget.TextInputLayout>
+
+           <android.support.design.widget.FloatingActionButton
+               android:id="@+id/nextButtonContact"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="bottom|end"
+               android:layout_marginTop="50dp"
+               android:layout_marginEnd="2dp"
+               android:layout_marginBottom="10dp"
+               android:translationZ="12dp"
+               android:src="@drawable/ic_arrow_forward_black_24dp"
+               app:fabSize="normal"/>
+    </LinearLayout>
+</ScrollView>

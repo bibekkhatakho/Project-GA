@@ -10,4 +10,41 @@
     <string name="signup">"Sign Up"</string>
     <string name="forgotPassword">"Forgot Password?"</string>
     <string name="signinGoogle">"Sign In With Google+"</string>
+
+    <string name="app_name">ProjectGA</string>
+
+    //Splash Screen
+    <string name="googleAlzheimer">Google Alzheimer</string>
+
+    // Sign Up - First Screen
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="emailAddress">Email Address</string>
+    <string name="password">Password</string>
+    <string name="confirmPassword">Repeat Password</string>
+    <string name="signUp">Sign Up</string>
+
+    //Sign Up - Second Screen
+    <string name="contactDetails">Contact Details</string>
+    <string name="dateOfBirth">Date of Birth</string>
+    <string name="securityQuestion">Security Question</string>
+    <string name="securityAnswer">Security Answer</string>
+    <string name="contactNumber">Phone Number</string>
+
+    <array name="securityQuestionsArray">
+        <item>What is the name of your first pet?</item>
+        <item>In what city you got your first job?</item>
+        <item>What is your Mother\'s maiden name?</item>
+        <item>Who is your childhood sports hero?</item>
+        <item>What is your favorite restaurant?</item>
+        <item>What is the make or model of your first car?</item>
+        <item>Which street is your grocery store located?</item>
+    </array>
+
+
+    //Sign Up - Final Screen
+    <string name="addGuardian"> Add Guardian </string>
+    <string name="addGuardianInfo"> People who suffer and wish to protect their loved ones suffering from Alzheimer\'s are Guardian Users\. Guardian Users may either be one among the family members or friends\. They can use this app to track the vicinity of the patient and also to message them\, in case the patient is lost\. </string>
+
 </resources>
+
