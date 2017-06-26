@@ -6,11 +6,20 @@ package com.project.group.projectga;
 
 public class Profile {
     private String email;
+
     private String password;
+    private String securityAnswer;
+
     private String name;
+
     private int birthYear;
     private int birthMonth;
     private int birthDay;
+
+    private String address;
+    private String phone;
+
+
 
     public Profile() {
     }
@@ -29,6 +38,14 @@ public class Profile {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
     }
 
     public String getName() {
@@ -61,5 +78,21 @@ public class Profile {
 
     public void setBirthDay(int birthDay) {
         this.birthDay = birthDay;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
