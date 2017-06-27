@@ -41,6 +41,9 @@
 
     //Sign Up - Final Screen
     <string name="addGuardian"> Add Guardian </string>
+    <string name="continueFab">Continue</string>
+    <string name="nextFab">Next</string>
+
     <string name="addGuardianInfo"> People who suffer and wish to protect their loved ones suffering from Alzheimer\'s are Guardian Users\. Guardian Users may either be one among the family members or friends\. They can use this app to track the vicinity of the patient and also to message them\, in case the patient is lost\. </string>
 
 </resources>

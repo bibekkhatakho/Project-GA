@@ -1,128 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:fab="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="6dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/signUp"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="80dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:gravity="center">
+            android:paddingTop="40dp">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/firstNameTextInputLayout"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/firstNameTextInputLayout"
+                style="@style/textfieldbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/firstNameTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/textfieldbox"
-                    android:layout_marginTop="20dp">
+                    android:hint="@string/firstName"
+                    android:inputType="textPersonName"
+                    tools:ignore="MissingPrefix" />
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/firstNameTextInputEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/firstName"
-                            android:inputType="textPersonName"
-                            tools:ignore="MissingPrefix" />
+            </android.support.design.widget.TextInputLayout>
 
-                </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/lastNameTextInputLayout"
+                style="@style/textfieldbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/lastNameTextInputLayout"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/lastNameTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/textfieldbox"
-                    android:layout_marginTop="20dp">
+                    android:hint="@string/lastName"
+                    android:inputType="textPersonName"
+                    tools:ignore="MissingPrefix" />
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/lastNameTextInputEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/lastName"
-                            android:inputType="textPersonName"
-                            tools:ignore="MissingPrefix" />
+            </android.support.design.widget.TextInputLayout>
 
-                </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/emailTextInputLayout"
+                style="@style/textfieldbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/emailTextInputLayout"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/emailTextEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/textfieldbox"
-                    android:layout_marginTop="20dp">
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/ic_email_black_24dp"
+                    android:hint="@string/emailAddress"
+                    android:inputType="textEmailAddress"
+                    tools:ignore="MissingPrefix,UnusedAttribute" />
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/emailTextEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/emailAddress"
-                            android:drawableStart="@drawable/ic_email_black_24dp"
-                            android:drawableTint="@color/colorPrimaryDark"
-                            android:drawablePadding="10dp"
-                            android:inputType="textEmailAddress"
-                            tools:ignore="MissingPrefix,UnusedAttribute" />
+            </android.support.design.widget.TextInputLayout>
 
-                </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordTextInputLayout"
+                style="@style/textfieldbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/passwordTextInputLayout"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/passwordTextEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/textfieldbox"
-                    android:layout_marginTop="20dp">
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    tools:ignore="MissingPrefix,UnusedAttribute" />
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/passwordTextEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/password"
-                            android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                            android:drawableTint="@color/colorPrimaryDark"
-                            android:drawablePadding="10dp"
-                            android:inputType="textPassword"
-                            tools:ignore="MissingPrefix,UnusedAttribute" />
+            </android.support.design.widget.TextInputLayout>
 
-                </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/confirmpasswordTextInputLayout"
+                style="@style/textfieldbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/confirmpasswordTextInputLayout"
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/confirmpasswordTextEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/textfieldbox"
-                    android:layout_marginTop="20dp">
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/ic_refresh_black_24dp"
+                    android:hint="@string/confirmPassword"
+                    android:inputType="textPassword"
+                    tools:ignore="MissingPrefix,UnusedAttribute" />
 
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/confirmpasswordTextEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/confirmPassword"
-                            android:drawableStart="@drawable/ic_refresh_black_24dp"
-                            android:drawableTint="@color/colorPrimaryDark"
-                            android:drawablePadding="10dp"
-                            android:inputType="textPassword"
-                            tools:ignore="MissingPrefix,UnusedAttribute" />
+            </android.support.design.widget.TextInputLayout>
 
-                </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/text_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nextFab" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/nextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="10dp"
-                    android:translationZ="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginTop="10dp"
                     android:src="@drawable/ic_arrow_forward_black_24dp"
-                    app:fabSize="normal"/>
-
+                    android:translationZ="12dp"
+                    app:fabSize="normal" />
+            </LinearLayout>
         </LinearLayout>
 
-</ScrollView>
+    </ScrollView>
+</RelativeLayout>
