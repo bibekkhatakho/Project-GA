@@ -46,6 +46,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
+                    android:background="@color/loginbackground"
+                    android:padding="15dp"
                     android:drawableStart="@drawable/ic_phone_black_24dp"
                     android:hint="@string/contactNumber"
                     android:inputType="number"
@@ -67,6 +69,8 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableStart="@drawable/ic_cake_black_24dp"
+                    android:background="@color/loginbackground"
+                    android:padding="15dp"
                     android:hint="@string/dateOfBirth"
                     android:inputType="date"
                     tools:ignore="MissingPrefix,UnusedAttribute" />
@@ -111,6 +115,8 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableStart="@drawable/ic_lock_open_black_24dp"
+                    android:background="@color/loginbackground"
+                    android:padding="15dp"
                     android:hint="@string/securityAnswer"
                     android:inputType="textPassword"
                     tools:ignore="MissingPrefix,UnusedAttribute" />
@@ -127,6 +133,7 @@
                     style="@style/text_fab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="30dp"
                     android:text="@string/nextFab" />
 
                 <android.support.design.widget.FloatingActionButton
@@ -136,7 +143,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_marginBottom="12dp"
                     android:layout_marginEnd="6dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="25dp"
                     android:src="@drawable/ic_arrow_forward_black_24dp"
                     android:translationZ="12dp"
                     app:fabSize="normal" />

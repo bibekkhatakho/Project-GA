@@ -17,8 +17,8 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     public void onClick(View v){
-        EditText email = (EditText)findViewById(R.id.emailET);
-        EditText password = (EditText)findViewById(R.id.emailET);
+        //EditText email = (EditText)findViewById(R.id.emailET);
+        //EditText password = (EditText)findViewById(R.id.emailET);
         if(v.getId() == R.id.loginButton){
 
 

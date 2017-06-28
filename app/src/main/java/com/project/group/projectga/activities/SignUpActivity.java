@@ -7,7 +7,9 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.group.projectga.R;
@@ -17,14 +19,10 @@ import butterknife.ButterKnife;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
-    @BindView(R.id.firstNameTextInputLayout)
-    protected TextInputLayout firstNameTextInputLayout;
-    @BindView(R.id.firstNameTextInputEditText)
-    protected TextInputEditText firstNameTextInputEditText;
-    @BindView(R.id.lastNameTextInputLayout)
-    protected TextInputLayout lastNameTextInputLayout;
-    @BindView(R.id.lastNameTextInputEditText)
-    protected TextInputEditText lastNameTextInputEditText;
+    @BindView(R.id.fullNameTextInputLayout)
+    protected TextInputLayout fullNameTextInputLayout;
+    @BindView(R.id.fullNameTextInputEditText)
+    protected TextInputEditText fullNameTextInputEditText;
     @BindView(R.id.emailTextInputLayout)
     protected TextInputLayout emailTextInputLayout;
     @BindView(R.id.emailTextEditText)

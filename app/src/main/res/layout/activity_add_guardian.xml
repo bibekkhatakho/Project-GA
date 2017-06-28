@@ -39,6 +39,8 @@
                 android:layout_marginStart="50dp"
                 android:drawablePadding="10dp"
                 android:drawableStart="@drawable/ic_person_add_black_24dp"
+                android:background="@color/loginbackground"
+                android:padding="15dp"
                 android:gravity="start|center"
                 android:text="@string/addGuardian"
                 android:textSize="24sp"
@@ -58,6 +60,8 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableStart="@drawable/ic_email_black_24dp"
+                    android:background="@color/loginbackground"
+                    android:padding="15dp"
                     android:hint="@string/emailAddress"
                     android:inputType="textEmailAddress"
                     tools:ignore="MissingPrefix,UnusedAttribute" />

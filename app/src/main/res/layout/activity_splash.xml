@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/loginbackground"
     android:orientation="vertical"
     android:paddingTop="50dp"
     app:theme="@style/Theme.AppCompat.Light.NoActionBar"
@@ -33,7 +33,7 @@
         android:paddingStart="140dp"
         android:paddingTop="150dp"
         android:text="@string/googleAlzheimer"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorAccent"
         android:textSize="18sp"
         android:textStyle="bold" />
 
