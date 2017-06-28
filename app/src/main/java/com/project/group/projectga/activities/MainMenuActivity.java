@@ -49,11 +49,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
         final PrimaryDrawerItem home = new PrimaryDrawerItem().withName("Home").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_home);
         final PrimaryDrawerItem profile = new PrimaryDrawerItem().withName("Profile").withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_account);
-        final PrimaryDrawerItem gallery = new PrimaryDrawerItem().withName("Gallery").withIdentifier(3).withIcon(FontAwesome.Icon.faw_stethoscope);
+        final PrimaryDrawerItem gallery = new PrimaryDrawerItem().withName("Gallery").withIdentifier(3).withIcon(R.drawable.ic_perm_media_black_24dp);
         final PrimaryDrawerItem recognition = new PrimaryDrawerItem().withName("Recognition").withIdentifier(4).withIcon(GoogleMaterial.Icon.gmd_face);
-        final PrimaryDrawerItem maps = new PrimaryDrawerItem().withName("Maps").withIdentifier(5).withIcon(FontAwesome.Icon.faw_stethoscope);
-        final PrimaryDrawerItem tagAndLocate = new PrimaryDrawerItem().withName("Tag & Locate").withIdentifier(6).withIcon(GoogleMaterial.Icon.gmd_calendar_note);
-        final PrimaryDrawerItem gamesAndPuzzle = new PrimaryDrawerItem().withName("Games & Puzzles").withIdentifier(7).withIcon(FontAwesome.Icon.faw_users);
+        final PrimaryDrawerItem maps = new PrimaryDrawerItem().withName("Maps").withIdentifier(5).withIcon(R.drawable.ic_place_black_24dp);
+        final PrimaryDrawerItem tagAndLocate = new PrimaryDrawerItem().withName("Tag & Locate").withIdentifier(6).withIcon(R.drawable.ic_remove_red_eye_black_24dp);
+        final PrimaryDrawerItem gamesAndPuzzle = new PrimaryDrawerItem().withName("Games & Puzzles").withIdentifier(7).withIcon(R.drawable.ic_casino_black_24dp);
         final PrimaryDrawerItem backup = new PrimaryDrawerItem().withName("Backup").withIdentifier(8).withIcon(GoogleMaterial.Icon.gmd_save);
         final PrimaryDrawerItem logout = new PrimaryDrawerItem().withName("Logout").withIdentifier(9).withIcon(FontAwesome.Icon.faw_sign_out);
 
@@ -106,73 +106,6 @@ public class MainMenuActivity extends AppCompatActivity {
                 .addDrawerItems(new DividerDrawerItem())
                 .addDrawerItems(logout)
                 .buildForFragment();
-
-//        result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-//            @Override
-//            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-//
-//                int drawItemId = (int) drawerItem.getIdentifier();
-//                Intent intent;
-//                Fragment fragment;
-//                switch (drawItemId) {
-//
-//                    case 1:
-////                        fragment = new HomeFragment();
-////                        fragmentStack.add(home);
-//
-//                        break;
-//                    case 2:
-//                        fragment = new ProfileFragment();
-////                        fragmentStack.add(profile);
-//                        break;
-//                    case 3:
-//                        fragment = new VitalsFragment();
-////                        fragmentStack.add(vitals);
-//                        break;
-//                    case 4:
-//                        fragment = new MedicationFragment();
-////                        fragmentStack.add(medication);
-//                        break;
-//                    case 5:
-//                        fragment = new DietFragment();
-////                        fragmentStack.add(diet);
-//                        break;
-//                    case 6:
-//                        fragment = new NotesFragment();
-////                        fragmentStack.add(notes);
-//                        break;
-//                    case 7:
-//                        fragment = new AppointmentsFragment();
-//                       / fragmentStack.add(appointments);
-//                        break;
-//                    case 8:
-//                        fragment = new DesigneeFragment();
-////                        fragmentStack.add(designee);
-//                        break;
-//                    case 10:
-//                        fragment = new ContactUsFragment();
-////                        fragmentStack.add(contactUs);
-//                        break;
-//                    default:
-////                        fragment = new HomeFragment();
-//                        break;
-//                }
-//                if (drawItemId == 9) {
-//                    FirebaseAuth.getInstance().signOut();
-//                    SharedPreferences.Editor editor = preferences.edit();
-//                    editor.clear();
-//                    editor.apply();
-//                    intent = new Intent(PhmsActivity.this, SplashActivity.class);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//
-//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                transaction.replace(R.id.fragment_container, fragment);
-//                transaction.commit();
-//                return false;
-//            }
-//        });
+        
     }
 }
