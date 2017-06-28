@@ -94,7 +94,7 @@
                     android:paddingTop="10dp"/>
 
             <com.satsuware.usefulviews.LabelledSpinner
-                android:id="@+id/genderSpinner"
+                android:id="@+id/securityQuestionSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:spinnerEntries="@array/securityQuestionsArray"

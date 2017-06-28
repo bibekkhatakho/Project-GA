@@ -5,23 +5,47 @@ package com.project.group.projectga;
  */
 
 public class Profile {
+
+    private String fullName;
+    private String userId;
     private String email;
 
-    private String password;
+    private String phone;
+    private String dateOfBirth;
+
+    private String securityQuestion;
     private String securityAnswer;
 
-    private String name;
-
-    private int birthYear;
-    private int birthMonth;
-    private int birthDay;
-
-    private String address;
-    private String phone;
-
-
+    private String guardianEmail;
 
     public Profile() {
+    }
+
+    public Profile(String fullName, String userId, String email, String phone, String dateOfBirth, String securityQuestion, String securityAnswer, String guardianEmail) {
+        this.fullName = fullName;
+        this.userId = userId;
+        this.email = email;
+        this.phone = phone;
+        this.dateOfBirth = dateOfBirth;
+        this.securityQuestion = securityQuestion;
+        this.securityAnswer = securityAnswer;
+        this.guardianEmail = guardianEmail;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
@@ -32,12 +56,28 @@ public class Profile {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
     }
 
     public String getSecurityAnswer() {
@@ -48,51 +88,13 @@ public class Profile {
         this.securityAnswer = securityAnswer;
     }
 
-    public String getName() {
-        return name;
+    public String getGuardianEmail() {
+        return guardianEmail;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getBirthYear() {
-        return birthYear;
-    }
-
-    public void setBirthYear(int birthYear) {
-        this.birthYear = birthYear;
-    }
-
-    public int getBirthMonth() {
-        return birthMonth;
-    }
-
-    public void setBirthMonth(int birthMonth) {
-        this.birthMonth = birthMonth;
-    }
-
-    public int getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(int birthDay) {
-        this.birthDay = birthDay;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setGuardianEmail(String guardianEmail) {
+        this.guardianEmail = guardianEmail;
     }
 }
+
+
