@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    app:theme="@style/Theme.AppCompat.Light.NoActionBar"
+    android:background="@color/loginbackground"
     android:orientation="vertical"
     android:paddingTop="50dp"
+    app:theme="@style/Theme.AppCompat.Light.NoActionBar"
     tools:ignore="MissingPrefix">
 
 
@@ -16,31 +16,32 @@
         android:id="@+id/projectgalogo"
         android:layout_width="350dp"
         android:layout_height="350dp"
-        android:src="@drawable/logoga"
         android:layout_margin="40dp"
+        android:src="@drawable/logoga"
         tools:ignore="ContentDescription" />
 
     <TextView
+        android:id="@+id/projectgaText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/projectgaText"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_alignStart="@+id/projectgalogo"
-        android:layout_alignEnd="@+id/projectgalogo"
-        android:layout_alignTop="@+id/projectgalogo"
         android:layout_alignBottom="@+id/projectgalogo"
+        android:layout_alignEnd="@+id/projectgalogo"
+        android:layout_alignStart="@+id/projectgalogo"
+        android:layout_alignTop="@+id/projectgalogo"
         android:gravity="center"
-        android:paddingTop="150dp"
-        android:paddingStart="150dp"
         android:paddingEnd="10dp"
-        android:text="@string/googleAlzheimer" />
+        android:paddingStart="150dp"
+        android:paddingTop="150dp"
+        android:text="@string/googleAlzheimer"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:id="@+id/signInButton"
         style="@style/fancyButton"
+        android:layout_below="@+id/projectgaText"
         android:clickable="true"
         android:elevation="2dp"
         fancy:fb_defaultColor="@color/colorPrimaryDark"
@@ -51,12 +52,13 @@
         fancy:fb_radius="30dp"
         fancy:fb_text="Sign In"
         fancy:fb_textColor="@android:color/white"
-        fancy:fb_textSize="18sp"
-        android:layout_below="@+id/projectgaText" />
+        fancy:fb_textSize="18sp" />
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:id="@+id/signUpButton"
         style="@style/fancyButton"
+        android:layout_below="@+id/projectgaText"
+        android:layout_toEndOf="@+id/signInButton"
         android:clickable="true"
         android:elevation="2dp"
         fancy:fb_defaultColor="@color/colorPrimaryDark"
@@ -67,9 +69,6 @@
         fancy:fb_radius="30dp"
         fancy:fb_text="Sign Up"
         fancy:fb_textColor="@android:color/white"
-        fancy:fb_textSize="18sp"
-        android:layout_below="@+id/projectgaText"
-        android:layout_toEndOf="@+id/signInButton"
-        />
+        fancy:fb_textSize="18sp" />
 
 </RelativeLayout>

@@ -1,8 +1,4 @@
-package com.project.group.projectga;
-
-/**
- * Created by iod on 6/23/2017.
- */
+package com.project.group.projectga.models;
 
 public class Profile {
     private String email;

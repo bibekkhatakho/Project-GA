@@ -23,7 +23,7 @@
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.ContactDetailsActivity" />
         <activity android:name=".activities.AddGuardianActivity" />
-        <activity android:name=".activities.MainMenuActivity"></activity>
+        <activity android:name=".activities.MainMenuActivity" />
     </application>
 
 </manifest>

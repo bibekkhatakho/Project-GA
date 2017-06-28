@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
-    app:theme="@style/Theme.AppCompat.Light.NoActionBar"
+    android:background="@color/loginbackground"
     android:orientation="vertical"
     android:paddingTop="50dp"
+    app:theme="@style/Theme.AppCompat.Light.NoActionBar"
     tools:ignore="MissingPrefix">
 
 
@@ -15,28 +15,27 @@
         android:id="@+id/projectgalogo"
         android:layout_width="350dp"
         android:layout_height="350dp"
-        android:src="@drawable/logoga"
         android:layout_margin="40dp"
+        android:src="@drawable/logoga"
         tools:ignore="ContentDescription" />
 
     <TextView
+        android:id="@+id/projectgaText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/projectgaText"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_alignStart="@+id/projectgalogo"
-        android:layout_alignEnd="@+id/projectgalogo"
-        android:layout_alignTop="@+id/projectgalogo"
         android:layout_alignBottom="@+id/projectgalogo"
+        android:layout_alignEnd="@+id/projectgalogo"
+        android:layout_alignStart="@+id/projectgalogo"
+        android:layout_alignTop="@+id/projectgalogo"
         android:gravity="center"
-        android:paddingTop="150dp"
         android:paddingBottom="10dp"
-        android:paddingStart="140dp"
         android:paddingEnd="10dp"
-        android:text="@string/googleAlzheimer" />
-
+        android:paddingStart="140dp"
+        android:paddingTop="150dp"
+        android:text="@string/googleAlzheimer"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
