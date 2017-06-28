@@ -38,6 +38,7 @@
 
     </style>
 
+
     <style name="spinner_style">
     <item name="android:background">@drawable/ic_lock_outline_black_24dp</item>
     <item name="android:layout_marginLeft">10dp</item>
