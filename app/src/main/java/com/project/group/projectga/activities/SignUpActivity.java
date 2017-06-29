@@ -132,10 +132,10 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     private void onAuthSuccess(FirebaseUser user) {
         // Write new user
         writeNewUser(user.getUid(), user.getEmail());
-//        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
-//        contactIntent.putExtra("fullName", fullName);
-//        startActivity(contactIntent);
-//        finish();
+        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
+        contactIntent.putExtra("fullName", fullName);
+        startActivity(contactIntent);
+        finish();
     }
 
     private void writeNewUser(String userId, String email) {
