@@ -39,6 +39,7 @@ import com.project.group.projectga.fragments.MapsFragment;
 import com.project.group.projectga.fragments.ProfileFragment;
 import com.project.group.projectga.fragments.RecognitionFragment;
 import com.project.group.projectga.fragments.TagLocateFragment;
+import com.project.group.projectga.preferences.Preferences;
 import com.squareup.picasso.Picasso;
 
 import java.util.Stack;
@@ -108,8 +109,8 @@ public class MainMenuActivity extends CoreActivity {
             }
         });
 
-        String name = "Ramji Seetharaman";
-        String email = "ramji.sepak@gmail.com";
+        String name = preferences.getString(Preferences.NAME, "");
+        String email = preferences.getString(Preferences.EMAIL, "");
         final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
 
         headerResult = new AccountHeaderBuilder()

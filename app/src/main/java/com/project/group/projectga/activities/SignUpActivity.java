@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SignUpActivity extends CoreActivity implements View.OnClickListener{
+public class SignUpActivity extends CoreActivity implements View.OnClickListener, View.OnFocusChangeListener {
 
     @BindView(R.id.fullNameTextInputLayout)
     protected TextInputLayout fullNameTextInputLayout;
@@ -75,6 +75,11 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         setSupportActionBar(toolbar);
+
+        fullNameTextInputEditText.setOnFocusChangeListener(this);
+        emailTextEditText.setOnFocusChangeListener(this);
+        passwordTextEditText.setOnFocusChangeListener(this);
+        confirmPasswordTextEditText.setOnFocusChangeListener(this);
 
         nextButton.setOnClickListener(this);
 
@@ -132,10 +137,10 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     private void onAuthSuccess(FirebaseUser user) {
         // Write new user
         writeNewUser(user.getUid(), user.getEmail());
-        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
-        contactIntent.putExtra("fullName", fullName);
-        startActivity(contactIntent);
-        finish();
+//        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
+//        contactIntent.putExtra("fullName", fullName);
+//        startActivity(contactIntent);
+//        finish();
     }
 
     private void writeNewUser(String userId, String email) {
@@ -144,6 +149,7 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         databaseReference.child("users").child(userId).child("email").setValue(email);
         Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
         contactIntent.putExtra("fullName", fullName);
+        contactIntent.putExtra("emailAddress", email);
         startActivity(contactIntent);
         finish();
 
@@ -209,4 +215,44 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     }
 
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()) {
+
+            case R.id.fullNameTextInputEditText:
+                if (!hasFocus) {
+                    validateFullName(fullNameTextInputEditText.getText().toString().trim());
+                } else {
+                    fullNameTextInputLayout.setError(null);
+                }
+                break;
+            case R.id.emailTextEditText:
+                if (!hasFocus) {
+                    validateEmail(emailTextEditText.getText().toString().trim());
+                } else {
+                    emailTextInputLayout.setError(null);
+                }
+
+                break;
+
+            case R.id.passwordTextEditText:
+                if (!hasFocus) {
+                    validateSetPass(passwordTextEditText.getText().toString().trim());
+                } else {
+                    passwordTextInputLayout.setError(null);
+                }
+
+                break;
+
+            case R.id.confirmpasswordTextEditText:
+                if (!hasFocus) {
+                    validateConfirmPass(passwordTextEditText.getText().toString().trim(), confirmPasswordTextEditText.getText().toString().trim());
+                } else {
+                    confirmPasswordTextInputLayout.setError(null);
+                }
+
+                break;
+        }
+
+    }
 }
