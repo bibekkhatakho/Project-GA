@@ -59,9 +59,7 @@
     //Forget Password Screen
     <string name="asksecurityquestion"> Security Question </string>
     <string name="secutityquestionanswer"> Enter The Answer </string>
-
-
-
+    <string name="updatePhoto">Update Photo</string>
 
 
 </resources>
