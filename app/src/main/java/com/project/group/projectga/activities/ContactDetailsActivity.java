@@ -145,14 +145,21 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 //        finish();
 
     }
-    private boolean validateForm(String phoneNumber, String dateOfBirth, String securityAnswer) {
+    private boolean validateForm(String phone, String dob, String secAnswer) {
         boolean valid = true;
-        if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(dateOfBirth) || TextUtils.isEmpty(securityAnswer)) {
+        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(dob) || TextUtils.isEmpty(secAnswer)) {
             Toast.makeText(this, "Please enter all mandatory fields", Toast.LENGTH_SHORT).show();
             valid = false;
         }
-        if(!isValidPhoneNumber(phoneNumber)){
+        if(!isValidPhoneNumber(phone)){
             phoneNumberTextInputLayout.setError("Please enter a valid Phone Number");
+            valid = false;
+        }else{
+            phoneNumberTextInputLayout.setError(null);
+        }
+
+        if(phone.length() <10){
+            phoneNumberTextInputLayout.setError("Phone number should be atleast 10 digits");
             valid = false;
         }else{
             phoneNumberTextInputLayout.setError(null);

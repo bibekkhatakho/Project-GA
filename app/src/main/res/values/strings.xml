@@ -47,9 +47,11 @@
     <string name="homeScreen">GA Home</string>
 
     <string name="addGuardianInfo"> People who suffer and wish to protect their loved ones suffering from Alzheimer\'s are Guardian Users\. Guardian Users may either be one among the family members or friends\. They can use this app to track the vicinity of the patient and also to message them\, in case the patient is lost\. </string>
-    <string name="mapLabel">Map</string>
+    <string name="mapLabel">Maps</string>
     <string name="galleryLabel">Gallery</string>
     <string name="recognitionLabel">Recognition</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
     <string name="backupLabel">Backup</string>
     <string name="locateLabel">Tag &amp; Locate</string>
     <string name="gamesLabel">Games &amp; Puzzles</string>
@@ -57,6 +59,10 @@
     //Forget Password Screen
     <string name="asksecurityquestion"> Security Question </string>
     <string name="secutityquestionanswer"> Enter The Answer </string>
+
+
+
+
 
 </resources>
 
