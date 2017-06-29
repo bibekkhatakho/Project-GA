@@ -25,7 +25,8 @@
         <activity android:name=".activities.AddGuardianActivity" />
         <activity android:name=".activities.MainMenuActivity" />
         <activity android:name=".activities.ForgetPasswordActivity" />
-        <activity android:name=".activities.ResetPassword"></activity>
+        <activity android:name=".activities.ResetPassword" />
+        <activity android:name=".activities.ResetPasswordActivity"></activity>
     </application>
 
 </manifest>

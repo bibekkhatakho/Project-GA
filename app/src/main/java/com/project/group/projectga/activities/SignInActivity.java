@@ -1,5 +1,6 @@
 package com.project.group.projectga.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,12 +32,13 @@ public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-
+        progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -70,8 +72,19 @@ public class SignInActivity extends AppCompatActivity {
         boolean emailexists = false;
         Toast.makeText(this,"singing google",Toast.LENGTH_SHORT).show();
         if(v.getId() == R.id.loginButton){
-           email = ETemail.getText().toString();
+            email = ETemail.getText().toString();
             String password = ETpassword.getText().toString();
+            mAuth.signInWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progressDialog.dismiss();
+                            if(task.isSuccessful()){
+                                Intent loginIntent = new Intent(SignInActivity.this,MainMenuActivity.class);
+                                startActivity(loginIntent);
+                            }
+                        }
+                    });
         }
         else if(v.getId() == R.id.singinGoogleButton)
         {
