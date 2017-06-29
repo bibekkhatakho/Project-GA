@@ -96,9 +96,6 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         password = passwordTextEditText.getText().toString().trim();
         confirmPassword = confirmPasswordTextEditText.getText().toString().trim();
 
-        if (!validateConfirmPass(password, confirmPassword)) {
-            return;
-        }
         if (!validateForm(email, password, fullName, confirmPassword)) {
             hideProgressDialog();
             return;
@@ -121,16 +118,6 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
                     Toast.makeText(SignUpActivity.this, "Could not Register user", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private boolean validateConfirmPass(String password, String confirmPassword) {
-        if (confirmPassword.compareTo(password) != 0) {
-            confirmPasswordTextInputLayout.setError("Passwords don't match. Please try again.");
-            return false;
-        } else {
-            confirmPasswordTextInputLayout.setError(null);
-        }
-        return true;
     }
 
     private void onAuthSuccess(FirebaseUser user) {
@@ -160,7 +147,38 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
             Toast.makeText(this, "Please enter all mandatory fields", Toast.LENGTH_SHORT).show();
             valid = false;
         }
+        if(!Pattern.matches(textOnlyRegex, fullName)){
+            fullNameTextInputLayout.setError("Please enter a valid name");
+            valid = false;
+        }else{
+            fullNameTextInputLayout.setError(null);
+        }
+        if(!isValidEmail(email)){
+            emailTextInputLayout.setError("Please enter a valid email address");
+            valid = false;
+        }else {
+            emailTextInputLayout.setError(null);
+        }
+
+        if(password.length() < 8){
+            passwordTextInputLayout.setError("Password should be a minimum of 8 characters");
+            valid = false;
+        }else{
+            passwordTextInputLayout.setError(null);
+        }
+
+        if (confirmPassword.compareTo(password) != 0) {
+            confirmPasswordTextInputLayout.setError("Passwords don't match. Please try again.");
+            valid = false;
+        } else {
+            confirmPasswordTextInputLayout.setError(null);
+        }
+
         return valid;
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     @Override

@@ -147,12 +147,21 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
     }
     private boolean validateForm(String phoneNumber, String dateOfBirth, String securityAnswer) {
         boolean valid = true;
-        String textOnlyRegex = "^[\\p{L} .'-]+$";
         if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(dateOfBirth) || TextUtils.isEmpty(securityAnswer)) {
             Toast.makeText(this, "Please enter all mandatory fields", Toast.LENGTH_SHORT).show();
             valid = false;
         }
+        if(!isValidPhoneNumber(phoneNumber)){
+            phoneNumberTextInputLayout.setError("Please enter a valid Phone Number");
+            valid = false;
+        }else{
+            phoneNumberTextInputLayout.setError(null);
+        }
         return valid;
+    }
+
+    private static boolean isValidPhoneNumber(String phoneNumber) {
+        return !TextUtils.isEmpty(phoneNumber) && android.util.Patterns.PHONE.matcher(phoneNumber).matches();
     }
 
     private void onAuthFailure() {

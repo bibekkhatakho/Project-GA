@@ -9,4 +9,5 @@
     <color name="red">#ff0000</color>
     <color name="black">#000000</color>
     <color name="offWhite">#fdfdfd</color>
+    <color name="colorButton">#fdfdfd</color>
 </resources>
