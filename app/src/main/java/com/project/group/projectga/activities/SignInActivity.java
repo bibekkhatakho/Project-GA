@@ -91,10 +91,10 @@ public class SignInActivity extends AppCompatActivity {
             if (email.isEmpty())
                 Toast.makeText(this, "Empty email", Toast.LENGTH_SHORT).show();
             else {
-                if (emailexists)
-                    startActivity(new Intent(this, ForgetPasswordActivity.class));
-                else
-                    Toast.makeText(this, "Invalid Email Address.", Toast.LENGTH_SHORT).show();
+                //if (emailexists)
+                    //startActivity(new Intent(this, ForgetPasswordActivity.class));
+                //else
+                    //Toast.makeText(this, "Invalid Email Address.", Toast.LENGTH_SHORT).show();
 
             }
         }
