@@ -64,6 +64,8 @@
     <string name="guardianLabel">Your Guardian</string>
     <string name="tempName">User Name</string>
     <string name="tempEmail">User@Email.com</string>
+    <string name="tempDate">12/31/1999</string>
+    <string name="tempPhone">(555)555-5555</string>
 
 
 </resources>
