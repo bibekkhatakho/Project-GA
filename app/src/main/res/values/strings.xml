@@ -61,6 +61,9 @@
     <string name="secutityquestionanswer"> Enter The Answer </string>
     <string name="updatePhoto">Update Photo</string>
     <string name="aboutLabel">About You</string>
+    <string name="guardianLabel">Your Guardian</string>
+    <string name="tempName">User Name</string>
+    <string name="tempEmail">User@Email.com</string>
 
 
 </resources>
