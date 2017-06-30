@@ -32,7 +32,7 @@
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="40dp">
+            android:layout_marginTop="20dp">
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/phoneNumberTextInputLayout"
@@ -46,8 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
-                    android:background="@color/loginbackground"
-                    android:padding="15dp"
+                    android:background="@null"
                     android:drawableStart="@drawable/ic_phone_black_24dp"
                     android:hint="@string/contactNumber"
                     android:inputType="number"
@@ -69,8 +68,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableStart="@drawable/ic_cake_black_24dp"
-                    android:background="@color/loginbackground"
-                    android:padding="15dp"
+                    android:background="@null"
                     android:hint="@string/dateOfBirth"
                     android:inputType="date"
                     tools:ignore="MissingPrefix,UnusedAttribute" />
@@ -81,8 +79,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                style="@style/textfieldbox">
+                android:layout_marginTop="20dp"
+                android:background="@drawable/textbox"
+                android:foreground="?android:attr/selectableItemBackground">
                 
                 <ImageView
                     android:id="@+id/securityQuestionIcon"
@@ -115,8 +114,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:drawableStart="@drawable/ic_lock_open_black_24dp"
-                    android:background="@color/loginbackground"
-                    android:padding="15dp"
+                    android:background="@null"
                     android:hint="@string/securityAnswer"
                     android:inputType="textPassword"
                     tools:ignore="MissingPrefix,UnusedAttribute" />

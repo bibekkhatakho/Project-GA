@@ -18,29 +18,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.SplashScreen">
-            <intent-filter android:label="string/filter_title_splash">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with http://www.example.com/splash" -->
-                <data android:scheme="http"
-                      android:host="www.example.com"/>
-                <!-- Accepts URIs that begin with "example://splash" -->
-
-
-            </intent-filter>
-
-        </activity>
-
-
+        <activity android:name=".activities.SplashScreen" />
         <activity android:name=".activities.SignInActivity" />
         <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.ContactDetailsActivity" />
         <activity android:name=".activities.AddGuardianActivity" />
         <activity android:name=".activities.MainMenuActivity" />
-        <!--<activity android:name=".activities.ForgetPasswordActivity" />
-        <activity android:name=".activities.ResetPassword"></activity> -->
+        <activity android:name=".activities.ForgetPasswordActivity" />
+        <activity android:name=".activities.ResetPasswordActivity"></activity>
     </application>
 
 </manifest>

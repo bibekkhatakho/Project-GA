@@ -33,9 +33,7 @@
     <style name="textfieldbox">
         <item name="android:background">@drawable/textbox</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-
+        <item name="android:padding">10dp</item>
     </style>
 
 

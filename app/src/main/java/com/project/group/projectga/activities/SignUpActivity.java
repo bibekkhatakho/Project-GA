@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SignUpActivity extends CoreActivity implements View.OnClickListener{
+public class SignUpActivity extends CoreActivity implements View.OnClickListener, View.OnFocusChangeListener {
 
     @BindView(R.id.fullNameTextInputLayout)
     protected TextInputLayout fullNameTextInputLayout;
@@ -76,6 +76,11 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
 
         setSupportActionBar(toolbar);
 
+        fullNameTextInputEditText.setOnFocusChangeListener(this);
+        emailTextEditText.setOnFocusChangeListener(this);
+        passwordTextEditText.setOnFocusChangeListener(this);
+        confirmPasswordTextEditText.setOnFocusChangeListener(this);
+
         nextButton.setOnClickListener(this);
 
     }
@@ -96,11 +101,17 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         password = passwordTextEditText.getText().toString().trim();
         confirmPassword = confirmPasswordTextEditText.getText().toString().trim();
 
-        if (!validateConfirmPass(password, confirmPassword)) {
+        if (!validateFullName(fullName)) {
             return;
         }
-        if (!validateForm(email, password, fullName, confirmPassword)) {
-            hideProgressDialog();
+
+        if (!validateEmail(email)) {
+            return;
+        }
+        if (!validateSetPass(password)) {
+            return;
+        }
+        if (!validateConfirmPass(password, confirmPassword)) {
             return;
         }
 
@@ -118,28 +129,18 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
                 }
                 else
                     hideProgressDialog();
-                    Toast.makeText(SignUpActivity.this, "Could not Register user", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "Could not Register user", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private boolean validateConfirmPass(String password, String confirmPassword) {
-        if (confirmPassword.compareTo(password) != 0) {
-            confirmPasswordTextInputLayout.setError("Passwords don't match. Please try again.");
-            return false;
-        } else {
-            confirmPasswordTextInputLayout.setError(null);
-        }
-        return true;
     }
 
     private void onAuthSuccess(FirebaseUser user) {
         // Write new user
         writeNewUser(user.getUid(), user.getEmail());
-        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
-        contactIntent.putExtra("fullName", fullName);
-        startActivity(contactIntent);
-        finish();
+//        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
+//        contactIntent.putExtra("fullName", fullName);
+//        startActivity(contactIntent);
+//        finish();
     }
 
     private void writeNewUser(String userId, String email) {
@@ -148,20 +149,61 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         databaseReference.child("users").child(userId).child("email").setValue(email);
         Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
         contactIntent.putExtra("fullName", fullName);
+        contactIntent.putExtra("emailAddress", email);
         startActivity(contactIntent);
         finish();
 
     }
 
-    private boolean validateForm(String fullName, String email, String password, String confirmPassword) {
+    private boolean validateFullName(String name) {
         boolean valid = true;
         String textOnlyRegex = "^[\\p{L} .'-]+$";
-        if (TextUtils.isEmpty(fullName) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please enter all mandatory fields", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(name) || !Pattern.matches(textOnlyRegex, name)) {
+            fullNameTextInputLayout.setError("Enter a valid name");
             valid = false;
+        } else {
+            fullNameTextInputLayout.setError(null);
         }
         return valid;
     }
+
+    private boolean validateEmail(String emailText) {
+
+        if (emailText.isEmpty() || !isValidEmail(emailText)) {
+            emailTextInputLayout.setError("Please enter a valid Email address");
+            return false;
+        } else {
+            emailTextInputLayout.setError(null);
+        }
+
+        return true;
+    }
+
+    private static boolean isValidEmail(String email) {
+        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    private boolean validateSetPass(String setPass) {
+        if (setPass.length() < 8) {
+            passwordTextInputLayout.setError("Password should be a minimum of 8 characters");
+            return false;
+        } else {
+            passwordTextInputLayout.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validateConfirmPass(String setPass, String confirmPass) {
+        if (confirmPass.compareTo(setPass) != 0) {
+            confirmPasswordTextInputLayout.setError("Passwords don't match. Please try again");
+            return false;
+        } else {
+            confirmPasswordTextInputLayout.setError(null);
+        }
+        return true;
+    }
+
+
 
     @Override
     public void onStart() {
@@ -173,4 +215,44 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     }
 
 
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()) {
+
+            case R.id.fullNameTextInputEditText:
+                if (!hasFocus) {
+                    validateFullName(fullNameTextInputEditText.getText().toString().trim());
+                } else {
+                    fullNameTextInputLayout.setError(null);
+                }
+                break;
+            case R.id.emailTextEditText:
+                if (!hasFocus) {
+                    validateEmail(emailTextEditText.getText().toString().trim());
+                } else {
+                    emailTextInputLayout.setError(null);
+                }
+
+                break;
+
+            case R.id.passwordTextEditText:
+                if (!hasFocus) {
+                    validateSetPass(passwordTextEditText.getText().toString().trim());
+                } else {
+                    passwordTextInputLayout.setError(null);
+                }
+
+                break;
+
+            case R.id.confirmpasswordTextEditText:
+                if (!hasFocus) {
+                    validateConfirmPass(passwordTextEditText.getText().toString().trim(), confirmPasswordTextEditText.getText().toString().trim());
+                } else {
+                    confirmPasswordTextInputLayout.setError(null);
+                }
+
+                break;
+        }
+
+    }
 }

@@ -13,9 +13,6 @@ import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.project.group.projectga.R;
 import com.satsuware.usefulviews.LabelledSpinner;
 
@@ -25,7 +22,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ContactDetailsActivity extends CoreActivity implements View.OnClickListener{
+public class ContactDetailsActivity extends CoreActivity implements View.OnClickListener, View.OnFocusChangeListener{
 
     @BindView(R.id.phoneNumberTextInputLayout)
     protected TextInputLayout phoneNumberTextInputLayout;
@@ -46,22 +43,13 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
     String securityQuestion = "What is the name of your first pet?";
 
-    FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_details);
         ButterKnife.bind(this);
 
-        if (getUid() != null) {
-            String userId = getUid();
-            firebaseAuth = FirebaseAuth.getInstance();
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-        }else{
-            onAuthFailure();
-        }
+        phoneNumberTextInputEditText.setOnFocusChangeListener(this);
 
         securityQuestionSpinner.setLabelText(R.string.securityQuestion);
         securityQuestionSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
@@ -122,6 +110,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         Intent intent = getIntent();
 
         String fullName = intent.getStringExtra("fullName");
+        String userEmailAddress = intent.getStringExtra("emailAddress");
 
         String phoneNumber = phoneNumberTextInputEditText.getText().toString().trim();
         String dateOfBirth = dateofBirthTextInputEditText.getText().toString().trim();
@@ -137,6 +126,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         Intent guardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         guardianIntent.putExtra("fullName", fullName);
+        guardianIntent.putExtra("userEmailAddress", userEmailAddress);
         guardianIntent.putExtra("phoneNumber", phoneNumber);
         guardianIntent.putExtra("dateofBirth", dateOfBirth);
         guardianIntent.putExtra("securityAnswer", securityAnswer);
@@ -145,20 +135,53 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 //        finish();
 
     }
-    private boolean validateForm(String phoneNumber, String dateOfBirth, String securityAnswer) {
+    private boolean validateForm(String phone, String dob, String secAnswer) {
         boolean valid = true;
-        String textOnlyRegex = "^[\\p{L} .'-]+$";
-        if (TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(dateOfBirth) || TextUtils.isEmpty(securityAnswer)) {
+        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(dob) || TextUtils.isEmpty(secAnswer)) {
             Toast.makeText(this, "Please enter all mandatory fields", Toast.LENGTH_SHORT).show();
             valid = false;
         }
+        if(!isValidPhoneNumber(phone)){
+            phoneNumberTextInputLayout.setError("Please enter a valid Phone Number");
+            valid = false;
+        }else{
+            phoneNumberTextInputLayout.setError(null);
+        }
+
+        if(phone.length() <10){
+            phoneNumberTextInputLayout.setError("Phone number should be atleast 10 digits");
+            valid = false;
+        }else{
+            phoneNumberTextInputLayout.setError(null);
+        }
         return valid;
     }
+
+    private static boolean isValidPhoneNumber(String phoneNumber) {
+        return !TextUtils.isEmpty(phoneNumber) && android.util.Patterns.PHONE.matcher(phoneNumber).matches();
+    }
+
+
 
     private void onAuthFailure() {
 
         Intent intent = new Intent(ContactDetailsActivity.this, SplashScreen.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        switch (v.getId()) {
+
+            case R.id.phoneNumberTextInputEditText:
+                if (!hasFocus) {
+                    validateForm(phoneNumberTextInputEditText.getText().toString().trim(), dateofBirthTextInputEditText.getText().toString().trim(), securityAnswerTextInputEditText.getText().toString().trim());
+                } else {
+                    phoneNumberTextInputLayout.setError(null);
+                }
+                break;
+        }
+
     }
 }
