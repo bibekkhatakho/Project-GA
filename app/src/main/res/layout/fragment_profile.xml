@@ -18,6 +18,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/profileBackground"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/profileBackground" />
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/photoEditLayout"
             android:layout_width="wrap_content"
@@ -50,17 +61,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/profileBG"
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:adjustViewBounds="false"
-            android:scaleType="fitXY"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/header" />
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/photoCircle"
             android:layout_width="128dp"
@@ -70,17 +70,18 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/photoBorder"
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/circularPhoto"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:scaleType="fitCenter"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.6"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/material_drawer_circle_mask" />
+                app:layout_constraintTop_toTopOf="parent" />
+
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
@@ -330,23 +331,24 @@
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/guardianPhotoLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="0dp"
-            android:layout_marginLeft="32dp">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/guardianPhotoBorder"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:scaleType="fitXY"
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/circularGuardianPhoto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/material_drawer_circle_mask" />
+                app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
