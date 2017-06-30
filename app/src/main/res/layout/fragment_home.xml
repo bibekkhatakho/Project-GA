@@ -64,12 +64,13 @@
                     android:layout_marginTop="0dp"
                     android:adjustViewBounds="true"
                     android:cropToPadding="false"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
+                    android:tint="@color/md_yellow_700"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_map_yellow" />
+                    app:srcCompat="@drawable/ic_place_black_24dp" />
 
                 <TextView
                     android:id="@+id/mapLabel"
@@ -135,12 +136,13 @@
                     android:layout_marginTop="0dp"
                     android:adjustViewBounds="true"
                     android:cropToPadding="false"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
+                    android:tint="@color/green"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_gallery_green" />
+                    app:srcCompat="@drawable/ic_perm_media_black_24dp" />
 
                 <TextView
                     android:id="@+id/galleryLabel"
@@ -197,12 +199,13 @@
                     android:layout_marginTop="0dp"
                     android:adjustViewBounds="true"
                     android:cropToPadding="false"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
+                    android:tint="@color/blue"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_locate_blue" />
+                    app:srcCompat="@drawable/ic_remove_red_eye_black_24dp" />
 
                 <TextView
                     android:id="@+id/locateLabel"
@@ -259,11 +262,13 @@
                     android:layout_marginTop="0dp"
                     android:adjustViewBounds="true"
                     android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:tint="@color/materialize_primary"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_face_red" />
+                    app:srcCompat="@drawable/ic_face_black_24dp" />
 
                 <TextView
                     android:id="@+id/recognitionLabel"
@@ -320,11 +325,13 @@
                     android:layout_marginTop="0dp"
                     android:adjustViewBounds="true"
                     android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:tint="@color/purple"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_games_purple" />
+                    app:srcCompat="@drawable/ic_casino_black_24dp" />
 
                 <TextView
                     android:id="@+id/gamesLabel"
@@ -381,11 +388,13 @@
                     android:layout_marginTop="0dp"
                     android:adjustViewBounds="true"
                     android:cropToPadding="false"
+                    android:scaleType="fitXY"
+                    android:tint="@color/md_blue_grey_500"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_backup_gray" />
+                    app:srcCompat="@drawable/ic_save_black_24dp" />
 
                 <TextView
                     android:id="@+id/backupLabel"

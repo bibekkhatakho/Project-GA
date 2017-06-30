@@ -15,8 +15,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -39,6 +42,7 @@ import com.project.group.projectga.fragments.MapsFragment;
 import com.project.group.projectga.fragments.ProfileFragment;
 import com.project.group.projectga.fragments.RecognitionFragment;
 import com.project.group.projectga.fragments.TagLocateFragment;
+import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
 import com.squareup.picasso.Picasso;
 
@@ -71,13 +75,6 @@ public class MainMenuActivity extends CoreActivity {
         gaFragmentStack = new Stack<>();
 
 
-        Fragment home_fragment = new HomeFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container_gaFragments, home_fragment);
-        transaction.commit();
-
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         if (getUid() != null) {
             String userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
@@ -86,6 +83,15 @@ public class MainMenuActivity extends CoreActivity {
         } else {
             onAuthFailure();
         }
+
+        Fragment home_fragment = new HomeFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_gaFragments, home_fragment);
+        transaction.commit();
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+
 
         final PrimaryDrawerItem home = new PrimaryDrawerItem().withName("Home").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_home);
         final PrimaryDrawerItem profile = new PrimaryDrawerItem().withName("Profile").withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_account);
@@ -126,89 +132,89 @@ public class MainMenuActivity extends CoreActivity {
                 })
                 .build();
 
-        result = new DrawerBuilder()
-                .withActivity(this)
-                .withAccountHeader(headerResult)
-                .withToolbar(toolbar)
-                .withDisplayBelowStatusBar(false)
-                .withTranslucentStatusBar(true)
-                .withSavedInstance(savedInstanceState)
-                .withActionBarDrawerToggle(true)
-                .withActionBarDrawerToggleAnimated(true)
-                .addDrawerItems(home)
-                .addDrawerItems(profile)
-                .addDrawerItems(gallery)
-                .addDrawerItems(recognition)
-                .addDrawerItems(maps)
-                .addDrawerItems(tagAndLocate)
-                .addDrawerItems(gamesAndPuzzle)
-                .addDrawerItems(backup)
-                .addDrawerItems(new DividerDrawerItem())
-                .addDrawerItems(logout)
-                .buildForFragment();
+            result = new DrawerBuilder()
+                    .withActivity(this)
+                    .withAccountHeader(headerResult)
+                    .withToolbar(toolbar)
+                    .withDisplayBelowStatusBar(false)
+                    .withTranslucentStatusBar(true)
+                    .withSavedInstance(savedInstanceState)
+                    .withActionBarDrawerToggle(true)
+                    .withActionBarDrawerToggleAnimated(true)
+                    .addDrawerItems(home)
+                    .addDrawerItems(profile)
+                    .addDrawerItems(gallery)
+                    .addDrawerItems(recognition)
+                    .addDrawerItems(maps)
+                    .addDrawerItems(tagAndLocate)
+                    .addDrawerItems(gamesAndPuzzle)
+                    .addDrawerItems(backup)
+                    .addDrawerItems(new DividerDrawerItem())
+                    .addDrawerItems(logout)
+                    .buildForFragment();
 
-        result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-            @Override
-            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+            result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                @Override
+                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
-                int drawItemId = (int) drawerItem.getIdentifier();
-                Intent intent;
-                Fragment fragment;
-                switch (drawItemId) {
+                    int drawItemId = (int) drawerItem.getIdentifier();
+                    Intent intent;
+                    Fragment fragment;
+                    switch (drawItemId) {
 
-                    case 1:
-                        fragment = new HomeFragment();
-                        gaFragmentStack.add(home);
-                        break;
-                    case 2:
-                        fragment = new ProfileFragment();
-                        gaFragmentStack.add(profile);
-                        break;
-                    case 3:
-                        fragment = new GalleryFragment();
-                        gaFragmentStack.add(gallery);
-                        break;
-                    case 4:
-                        fragment = new RecognitionFragment();
-                        gaFragmentStack.add(recognition);
-                        break;
-                    case 5:
-                        fragment = new MapsFragment();
-                        gaFragmentStack.add(maps);
-                        break;
-                    case 6:
-                        fragment = new TagLocateFragment();
-                        gaFragmentStack.add(tagAndLocate);
-                        break;
-                    case 7:
-                        fragment = new GamesPuzzlesFragment();
-                        gaFragmentStack.add(gamesAndPuzzle);
-                        break;
-                    case 8:
-                        fragment = new BackupFragment();
-                        gaFragmentStack.add(backup);
-                        break;
-                    default:
-                        fragment = new HomeFragment();
-                        break;
+                        case 1:
+                            fragment = new HomeFragment();
+                            gaFragmentStack.add(home);
+                            break;
+                        case 2:
+                            fragment = new ProfileFragment();
+                            gaFragmentStack.add(profile);
+                            break;
+                        case 3:
+                            fragment = new GalleryFragment();
+                            gaFragmentStack.add(gallery);
+                            break;
+                        case 4:
+                            fragment = new RecognitionFragment();
+                            gaFragmentStack.add(recognition);
+                            break;
+                        case 5:
+                            fragment = new MapsFragment();
+                            gaFragmentStack.add(maps);
+                            break;
+                        case 6:
+                            fragment = new TagLocateFragment();
+                            gaFragmentStack.add(tagAndLocate);
+                            break;
+                        case 7:
+                            fragment = new GamesPuzzlesFragment();
+                            gaFragmentStack.add(gamesAndPuzzle);
+                            break;
+                        case 8:
+                            fragment = new BackupFragment();
+                            gaFragmentStack.add(backup);
+                            break;
+                        default:
+                            fragment = new HomeFragment();
+                            break;
+                    }
+                    if (drawItemId == 9) {
+                        FirebaseAuth.getInstance().signOut();
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.apply();
+                        intent = new Intent(MainMenuActivity.this, SplashScreen.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container_gaFragments, fragment);
+                    transaction.commit();
+                    return false;
                 }
-                if (drawItemId == 9) {
-                    FirebaseAuth.getInstance().signOut();
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.clear();
-                    editor.apply();
-                    intent = new Intent(MainMenuActivity.this, SplashScreen.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container_gaFragments, fragment);
-                transaction.commit();
-                return false;
-            }
-        });
+            });
     }
     private void onAuthFailure() {
         Intent intent = new Intent(MainMenuActivity.this, SplashScreen.class);

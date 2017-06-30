@@ -6,11 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.project.group.projectga.R;
+import com.satsuware.usefulviews.LabelledSpinner;
 
 import java.util.regex.Pattern;
 
@@ -48,7 +49,8 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     protected TextInputEditText confirmPasswordTextEditText;
     @BindView(R.id.nextButton)
     protected FloatingActionButton nextButton;
-
+    @BindView(R.id.userTypeSpinner)
+    protected LabelledSpinner userTypeSpinner;
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
@@ -62,6 +64,7 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     //Future reference for Firebase Authentication
     private FirebaseAuth firebaseAuth;
 
+    String userType = "Standard";
     DatabaseReference databaseReference;
 
 
@@ -75,6 +78,19 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         setSupportActionBar(toolbar);
+
+        userTypeSpinner.setLabelText(R.string.userType);
+        userTypeSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
+            @Override
+            public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
+                userType = adapterView.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
+                userType = adapterView.getSelectedItem().toString();
+            }
+        });
 
         fullNameTextInputEditText.setOnFocusChangeListener(this);
         emailTextEditText.setOnFocusChangeListener(this);
@@ -137,10 +153,11 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     private void onAuthSuccess(FirebaseUser user) {
         // Write new user
         writeNewUser(user.getUid(), user.getEmail());
-//        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
-//        contactIntent.putExtra("fullName", fullName);
-//        startActivity(contactIntent);
-//        finish();
+        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
+        contactIntent.putExtra("fullName", fullName);
+        contactIntent.putExtra("userType", userType);
+        startActivity(contactIntent);
+        finish();
     }
 
     private void writeNewUser(String userId, String email) {
@@ -149,6 +166,7 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         databaseReference.child("users").child(userId).child("email").setValue(email);
         Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
         contactIntent.putExtra("fullName", fullName);
+        contactIntent.putExtra("userType", userType);
         contactIntent.putExtra("emailAddress", email);
         startActivity(contactIntent);
         finish();

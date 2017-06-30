@@ -31,85 +31,84 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.homeScreen));
-        initControls(view);
         return view;
     }
 
 
-    public void initControls(View view){
+    public void initControls(View view) {
 
-        CardView galleryCard = (CardView) view.findViewById(R.id.galleryCard);
-        CardView mapsCard = (CardView) view.findViewById(R.id.mapCard);
-        CardView recognitionCard = (CardView) view.findViewById(R.id.recognitionCard);
-        CardView tagAndLocateCard = (CardView) view.findViewById(R.id.locateCard);
-        CardView gamesAndPuzzlesCard = (CardView) view.findViewById(R.id.gamesCard);
-        CardView backupCard = (CardView) view.findViewById(R.id.backupCard);
+            CardView galleryCard = (CardView) view.findViewById(R.id.galleryCard);
+            CardView mapsCard = (CardView) view.findViewById(R.id.mapCard);
+            CardView recognitionCard = (CardView) view.findViewById(R.id.recognitionCard);
+            CardView tagAndLocateCard = (CardView) view.findViewById(R.id.locateCard);
+            CardView gamesAndPuzzlesCard = (CardView) view.findViewById(R.id.gamesCard);
+            CardView backupCard = (CardView) view.findViewById(R.id.backupCard);
 
-        galleryCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment galleryFragment = new GalleryFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_gaFragments, galleryFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            galleryCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment galleryFragment = new GalleryFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container_gaFragments, galleryFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
-                ft.commit();
-            }
-        });
-        mapsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment mapsFragment = new MapsFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_gaFragments, mapsFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.commit();
+                }
+            });
+            mapsCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment mapsFragment = new MapsFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container_gaFragments, mapsFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 
-                ft.commit();
-            }
-        });
-        recognitionCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment recognitionFragment = new RecognitionFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_gaFragments, recognitionFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
-        tagAndLocateCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment tagAndLocateFragment = new TagLocateFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_gaFragments, tagAndLocateFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
-        gamesAndPuzzlesCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment gamesAndPuzzlesFragment = new GamesPuzzlesFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_gaFragments, gamesAndPuzzlesFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
-        backupCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fragment backupFragment = new BackupFragment();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.container_gaFragments, backupFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.addToBackStack(null);
-                ft.commit();
-            }
-        });
+                    ft.commit();
+                }
+            });
+            recognitionCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment recognitionFragment = new RecognitionFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container_gaFragments, recognitionFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+            tagAndLocateCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment tagAndLocateFragment = new TagLocateFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container_gaFragments, tagAndLocateFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+            gamesAndPuzzlesCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment gamesAndPuzzlesFragment = new GamesPuzzlesFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container_gaFragments, gamesAndPuzzlesFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
+            backupCard.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Fragment backupFragment = new BackupFragment();
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ft.replace(R.id.container_gaFragments, backupFragment);
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                    ft.addToBackStack(null);
+                    ft.commit();
+                }
+            });
     }
 }

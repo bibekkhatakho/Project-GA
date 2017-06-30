@@ -11,9 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.creativityapps.gmailbackgroundlibrary.BackgroundMail;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +45,9 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
     DatabaseReference databaseReference;
 
     String userEmailAddress;
+    String guardianUserEmail;
+    String fullName;
+    String userType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,13 +83,14 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
 
         Intent intent = getIntent();
 
-        String fullName = intent.getStringExtra("fullName");
+        fullName = intent.getStringExtra("fullName");
         userEmailAddress = intent.getStringExtra("userEmailAddress");
         String phoneNumber = intent.getStringExtra("phoneNumber");
         String dateOfBirth = intent.getStringExtra("dateofBirth");
         String securityAnswer = intent.getStringExtra("securityAnswer");
         String securityQuestion = intent.getStringExtra("securityQuestion");
-        String guardianUserEmail = addGuardianEmailTextInputEditText.getText().toString().trim();
+        userType = intent.getStringExtra("userType");
+        guardianUserEmail = addGuardianEmailTextInputEditText.getText().toString().trim();
 
         if (!validateForm(guardianUserEmail, userEmailAddress)) {
             hideProgressDialog();
@@ -97,6 +103,7 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
         databaseReference.child("securityAnswer").setValue(securityAnswer);
         databaseReference.child("securityQuestion").setValue(securityQuestion);
         databaseReference.child("guardianUserEmail").setValue(guardianUserEmail);
+        databaseReference.child("userType").setValue(userType);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -110,6 +117,38 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
                 }
                 editor.putString(Preferences.USERID, getUid());
                 editor.apply();
+
+                String subject = "App Invitation!";
+                String body = "Hi,\nThis email is to inform you that Mr." + fullName + " has invited you to be the guardian, as he/she is suffering from Alzheimer's."
+                        + " Check out the Google Play store to find our application to protect your loved one. \n APP NAME: Google Alzheimer \n\nRegards,\nGA Team.";
+                if (!TextUtils.isEmpty(guardianUserEmail)) {
+                    BackgroundMail.newBuilder(AddGuardianActivity.this)
+                            .withUsername("projectgateam@gmail.com")
+                            .withPassword("projectga1234")
+                            .withMailto(guardianUserEmail)
+                            .withType(BackgroundMail.TYPE_PLAIN)
+                            .withSubject(subject)
+                            .withBody(body)
+                            .withOnSuccessCallback(new BackgroundMail.OnSuccessCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    //do some magic
+                                    Log.d("Email", "Sent Success");
+                                    Intent intent = new Intent(AddGuardianActivity.this, MainMenuActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .withOnFailCallback(new BackgroundMail.OnFailCallback() {
+                                @Override
+                                public void onFail() {
+                                    //do some magic
+                                    Toast.makeText(AddGuardianActivity.this, "Email was not sent due to some issues. Please try again later", Toast.LENGTH_LONG).show();
+                                }
+                            })
+                            .send();
+                }
             }
 
             @Override
@@ -120,10 +159,11 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
 
         hideProgressDialog();
         Toast.makeText(this, "Profile Created!", Toast.LENGTH_SHORT).show();
-        Intent mainMenuIntent = new Intent(AddGuardianActivity.this, MainMenuActivity.class);
-        mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mainMenuIntent);
-        finish();
+//        Intent mainMenuIntent = new Intent(AddGuardianActivity.this, MainMenuActivity.class);
+//        mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        mainMenuIntent.putExtra("userType", userType);
+//        startActivity(mainMenuIntent);
+//        finish();
     }
 
     private boolean validateForm(String guardianEmailAddress, String userEmailAddress) {

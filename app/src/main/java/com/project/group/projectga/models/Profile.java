@@ -12,12 +12,13 @@ public class Profile {
     private String securityQuestion;
     private String securityAnswer;
 
+    private String userType;
     private String guardianEmail;
 
     public Profile() {
     }
 
-    public Profile(String fullName, String userId, String email, String phone, String dateOfBirth, String securityQuestion, String securityAnswer, String guardianEmail) {
+    public Profile(String fullName, String userType, String userId, String email, String phone, String dateOfBirth, String securityQuestion, String securityAnswer, String guardianEmail) {
         this.fullName = fullName;
         this.userId = userId;
         this.email = email;
@@ -26,6 +27,14 @@ public class Profile {
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
         this.guardianEmail = guardianEmail;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public String getFullName() {

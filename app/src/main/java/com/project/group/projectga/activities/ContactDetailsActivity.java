@@ -2,6 +2,8 @@ package com.project.group.projectga.activities;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -13,7 +15,15 @@ import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
+import com.project.group.projectga.models.Profile;
+import com.project.group.projectga.preferences.Preferences;
 import com.satsuware.usefulviews.LabelledSpinner;
 
 import java.text.SimpleDateFormat;
@@ -43,11 +53,23 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
     String securityQuestion = "What is the name of your first pet?";
 
+    FirebaseAuth firebaseAuth;
+    DatabaseReference databaseReference;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_details);
         ButterKnife.bind(this);
+
+        if (getUid() != null) {
+            String userId = getUid();
+            firebaseAuth = FirebaseAuth.getInstance();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+
+        } else {
+            onAuthFailure();
+        }
 
         phoneNumberTextInputEditText.setOnFocusChangeListener(this);
 
@@ -111,6 +133,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
         String fullName = intent.getStringExtra("fullName");
         String userEmailAddress = intent.getStringExtra("emailAddress");
+        String userType = intent.getStringExtra("userType");
 
         String phoneNumber = phoneNumberTextInputEditText.getText().toString().trim();
         String dateOfBirth = dateofBirthTextInputEditText.getText().toString().trim();
@@ -121,24 +144,61 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             return;
         }
 
-        hideProgressDialog();
-        Toast.makeText(this, "User details saved!",Toast.LENGTH_SHORT).show();
-        Intent guardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        guardianIntent.putExtra("fullName", fullName);
-        guardianIntent.putExtra("userEmailAddress", userEmailAddress);
-        guardianIntent.putExtra("phoneNumber", phoneNumber);
-        guardianIntent.putExtra("dateofBirth", dateOfBirth);
-        guardianIntent.putExtra("securityAnswer", securityAnswer);
-        guardianIntent.putExtra("securityQuestion", securityQuestion);
-        startActivity(guardianIntent);
-//        finish();
+        if(userType.equalsIgnoreCase("Standard")){
+            hideProgressDialog();
+            Toast.makeText(this, "User details saved!",Toast.LENGTH_SHORT).show();
+            Intent guardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            guardianIntent.putExtra("fullName", fullName);
+            guardianIntent.putExtra("userEmailAddress", userEmailAddress);
+            guardianIntent.putExtra("phoneNumber", phoneNumber);
+            guardianIntent.putExtra("dateofBirth", dateOfBirth);
+            guardianIntent.putExtra("userType", userType);
+            guardianIntent.putExtra("securityAnswer", securityAnswer);
+            guardianIntent.putExtra("securityQuestion", securityQuestion);
+            startActivity(guardianIntent);
+            finish();
+        }else{
+            databaseReference.child("fullName").setValue(fullName);
+            databaseReference.child("phoneNumber").setValue(phoneNumber);
+            databaseReference.child("dateOfBirth").setValue(dateOfBirth);
+            databaseReference.child("securityAnswer").setValue(securityAnswer);
+            databaseReference.child("securityQuestion").setValue(securityQuestion);
+            databaseReference.child("userType").setValue(userType);
+
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile profile = dataSnapshot.getValue(Profile.class);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContactDetailsActivity.this);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    if(profile != null) {
+                        editor.putString(Preferences.NAME, profile.getFullName());
+                        editor.putString(Preferences.EMAIL, profile.getEmail());
+                    }
+                    editor.putString(Preferences.USERID, getUid());
+                    editor.apply();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            hideProgressDialog();
+            Toast.makeText(this, "Profile Created", Toast.LENGTH_SHORT).show();
+            Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
+            mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(mainMenuIntent);
+            finish();
+        }
+
 
     }
     private boolean validateForm(String phone, String dob, String secAnswer) {
         boolean valid = true;
         if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(dob) || TextUtils.isEmpty(secAnswer)) {
-            Toast.makeText(this, "Please enter all mandatory fields", Toast.LENGTH_SHORT).show();
             valid = false;
         }
         if(!isValidPhoneNumber(phone)){

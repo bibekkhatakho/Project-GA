@@ -29,7 +29,7 @@ public class SignInActivity extends AppCompatActivity {
 
     GoogleApiClient mGoogleApiClient;
     private static int RC_SIGN_IN = 100;
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "SignInActivity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressDialog progressDialog;
@@ -70,7 +70,6 @@ public class SignInActivity extends AppCompatActivity {
         EditText ETpassword = (EditText)findViewById(R.id.passwordLoginEditText);
         String email;
         boolean emailexists = false;
-        Toast.makeText(this,"singing google",Toast.LENGTH_SHORT).show();
         if(v.getId() == R.id.loginButton){
             email = ETemail.getText().toString();
             String password = ETpassword.getText().toString();
@@ -104,10 +103,10 @@ public class SignInActivity extends AppCompatActivity {
             if (email.isEmpty())
                 Toast.makeText(this, "Empty email", Toast.LENGTH_SHORT).show();
             else {
-                if (emailexists)
-                    startActivity(new Intent(this, ForgetPasswordActivity.class));
-                else
-                    Toast.makeText(this, "Invalid Email Address.", Toast.LENGTH_SHORT).show();
+                //if (emailexists)
+                //startActivity(new Intent(this, ForgetPasswordActivity.class));
+                //else
+                //Toast.makeText(this, "Invalid Email Address.", Toast.LENGTH_SHORT).show();
 
             }
         }

@@ -26,6 +26,12 @@
     <string name="securityQuestion">Security Question</string>
     <string name="securityAnswer">Security Answer</string>
     <string name="contactNumber">Phone Number</string>
+    <string name="userType">User Type</string>
+
+    <array name="userType">
+        <item>Standard</item>
+        <item>Guardian</item>
+    </array>
 
     <array name="securityQuestionsArray">
         <item>What is the name of your first pet?</item>
@@ -59,6 +65,9 @@
     //Forget Password Screen
     <string name="asksecurityquestion"> Security Question </string>
     <string name="secutityquestionanswer"> Enter The Answer </string>
+    <string name="forgot_password_msg">Please enter the email Address for us to send your Reset Password Instructions.</string>
+    <string name="resetPassword">Reset Password</string>
+
 
 
 

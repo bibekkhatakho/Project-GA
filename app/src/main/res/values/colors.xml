@@ -10,4 +10,6 @@
     <color name="black">#000000</color>
     <color name="offWhite">#fdfdfd</color>
     <color name="colorButton">#fdfdfd</color>
+    <color name="blue">#478fcb</color>
+    <color name="purple">#903f98</color>
 </resources>

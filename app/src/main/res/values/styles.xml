@@ -30,6 +30,15 @@
         <item name="android:layout_marginLeft">30dp</item>
     </style>
 
+    <style name="fancyButtonProfile">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
+
     <style name="textfieldbox">
         <item name="android:background">@drawable/textbox</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
