@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -109,8 +110,9 @@ public class MainMenuActivity extends CoreActivity {
             }
         });
 
+        FirebaseUser user = firebaseAuth.getCurrentUser();
         String name = preferences.getString(Preferences.NAME, "");
-        String email = preferences.getString(Preferences.EMAIL, "");
+        String email = user.getEmail();
         final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
 
         headerResult = new AccountHeaderBuilder()
