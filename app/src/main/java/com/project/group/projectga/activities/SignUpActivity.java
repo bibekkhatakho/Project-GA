@@ -3,6 +3,7 @@ package com.project.group.projectga.activities;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
+import android.content.Context;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,8 +64,9 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     //Future reference for Firebase Authentication
     private FirebaseAuth firebaseAuth;
 
-    DatabaseReference databaseReference;
+    public static final String Name = "nameKey";
 
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,7 +85,6 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         confirmPasswordTextEditText.setOnFocusChangeListener(this);
 
         nextButton.setOnClickListener(this);
-
     }
 
     @Override
@@ -164,6 +166,10 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         } else {
             fullNameTextInputLayout.setError(null);
         }
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(Name, fullName);
+        editor.commit();
         return valid;
     }
 
@@ -202,8 +208,6 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         }
         return true;
     }
-
-
 
     @Override
     public void onStart() {

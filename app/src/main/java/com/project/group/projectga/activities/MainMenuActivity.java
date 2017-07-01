@@ -1,5 +1,6 @@
 package com.project.group.projectga.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -60,6 +61,7 @@ public class MainMenuActivity extends CoreActivity {
     DatabaseReference databaseReference;
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
+    public static final String Name = "nameKey";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,8 +78,6 @@ public class MainMenuActivity extends CoreActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_gaFragments, home_fragment);
         transaction.commit();
-
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (getUid() != null) {
             String userId = getUid();
@@ -111,7 +111,11 @@ public class MainMenuActivity extends CoreActivity {
         });
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        String name = preferences.getString(Preferences.NAME, "");
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String name = pref.getString(Name, "Name goes here.");//"No name defined" is the default value.
         String email = user.getEmail();
         final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
 
