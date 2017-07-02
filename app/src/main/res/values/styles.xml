@@ -31,7 +31,7 @@
     </style>
 
     <style name="fancyButtonProfile">
-        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_width">110dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>

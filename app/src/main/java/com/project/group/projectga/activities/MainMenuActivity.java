@@ -1,5 +1,6 @@
 package com.project.group.projectga.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -68,7 +69,6 @@ public class MainMenuActivity extends CoreActivity {
 
     public static final String Name = "nameKey";
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,8 +130,6 @@ public class MainMenuActivity extends CoreActivity {
                 Picasso.with(imageView.getContext()).cancelRequest(imageView);
             }
         });
-
-        FirebaseUser user = firebaseAuth.getCurrentUser();
 
         String name = preferences.getString(Preferences.NAME, "");
         String email = preferences.getString(Preferences.EMAIL, "");

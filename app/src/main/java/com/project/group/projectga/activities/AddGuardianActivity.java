@@ -106,8 +106,8 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
                 if(profile != null) {
                     editor.putString(Preferences.NAME, profile.getFullName());
                     editor.putString(Preferences.EMAIL, profile.getEmail());
+                    editor.putString(Preferences.USER_TYPE, profile.getUserType());
                 }
-                editor.putString(Preferences.USER_TYPE, profile.getUserType());
                 editor.putString(Preferences.USERID, getUid());
                 editor.apply();
 
