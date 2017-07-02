@@ -23,8 +23,6 @@
     //Sign Up - Second Screen
     <string name="contactDetails">Contact Details</string>
     <string name="dateOfBirth">Date of Birth</string>
-    <string name="securityQuestion">Security Question</string>
-    <string name="securityAnswer">Security Answer</string>
     <string name="contactNumber">Phone Number</string>
     <string name="userType">User Type</string>
 
@@ -32,17 +30,6 @@
         <item>Standard</item>
         <item>Guardian</item>
     </array>
-
-    <array name="securityQuestionsArray">
-        <item>What is the name of your first pet?</item>
-        <item>In what city you got your first job?</item>
-        <item>What is your Mother\'s maiden name?</item>
-        <item>Who is your childhood sports hero?</item>
-        <item>What is your favorite restaurant?</item>
-        <item>What is the make or model of your first car?</item>
-        <item>Which street is your grocery store located?</item>
-    </array>
-
 
     //Sign Up - Final Screen
     <string name="addGuardian"> Add Guardian </string>
@@ -69,8 +56,15 @@
     <string name="resetPassword">Reset Password</string>
 
 
-
-
+    //Profile Screen
+    <string name="updatePhoto">Update Photo</string>
+    <string name="displayName">Display Name</string>
+    <string name="aboutLabel">About You</string>
+    <string name="guardianLabel">Your Guardian</string>
+    <string name="tempName">User Name</string>
+    <string name="tempEmail">User@Email.com</string>
+    <string name="tempDate">12/31/1999</string>
+    <string name="tempPhone">(555)555-5555</string>
 
 
 </resources>

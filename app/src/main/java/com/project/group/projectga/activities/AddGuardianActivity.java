@@ -47,7 +47,6 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
     String userEmailAddress;
     String guardianUserEmail;
     String fullName;
-    String userType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,39 +81,33 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
         showProgressDialog("Saving...");
 
         Intent intent = getIntent();
-
         fullName = intent.getStringExtra("fullName");
         userEmailAddress = intent.getStringExtra("userEmailAddress");
         String phoneNumber = intent.getStringExtra("phoneNumber");
         String dateOfBirth = intent.getStringExtra("dateofBirth");
-        String securityAnswer = intent.getStringExtra("securityAnswer");
-        String securityQuestion = intent.getStringExtra("securityQuestion");
-        userType = intent.getStringExtra("userType");
+        String userType = intent.getStringExtra("userType");
         guardianUserEmail = addGuardianEmailTextInputEditText.getText().toString().trim();
 
         if (!validateForm(guardianUserEmail, userEmailAddress)) {
             hideProgressDialog();
             return;
         }
-
-        databaseReference.child("fullName").setValue(fullName);
         databaseReference.child("phoneNumber").setValue(phoneNumber);
         databaseReference.child("dateOfBirth").setValue(dateOfBirth);
-        databaseReference.child("securityAnswer").setValue(securityAnswer);
-        databaseReference.child("securityQuestion").setValue(securityQuestion);
-        databaseReference.child("guardianUserEmail").setValue(guardianUserEmail);
+        databaseReference.child("guardianEmail").setValue(guardianUserEmail);
         databaseReference.child("userType").setValue(userType);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Profile profile = dataSnapshot.getValue(Profile.class);
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(AddGuardianActivity.this);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 if(profile != null) {
                     editor.putString(Preferences.NAME, profile.getFullName());
                     editor.putString(Preferences.EMAIL, profile.getEmail());
                 }
+                editor.putString(Preferences.USER_TYPE, profile.getUserType());
                 editor.putString(Preferences.USERID, getUid());
                 editor.apply();
 
@@ -135,9 +128,9 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
                                     //do some magic
                                     Log.d("Email", "Sent Success");
                                     Intent intent = new Intent(AddGuardianActivity.this, MainMenuActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
-                                    finish();
+//                                    finish();
                                 }
                             })
                             .withOnFailCallback(new BackgroundMail.OnFailCallback() {
@@ -159,11 +152,6 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
 
         hideProgressDialog();
         Toast.makeText(this, "Profile Created!", Toast.LENGTH_SHORT).show();
-//        Intent mainMenuIntent = new Intent(AddGuardianActivity.this, MainMenuActivity.class);
-//        mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//        mainMenuIntent.putExtra("userType", userType);
-//        startActivity(mainMenuIntent);
-//        finish();
     }
 
     private boolean validateForm(String guardianEmailAddress, String userEmailAddress) {

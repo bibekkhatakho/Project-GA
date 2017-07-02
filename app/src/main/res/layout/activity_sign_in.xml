@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/loginbackground"
     >
 
     <ImageView
@@ -16,50 +15,42 @@
         android:background="@drawable/logo"
         android:foregroundGravity="center" />
 
-
-
-
-
     <android.support.design.widget.TextInputLayout
-
+        android:id="@+id/emailLoginTextInputLayout"
+        style="@style/textfieldbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/textfieldbox"
-        android:layout_marginTop="2dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        >
+        android:layout_marginTop="30dp">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/emailLoginEditText"
+            android:id="@+id/emailLoginTextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/emailAddress"
-            android:drawableStart="@drawable/ic_email_black_24dp"
-            android:drawableTint="@color/colorPrimaryDark"
+            android:background="@null"
             android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_email_black_24dp"
+            android:hint="@string/emailAddress"
             android:inputType="textEmailAddress"
-            tools:ignore="MissingPrefix,UnusedAttribute"
-            />
+            tools:ignore="MissingPrefix,UnusedAttribute" />
 
     </android.support.design.widget.TextInputLayout>
 
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/passwordTextInputLayout"
+        android:id="@+id/passwordLoginInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/textfieldbox"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        >
+        android:layout_marginLeft="10dp">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/passwordLoginEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
+            android:background="@null"
             android:drawableStart="@drawable/ic_lock_outline_black_24dp"
             android:drawableTint="@color/colorPrimaryDark"
             android:drawablePadding="10dp"
@@ -68,11 +59,6 @@
             android:shadowDx="5"/>
 
     </android.support.design.widget.TextInputLayout>
-
-
-
-
-
 
     <RelativeLayout
         android:id="@+id/LayoutForlogin"
@@ -133,8 +119,4 @@
         android:layout_marginTop="17dp"
         android:onClick="onClick"
         />
-
-
-
-
 </LinearLayout>

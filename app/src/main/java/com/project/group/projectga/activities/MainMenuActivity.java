@@ -8,13 +8,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +38,7 @@ import com.project.group.projectga.fragments.BackupFragment;
 import com.project.group.projectga.fragments.GalleryFragment;
 import com.project.group.projectga.fragments.GamesPuzzlesFragment;
 import com.project.group.projectga.fragments.HomeFragment;
+import com.project.group.projectga.fragments.HomeGuardianFragment;
 import com.project.group.projectga.fragments.MapsFragment;
 import com.project.group.projectga.fragments.ProfileFragment;
 import com.project.group.projectga.fragments.RecognitionFragment;
@@ -63,6 +64,10 @@ public class MainMenuActivity extends CoreActivity {
     DatabaseReference databaseReference;
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
+    boolean profileFlag, homeFlag = true;
+
+    public static final String Name = "nameKey";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,8 +77,28 @@ public class MainMenuActivity extends CoreActivity {
 
         setSupportActionBar(toolbar);
 
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final String userType = preferences.getString(Preferences.USER_TYPE, "");
+
         gaFragmentStack = new Stack<>();
 
+        if(userType.equalsIgnoreCase("Standard")) {
+            Fragment home_fragment = new HomeFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_gaFragments, home_fragment);
+            transaction.commit();
+        }else{
+            Fragment home_guardian_fragment = new HomeGuardianFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_gaFragments, home_guardian_fragment);
+            transaction.commit();
+        }
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            profileFlag = extras.getBoolean("profileFlag");
+            homeFlag = extras.getBoolean("homeFlag");
+        }
 
         if (getUid() != null) {
             String userId = getUid();
@@ -83,15 +108,6 @@ public class MainMenuActivity extends CoreActivity {
         } else {
             onAuthFailure();
         }
-
-        Fragment home_fragment = new HomeFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container_gaFragments, home_fragment);
-        transaction.commit();
-
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-
 
         final PrimaryDrawerItem home = new PrimaryDrawerItem().withName("Home").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_home);
         final PrimaryDrawerItem profile = new PrimaryDrawerItem().withName("Profile").withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_account);
@@ -115,6 +131,8 @@ public class MainMenuActivity extends CoreActivity {
             }
         });
 
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
         String name = preferences.getString(Preferences.NAME, "");
         String email = preferences.getString(Preferences.EMAIL, "");
         final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
@@ -131,6 +149,8 @@ public class MainMenuActivity extends CoreActivity {
                     }
                 })
                 .build();
+
+        if(userType !=null && userType.equalsIgnoreCase("Standard")) {
 
             result = new DrawerBuilder()
                     .withActivity(this)
@@ -153,6 +173,26 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(logout)
                     .buildForFragment();
 
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile profile = dataSnapshot.getValue(Profile.class);
+                    String profilePic = profile.getProfile();
+                    if (profilePic != null && !profilePic.equals("")) {
+                        userProfile.withIcon(profilePic);
+                        headerResult.updateProfile(userProfile);
+                    } else {
+                        userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
+                        headerResult.updateProfile(userProfile);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -163,9 +203,15 @@ public class MainMenuActivity extends CoreActivity {
                     switch (drawItemId) {
 
                         case 1:
-                            fragment = new HomeFragment();
-                            gaFragmentStack.add(home);
-                            break;
+                            if(userType != null && userType.equalsIgnoreCase("Standard")) {
+                                fragment = new HomeFragment();
+                                gaFragmentStack.add(home);
+                                break;
+                            }else {
+                                fragment = new HomeGuardianFragment();
+                                gaFragmentStack.add(home);
+                                break;
+                            }
                         case 2:
                             fragment = new ProfileFragment();
                             gaFragmentStack.add(profile);
@@ -215,6 +261,100 @@ public class MainMenuActivity extends CoreActivity {
                     return false;
                 }
             });
+
+        }else {
+            result = new DrawerBuilder()
+                    .withActivity(this)
+                    .withAccountHeader(headerResult)
+                    .withToolbar(toolbar)
+                    .withDisplayBelowStatusBar(false)
+                    .withTranslucentStatusBar(true)
+                    .withSavedInstance(savedInstanceState)
+                    .withActionBarDrawerToggle(true)
+                    .withActionBarDrawerToggleAnimated(true)
+                    .addDrawerItems(home)
+                    .addDrawerItems(profile)
+                    .addDrawerItems(maps)
+                    .addDrawerItems(backup)
+                    .addDrawerItems(new DividerDrawerItem())
+                    .addDrawerItems(logout)
+                    .buildForFragment();
+
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile profile = dataSnapshot.getValue(Profile.class);
+                    String profilePic = profile.getProfile();
+                    if (profilePic != null && !profilePic.equals("")) {
+                        userProfile.withIcon(profilePic);
+                        headerResult.updateProfile(userProfile);
+                    } else {
+                        userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
+                        headerResult.updateProfile(userProfile);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+            result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                @Override
+                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+
+                    int drawItemId = (int) drawerItem.getIdentifier();
+                    Intent intent;
+                    Fragment fragment;
+                    switch (drawItemId) {
+
+                        case 1:
+                            if(userType !=null && userType.equalsIgnoreCase("Standard")) {
+                                fragment = new HomeFragment();
+                                gaFragmentStack.add(home);
+                                break;
+                            }else {
+                                fragment = new HomeGuardianFragment();
+                                gaFragmentStack.add(home);
+                                break;
+                            }
+                        case 2:
+                            fragment = new ProfileFragment();
+                            gaFragmentStack.add(profile);
+                            break;
+                        case 5:
+                            fragment = new MapsFragment();
+                            gaFragmentStack.add(maps);
+                            break;
+                        case 8:
+                            fragment = new BackupFragment();
+                            gaFragmentStack.add(backup);
+                            break;
+                        default:
+                            fragment = new HomeFragment();
+                            break;
+                    }
+                    if (drawItemId == 9) {
+                        FirebaseAuth.getInstance().signOut();
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.apply();
+                        intent = new Intent(MainMenuActivity.this, SplashScreen.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.container_gaFragments, fragment);
+                    transaction.commit();
+                    return false;
+                }
+            });
+        }
+
     }
     private void onAuthFailure() {
         Intent intent = new Intent(MainMenuActivity.this, SplashScreen.class);

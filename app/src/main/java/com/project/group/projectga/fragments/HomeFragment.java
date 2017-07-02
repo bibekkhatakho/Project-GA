@@ -1,6 +1,8 @@
 package com.project.group.projectga.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.group.projectga.R;
+import com.project.group.projectga.preferences.Preferences;
 
 public class HomeFragment extends Fragment {
     Toolbar toolbar;
@@ -31,6 +34,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.homeScreen));
+        initControls(view);
         return view;
     }
 
@@ -110,5 +114,6 @@ public class HomeFragment extends Fragment {
                     ft.commit();
                 }
             });
+        }
+
     }
-}

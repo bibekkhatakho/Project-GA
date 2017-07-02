@@ -6,27 +6,41 @@ public class Profile {
     private String userId;
     private String email;
 
-    private String phone;
+    private String phoneNumber;
     private String dateOfBirth;
-
-    private String securityQuestion;
-    private String securityAnswer;
 
     private String userType;
     private String guardianEmail;
+    private String profile;
 
     public Profile() {
     }
 
-    public Profile(String fullName, String userType, String userId, String email, String phone, String dateOfBirth, String securityQuestion, String securityAnswer, String guardianEmail) {
+    public Profile(String fullName,String profile, String userType, String userId, String email, String phoneNumber, String dateOfBirth, String guardianEmail) {
         this.fullName = fullName;
         this.userId = userId;
         this.email = email;
-        this.phone = phone;
+        this.phoneNumber = phoneNumber;
+        this.userType = userType;
         this.dateOfBirth = dateOfBirth;
-        this.securityQuestion = securityQuestion;
-        this.securityAnswer = securityAnswer;
         this.guardianEmail = guardianEmail;
+        this.profile = profile;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     public String getUserType() {
@@ -61,36 +75,12 @@ public class Profile {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getDateOfBirth() {
         return dateOfBirth;
     }
 
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getSecurityQuestion() {
-        return securityQuestion;
-    }
-
-    public void setSecurityQuestion(String securityQuestion) {
-        this.securityQuestion = securityQuestion;
-    }
-
-    public String getSecurityAnswer() {
-        return securityAnswer;
-    }
-
-    public void setSecurityAnswer(String securityAnswer) {
-        this.securityAnswer = securityAnswer;
     }
 
     public String getGuardianEmail() {

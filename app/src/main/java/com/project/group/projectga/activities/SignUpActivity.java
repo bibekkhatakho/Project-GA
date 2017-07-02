@@ -22,7 +22,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.project.group.projectga.R;
-import com.satsuware.usefulviews.LabelledSpinner;
 
 import java.util.regex.Pattern;
 
@@ -49,24 +48,14 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     protected TextInputEditText confirmPasswordTextEditText;
     @BindView(R.id.nextButton)
     protected FloatingActionButton nextButton;
-    @BindView(R.id.userTypeSpinner)
-    protected LabelledSpinner userTypeSpinner;
+
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
-
-    protected String fullName;
-    //String reference of password
-    protected String email;
-    //String reference of password
-    protected String password;
-    //String reference of confirmpassword
-    protected String confirmPassword;
-    //Future reference for Firebase Authentication
     private FirebaseAuth firebaseAuth;
 
-    String userType = "Standard";
     DatabaseReference databaseReference;
 
+    String fullName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,19 +67,6 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         setSupportActionBar(toolbar);
-
-        userTypeSpinner.setLabelText(R.string.userType);
-        userTypeSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
-            @Override
-            public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
-                userType = adapterView.getSelectedItem().toString();
-            }
-
-            @Override
-            public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
-                userType = adapterView.getSelectedItem().toString();
-            }
-        });
 
         fullNameTextInputEditText.setOnFocusChangeListener(this);
         emailTextEditText.setOnFocusChangeListener(this);
@@ -113,9 +89,9 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     private void authUser()
     {
         fullName = fullNameTextInputEditText.getText().toString().trim();
-        email = emailTextEditText.getText().toString().trim();
-        password = passwordTextEditText.getText().toString().trim();
-        confirmPassword = confirmPasswordTextEditText.getText().toString().trim();
+        String email = emailTextEditText.getText().toString().trim();
+        String password = passwordTextEditText.getText().toString().trim();
+        String confirmPassword = confirmPasswordTextEditText.getText().toString().trim();
 
         if (!validateFullName(fullName)) {
             return;
@@ -155,7 +131,6 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         writeNewUser(user.getUid(), user.getEmail());
         Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
         contactIntent.putExtra("fullName", fullName);
-        contactIntent.putExtra("userType", userType);
         startActivity(contactIntent);
         finish();
     }
@@ -163,10 +138,10 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     private void writeNewUser(String userId, String email) {
 
         databaseReference.child("users").child(userId);
+        databaseReference.child("users").child(userId).child("fullName").setValue(fullName);
         databaseReference.child("users").child(userId).child("email").setValue(email);
         Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
         contactIntent.putExtra("fullName", fullName);
-        contactIntent.putExtra("userType", userType);
         contactIntent.putExtra("emailAddress", email);
         startActivity(contactIntent);
         finish();

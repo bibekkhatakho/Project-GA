@@ -34,12 +34,40 @@
             android:paddingRight="10dp"
             android:layout_marginTop="20dp">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/textbox"
+                android:foreground="?android:attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/userTypeIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/userType"
+                    android:src="@drawable/ic_fingerprint_black_24dp"
+                    android:layout_gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"/>
+
+                <com.satsuware.usefulviews.LabelledSpinner
+                    android:id="@+id/userTypeSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:spinnerEntries="@array/userType"
+                    ls:labelText="@string/userType" />
+
+            </LinearLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/phoneNumberTextInputLayout"
                 style="@style/textfieldbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="30dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/phoneNumberTextInputEditText"
@@ -47,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:background="@null"
+                    android:padding="10dp"
                     android:drawableStart="@drawable/ic_phone_black_24dp"
                     android:hint="@string/contactNumber"
                     android:inputType="number"
@@ -60,63 +89,18 @@
                 style="@style/textfieldbox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="30dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/dateofBirthTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
+                    android:padding="10dp"
                     android:drawableStart="@drawable/ic_cake_black_24dp"
                     android:background="@null"
                     android:hint="@string/dateOfBirth"
                     android:inputType="date"
-                    tools:ignore="MissingPrefix,UnusedAttribute" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/textbox"
-                android:foreground="?android:attr/selectableItemBackground">
-                
-                <ImageView
-                    android:id="@+id/securityQuestionIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/securityQuestion"
-                    android:src="@drawable/ic_lock_outline_black_24dp"
-                    android:layout_gravity="center"
-                    android:paddingTop="10dp"/>
-
-            <com.satsuware.usefulviews.LabelledSpinner
-                android:id="@+id/securityQuestionSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:spinnerEntries="@array/securityQuestionsArray"
-                ls:labelText="@string/securityQuestion" />
-
-            </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/securityAnswerTextInputLayout"
-                style="@style/textfieldbox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/securityAnswerTextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
-                    android:drawableStart="@drawable/ic_lock_open_black_24dp"
-                    android:background="@null"
-                    android:hint="@string/securityAnswer"
-                    android:inputType="textPassword"
                     tools:ignore="MissingPrefix,UnusedAttribute" />
 
             </android.support.design.widget.TextInputLayout>

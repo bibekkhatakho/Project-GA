@@ -34,6 +34,8 @@ import butterknife.ButterKnife;
 
 public class ContactDetailsActivity extends CoreActivity implements View.OnClickListener, View.OnFocusChangeListener{
 
+    @BindView(R.id.userTypeSpinner)
+    protected LabelledSpinner userTypeSpinner;
     @BindView(R.id.phoneNumberTextInputLayout)
     protected TextInputLayout phoneNumberTextInputLayout;
     @BindView(R.id.phoneNumberTextInputEditText)
@@ -42,17 +44,11 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
     protected TextInputLayout dateOfBirthTextInputLayout;
     @BindView(R.id.dateofBirthTextInputEditText)
     protected TextInputEditText dateofBirthTextInputEditText;
-    @BindView(R.id.securityQuestionSpinner)
-    protected LabelledSpinner securityQuestionSpinner;
-    @BindView(R.id.securityAnswerTextInputLayout)
-    protected TextInputLayout securityAnswerTextInputLayout;
-    @BindView(R.id.securityAnswerTextInputEditText)
-    protected TextInputEditText securityAnswerTextInputEditText;
     @BindView(R.id.nextButtonContact)
     protected FloatingActionButton nextButtonGuardian;
 
-    String securityQuestion = "What is the name of your first pet?";
 
+    String userType = "Standard";
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
 
@@ -61,6 +57,19 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_details);
         ButterKnife.bind(this);
+
+        userTypeSpinner.setLabelText(R.string.userType);
+        userTypeSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
+            @Override
+            public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
+                userType = adapterView.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
+                userType = adapterView.getSelectedItem().toString();
+            }
+        });
 
         if (getUid() != null) {
             String userId = getUid();
@@ -72,21 +81,6 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         }
 
         phoneNumberTextInputEditText.setOnFocusChangeListener(this);
-
-        securityQuestionSpinner.setLabelText(R.string.securityQuestion);
-        securityQuestionSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
-            @Override
-            public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
-
-                securityQuestion = adapterView.getSelectedItem().toString();
-
-            }
-
-            @Override
-            public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
-                securityQuestion = adapterView.getSelectedItem().toString();
-            }
-        });
 
             nextButtonGuardian.setOnClickListener(this);
             dateofBirthTextInputEditText.setOnClickListener(new View.OnClickListener() {
@@ -133,13 +127,11 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
         String fullName = intent.getStringExtra("fullName");
         String userEmailAddress = intent.getStringExtra("emailAddress");
-        String userType = intent.getStringExtra("userType");
 
         String phoneNumber = phoneNumberTextInputEditText.getText().toString().trim();
         String dateOfBirth = dateofBirthTextInputEditText.getText().toString().trim();
-        String securityAnswer = securityAnswerTextInputEditText.getText().toString().trim();
 
-        if (!validateForm(phoneNumber, dateOfBirth, securityAnswer)) {
+        if (!validateForm(phoneNumber, dateOfBirth)) {
             hideProgressDialog();
             return;
         }
@@ -154,28 +146,24 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             guardianIntent.putExtra("phoneNumber", phoneNumber);
             guardianIntent.putExtra("dateofBirth", dateOfBirth);
             guardianIntent.putExtra("userType", userType);
-            guardianIntent.putExtra("securityAnswer", securityAnswer);
-            guardianIntent.putExtra("securityQuestion", securityQuestion);
             startActivity(guardianIntent);
             finish();
         }else{
-            databaseReference.child("fullName").setValue(fullName);
             databaseReference.child("phoneNumber").setValue(phoneNumber);
             databaseReference.child("dateOfBirth").setValue(dateOfBirth);
-            databaseReference.child("securityAnswer").setValue(securityAnswer);
-            databaseReference.child("securityQuestion").setValue(securityQuestion);
             databaseReference.child("userType").setValue(userType);
 
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Profile profile = dataSnapshot.getValue(Profile.class);
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContactDetailsActivity.this);
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = preferences.edit();
                     if(profile != null) {
                         editor.putString(Preferences.NAME, profile.getFullName());
                         editor.putString(Preferences.EMAIL, profile.getEmail());
                     }
+                    editor.putString(Preferences.USER_TYPE, profile.getUserType());
                     editor.putString(Preferences.USERID, getUid());
                     editor.apply();
                 }
@@ -189,16 +177,16 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             hideProgressDialog();
             Toast.makeText(this, "Profile Created", Toast.LENGTH_SHORT).show();
             Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
-            mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//            mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(mainMenuIntent);
-            finish();
+//            finish();
         }
 
 
     }
-    private boolean validateForm(String phone, String dob, String secAnswer) {
+    private boolean validateForm(String phone, String dob) {
         boolean valid = true;
-        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(dob) || TextUtils.isEmpty(secAnswer)) {
+        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(dob)) {
             valid = false;
         }
         if(!isValidPhoneNumber(phone)){
@@ -236,7 +224,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
             case R.id.phoneNumberTextInputEditText:
                 if (!hasFocus) {
-                    validateForm(phoneNumberTextInputEditText.getText().toString().trim(), dateofBirthTextInputEditText.getText().toString().trim(), securityAnswerTextInputEditText.getText().toString().trim());
+                    validateForm(phoneNumberTextInputEditText.getText().toString().trim(), dateofBirthTextInputEditText.getText().toString().trim());
                 } else {
                     phoneNumberTextInputLayout.setError(null);
                 }
