@@ -157,7 +157,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Profile profile = dataSnapshot.getValue(Profile.class);
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContactDetailsActivity.this);
                     SharedPreferences.Editor editor = preferences.edit();
                     if(profile != null) {
                         editor.putString(Preferences.NAME, profile.getFullName());

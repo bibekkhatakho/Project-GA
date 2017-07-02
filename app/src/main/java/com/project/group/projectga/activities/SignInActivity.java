@@ -146,7 +146,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         Profile profile = dataSnapshot.getValue(Profile.class);
                                         Log.e("key", dataSnapshot.getKey());
-                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
                                         if(profile !=null){
                                             editor.putString(Preferences.EMAIL, profile.getEmail());

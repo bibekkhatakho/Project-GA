@@ -77,7 +77,7 @@ public class MainMenuActivity extends CoreActivity {
 
         setSupportActionBar(toolbar);
 
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
         final String userType = preferences.getString(Preferences.USER_TYPE, "");
 
         gaFragmentStack = new Stack<>();
