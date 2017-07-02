@@ -37,10 +37,10 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photoEditLayout">
+            app:layout_constraintTop_toBottomOf="@+id/photoCircle"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -84,45 +84,14 @@
         </android.support.v7.widget.CardView>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/photoEditLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/cardView"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photoCircle">
-
-            <ImageView
-                android:id="@+id/addIcon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:tint="@color/colorAccent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_add_black_24dp" />
-
-            <TextView
-                android:id="@+id/updatePhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/updatePhoto"
-                android:textColor="@color/material_drawer_dark_background"
-                android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/addIcon"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
             android:id="@+id/photoCircle"
             android:layout_width="128dp"
             android:layout_height="128dp"
-            app:layout_constraintBottom_toTopOf="@+id/photoEditLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileBackground">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp">
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/circularPhoto"
