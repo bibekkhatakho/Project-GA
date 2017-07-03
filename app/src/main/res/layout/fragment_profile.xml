@@ -186,7 +186,7 @@
             android:layout_marginStart="32dp"
             android:enabled="false"
             android:text="@string/fullName"
-            android:textColor="@color/textViewColor"
+            android:textColor="@color/textInputEditTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/nameIcon"
             app:layout_constraintLeft_toRightOf="@+id/nameIcon"
             app:layout_constraintTop_toTopOf="@+id/nameIcon" />
@@ -257,7 +257,7 @@
             android:layout_marginStart="32dp"
             android:enabled="false"
             android:text="@string/contactNumber"
-            android:textColor="@color/textViewColor"
+            android:textColor="@color/textInputEditTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/phoneIcon"
             app:layout_constraintLeft_toRightOf="@+id/phoneIcon"
             app:layout_constraintTop_toTopOf="@+id/phoneIcon" />
