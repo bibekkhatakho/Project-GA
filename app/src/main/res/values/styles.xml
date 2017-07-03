@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">#ABADB0</item>
     </style>
 
 
@@ -45,17 +46,6 @@
         <item name="android:padding">10dp</item>
     </style>
 
-
-    <style name="spinner_style">
-    <item name="android:background">@drawable/ic_lock_outline_black_24dp</item>
-    <item name="android:layout_marginLeft">10dp</item>
-    <item name="android:layout_marginRight">10dp</item>
-    <item name="android:layout_marginBottom">10dp</item>
-    <item name="android:paddingLeft">8dp</item>
-    <item name="android:paddingTop">5dp</item>
-    <item name="android:paddingBottom">5dp</item>
-    </style>
-
     <style name="text_fab">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/colorAccent</item>
@@ -63,6 +53,14 @@
         <item name="android:paddingStart">30dp</item>
         <item name="android:paddingEnd">10dp</item>
         <item name="android:paddingTop">15dp</item>
+    </style>
+
+    <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#ABADB0</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/textInputEditTextColor</item>
     </style>
 
 </resources>

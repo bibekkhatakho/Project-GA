@@ -186,8 +186,8 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
             Intent intent = new Intent(SignInActivity.this,ResetPasswordActivity.class);
             startActivity(intent);
             finish();
-            }
         }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

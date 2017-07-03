@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
@@ -82,32 +83,32 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
         phoneNumberTextInputEditText.setOnFocusChangeListener(this);
 
-            nextButtonGuardian.setOnClickListener(this);
-            dateofBirthTextInputEditText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Calendar calendar = Calendar.getInstance();
-                    int mYear = calendar.get(Calendar.YEAR);
-                    int mMonth = calendar.get(Calendar.MONTH);
-                    int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        nextButtonGuardian.setOnClickListener(this);
+        dateofBirthTextInputEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int mYear = calendar.get(Calendar.YEAR);
+                int mMonth = calendar.get(Calendar.MONTH);
+                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(ContactDetailsActivity.this,
-                            new DatePickerDialog.OnDateSetListener() {
-                                @Override
-                                public void onDateSet(DatePicker view, int year,
-                                                      int monthOfYear, int dayOfMonth) {
-                                    Calendar calendar = Calendar.getInstance();
-                                    calendar.set(year, monthOfYear, dayOfMonth);
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy");
-                                    String startDate = dateFormat.format(calendar.getTime());
-                                    // TODO: 4/11/17 Deleted the filter for startDate - Added in validateForm() method
-                                    dateofBirthTextInputEditText.setText(startDate);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ContactDetailsActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(year, monthOfYear, dayOfMonth);
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy");
+                                String startDate = dateFormat.format(calendar.getTime());
+                                // TODO: 4/11/17 Deleted the filter for startDate - Added in validateForm() method
+                                dateofBirthTextInputEditText.setText(startDate);
 
-                                }
-                            }, mYear, mMonth, mDay);
-                    datePickerDialog.show();
-                }
-            });
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
     }
 
     @Override

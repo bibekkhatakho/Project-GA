@@ -21,12 +21,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="20dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/toolbar"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,116 +34,139 @@
             android:gravity="center"
             android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:background="@drawable/logo"
-            android:contentDescription="@string/app_name"
-            android:layout_gravity="start|center"/>
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/emailLoginTextInputLayout"
-            style="@style/textfieldbox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/emailLoginTextInputEditText"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:drawablePadding="10dp"
-                android:drawableStart="@drawable/ic_email_black_24dp"
-                android:hint="@string/emailAddress"
-                android:inputType="textEmailAddress"
-                tools:ignore="MissingPrefix,UnusedAttribute" />
+                android:orientation="vertical">
 
-        </android.support.design.widget.TextInputLayout>
+                <ImageView
+                    android:id="@+id/projectgalogo"
+                    android:layout_width="225dp"
+                    android:layout_height="225dp"
+                    android:src="@drawable/logoga"
+                    tools:ignore="ContentDescription" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/passwordLoginInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/textfieldbox">
+                <TextView
+                    android:id="@+id/projectgaText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/googleAlzheimer"
+                    android:gravity="center"
+                    android:layout_alignBottom="@id/projectgalogo"
+                    android:layout_alignTop="@id/projectgalogo"
+                    android:layout_alignStart="@id/projectgalogo"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="110dp"
+                    android:textColor="@color/appNameColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/passwordLoginEditText"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/emailLoginTextInputLayout"
+                style="@style/textfieldbox"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/emailLoginTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="@color/textInputEditTextColor"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/ic_email_black_24dp"
+                    android:hint="@string/emailAddress"
+                    android:inputType="textEmailAddress"
+                    tools:ignore="MissingPrefix,UnusedAttribute" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordLoginInputLayout"
+                style="@style/textfieldbox"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/passwordLoginEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:drawablePadding="10dp"
+                    android:textColor="@color/textInputEditTextColor"
+                    android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    tools:ignore="MissingPrefix,UnusedAttribute" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:background="@null"
-                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                android:drawablePadding="10dp"
-                android:inputType="textPassword"
-                tools:ignore="MissingPrefix,UnusedAttribute"
-                android:shadowDx="5"/>
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-        </android.support.design.widget.TextInputLayout>
+                <Button
+                    android:id="@+id/loginButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:background="@null"
+                    android:onClick="onClick"
+                    android:text="@string/login"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+                <Button
+                    android:id="@+id/forgotPasswordTextView"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="110dp"
+                    android:text="@string/forgotPassword"
+                    android:textAllCaps="false"
+                    android:textColor="@color/appNameColor"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
 
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/signupTV"
+                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                style="?android:attr/buttonBarButtonStyle"
-                android:text="@string/login"
-                android:textSize="20sp"
-                android:layout_gravity="start"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:paddingEnd="40dp"
+                android:paddingStart="20dp"
+                android:text="@string/signUp"
                 android:textAllCaps="false"
-                android:textColor="@color/colorAccent"
-                android:onClick="onClick"
+                android:textColor="@color/green"
+                android:textSize="22sp"
+
                 />
 
-        <Button
-            android:id="@+id/forgotPasswordTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="50dp"
-            android:paddingStart="95dp"
-            android:paddingEnd="10dp"
-            style="?android:attr/buttonBarButtonStyle"
-            android:textSize="20sp"
-            android:layout_gravity="end"
-            android:text="@string/forgotPassword"
-            android:textAllCaps="false"
-            android:textColor="@color/colorAccent" />
-
-        </LinearLayout>
-
-
-        <Button
-            android:id="@+id/signupTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="40dp"
-            android:text="@string/signUp"
-            android:textSize="22sp"
-            style="?android:attr/buttonBarButtonStyle"
-            android:textColor="@color/green"
-            android:textAllCaps="false"
-            android:layout_gravity="center_horizontal"
-
-            />
-
-        <Button
-            android:id="@+id/singinGoogleButton"
-            android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:background="@drawable/google"
-            android:layout_gravity="center"
-            android:layout_marginTop="17dp"
-            android:onClick="onClick"
-            />
+            <Button
+                android:id="@+id/singinGoogleButton"
+                android:layout_width="250dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="17dp"
+                android:background="@drawable/google"
+                android:onClick="onClick" />
 
         </LinearLayout>
     </ScrollView>

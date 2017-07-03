@@ -65,6 +65,7 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/phoneNumberTextInputLayout"
                 style="@style/textfieldbox"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
@@ -74,6 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
+                    android:textColor="@color/textInputEditTextColor"
                     android:background="@null"
                     android:padding="10dp"
                     android:drawableStart="@drawable/ic_phone_black_24dp"
@@ -87,6 +89,7 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/dateOfBirthTextInputLayout"
                 style="@style/textfieldbox"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
@@ -97,6 +100,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
                     android:padding="10dp"
+                    android:textColor="@color/textInputEditTextColor"
                     android:drawableStart="@drawable/ic_cake_black_24dp"
                     android:background="@null"
                     android:hint="@string/dateOfBirth"

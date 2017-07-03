@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -79,6 +80,7 @@ public class MainMenuActivity extends CoreActivity {
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
         final String userType = preferences.getString(Preferences.USER_TYPE, "");
+        Toast.makeText(this, userType , Toast.LENGTH_LONG).show();
 
         gaFragmentStack = new Stack<>();
 
