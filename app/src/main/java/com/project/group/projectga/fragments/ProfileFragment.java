@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment {
         toolbar.setTitle(getString(R.string.profile));
         toolbar.setVisibility(View.VISIBLE);
 
-       // guardianDividerLayout = (ConstraintLayout) view.findViewById(R.id.guardianDividerLayout);
+        // guardianDividerLayout = (ConstraintLayout) view.findViewById(R.id.guardianDividerLayout);
         //guardianLayout = (ConstraintLayout) view.findViewById(R.id.guardianLayout);
 
         circularProfilePhoto = (CircularImageView) view.findViewById(R.id.circularPhoto);
@@ -252,7 +252,6 @@ public class ProfileFragment extends Fragment {
                 if (profile != null) {
                     editor.putString(Preferences.NAME, profile.getFullName());
                     editor.putString(Preferences.EMAIL, profile.getEmail());
-                    editor.putString(Preferences.USER_TYPE, profile.getUserType());
                 }
                 editor.apply();
             }

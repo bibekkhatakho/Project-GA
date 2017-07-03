@@ -178,9 +178,9 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             hideProgressDialog();
             Toast.makeText(this, "Profile Created", Toast.LENGTH_SHORT).show();
             Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
-//            mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(mainMenuIntent);
-//            finish();
+            finish();
         }
 
 

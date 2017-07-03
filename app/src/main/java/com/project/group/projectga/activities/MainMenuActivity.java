@@ -84,17 +84,15 @@ public class MainMenuActivity extends CoreActivity {
 
         gaFragmentStack = new Stack<>();
 
-        if(userType.equalsIgnoreCase("Standard")) {
-            Fragment home_fragment = new HomeFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment home_fragment = new HomeFragment();
+        Fragment home_guardian_fragment = new HomeGuardianFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            if(userType.equalsIgnoreCase("Standard")) {
             transaction.replace(R.id.container_gaFragments, home_fragment);
-            transaction.commit();
         }else{
-            Fragment home_guardian_fragment = new HomeGuardianFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.container_gaFragments, home_guardian_fragment);
-            transaction.commit();
         }
+        transaction.commit();
 
         Bundle extras = getIntent().getExtras();
         if(extras != null){
