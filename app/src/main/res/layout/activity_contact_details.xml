@@ -35,10 +35,11 @@
             android:layout_marginTop="20dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="20dp"
+                android:padding="10dp"
                 android:background="@drawable/textbox"
                 android:foreground="?android:attr/selectableItemBackground">
 
@@ -53,12 +54,12 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"/>
 
-                <com.satsuware.usefulviews.LabelledSpinner
+                <Spinner
                     android:id="@+id/userTypeSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:spinnerEntries="@array/userType"
-                    ls:labelText="@string/userType" />
+                    android:layout_gravity="center"
+                    android:entries="@array/userType" />
 
             </LinearLayout>
 
@@ -68,7 +69,7 @@
                 app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="20dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/phoneNumberTextInputEditText"
@@ -77,11 +78,10 @@
                     android:drawablePadding="10dp"
                     android:textColor="@color/textInputEditTextColor"
                     android:background="@null"
-                    android:padding="10dp"
                     android:drawableStart="@drawable/ic_phone_black_24dp"
                     android:hint="@string/contactNumber"
                     android:inputType="number"
-                    android:maxLength="10"
+                    android:maxLength="14"
                     tools:ignore="MissingPrefix,UnusedAttribute" />
 
             </android.support.design.widget.TextInputLayout>
@@ -92,19 +92,19 @@
                 app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="20dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/dateofBirthTextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawablePadding="10dp"
-                    android:padding="10dp"
                     android:textColor="@color/textInputEditTextColor"
                     android:drawableStart="@drawable/ic_cake_black_24dp"
                     android:background="@null"
                     android:hint="@string/dateOfBirth"
                     android:inputType="date"
+                    android:focusable="false"
                     tools:ignore="MissingPrefix,UnusedAttribute" />
 
             </android.support.design.widget.TextInputLayout>

@@ -9,11 +9,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,18 +29,21 @@ import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
-import com.satsuware.usefulviews.LabelledSpinner;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ContactDetailsActivity extends CoreActivity implements View.OnClickListener, View.OnFocusChangeListener{
+import static java.lang.Thread.sleep;
+
+public class ContactDetailsActivity extends CoreActivity implements View.OnClickListener {
 
     @BindView(R.id.userTypeSpinner)
-    protected LabelledSpinner userTypeSpinner;
+    protected Spinner userTypeSpinner;
     @BindView(R.id.phoneNumberTextInputLayout)
     protected TextInputLayout phoneNumberTextInputLayout;
     @BindView(R.id.phoneNumberTextInputEditText)
@@ -47,11 +54,12 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
     protected TextInputEditText dateofBirthTextInputEditText;
     @BindView(R.id.nextButtonContact)
     protected FloatingActionButton nextButtonGuardian;
+    @BindView(R.id.toolbar)
+    protected Toolbar toolbar;
 
-
-    String userType = "Standard";
-    FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    String userType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,18 +67,71 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         setContentView(R.layout.activity_contact_details);
         ButterKnife.bind(this);
 
-        userTypeSpinner.setLabelText(R.string.userType);
-        userTypeSpinner.setOnItemChosenListener(new LabelledSpinner.OnItemChosenListener() {
+        setSupportActionBar(toolbar);
+
+        phoneNumberTextInputEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
+            //we need to know if the user is erasing or inputing some new character
+            private boolean backspacingFlag = false;
+            //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
+            private boolean editedFlag = false;
+            //we need to mark the cursor position and restore it after the edition
+            private int cursorComplement;
+
             @Override
-            public void onItemChosen(View labelledSpinner, AdapterView<?> adapterView, View itemView, int position, long id) {
-                userType = adapterView.getSelectedItem().toString();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //we store the cursor local relative to the end of the string in the EditText before the edition
+                cursorComplement = s.length()-phoneNumberTextInputEditText.getSelectionStart();
+                //we check if the user ir inputing or erasing a character
+                if (count > after) {
+                    backspacingFlag = true;
+                } else {
+                    backspacingFlag = false;
+                }
             }
 
             @Override
-            public void onNothingChosen(View labelledSpinner, AdapterView<?> adapterView) {
-                userType = adapterView.getSelectedItem().toString();
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // nothing to do here =D
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String string = s.toString();
+                //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
+                String phone = string.replaceAll("[^\\d]", "");
+
+                //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
+                //if the flag is false, this is a original user-typed entry. so we go on and do some magic
+                if (!editedFlag) {
+
+                    //we start verifying the worst case, many characters mask need to be added
+                    //example: 999999999 <- 6+ digits already typed
+                    // masked: (999) 999-999
+                    if (phone.length() >= 6 && !backspacingFlag) {
+                        //we will edit. next call on this textWatcher will be ignored
+                        editedFlag = true;
+                        //here is the core. we substring the raw digits and add the mask as convenient
+                        String ans = "(" + phone.substring(0, 3) + ") " + phone.substring(3,6) + "-" + phone.substring(6);
+                        phoneNumberTextInputEditText.setText(ans);
+                        //we deliver the cursor to its original position relative to the end of the string
+                        phoneNumberTextInputEditText.setSelection(phoneNumberTextInputEditText.getText().length()-cursorComplement);
+
+                        //we end at the most simple case, when just one character mask is needed
+                        //example: 99999 <- 3+ digits already typed
+                        // masked: (999) 99
+                    } else if (phone.length() >= 3 && !backspacingFlag) {
+                        editedFlag = true;
+                        String ans = "(" +phone.substring(0, 3) + ") " + phone.substring(3);
+                        phoneNumberTextInputEditText.setText(ans);
+                        phoneNumberTextInputEditText.setSelection(phoneNumberTextInputEditText.getText().length()-cursorComplement);
+                    }
+                    // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
+                } else {
+                    editedFlag = false;
+                }
             }
         });
+
 
         if (getUid() != null) {
             String userId = getUid();
@@ -81,75 +142,29 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             onAuthFailure();
         }
 
-        phoneNumberTextInputEditText.setOnFocusChangeListener(this);
-
-        nextButtonGuardian.setOnClickListener(this);
-        dateofBirthTextInputEditText.setOnClickListener(new View.OnClickListener() {
+        nextButtonGuardian.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                int mYear = calendar.get(Calendar.YEAR);
-                int mMonth = calendar.get(Calendar.MONTH);
-                int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(ContactDetailsActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(year, monthOfYear, dayOfMonth);
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy");
-                                String startDate = dateFormat.format(calendar.getTime());
-                                // TODO: 4/11/17 Deleted the filter for startDate - Added in validateForm() method
-                                dateofBirthTextInputEditText.setText(startDate);
-
-                            }
-                        }, mYear, mMonth, mDay);
-                datePickerDialog.show();
+            public void onClick(View v) {
+                writeUserProfile();
             }
         });
-    }
 
-    @Override
-    public void onClick(View view) {
-
-        if (view == nextButtonGuardian) {
-            writeUserProfile();
-        }else{
-            onAuthFailure();
-        }
+        dateofBirthTextInputEditText.setOnClickListener(this);
     }
 
     private void writeUserProfile() {
 
         showProgressDialog("Saving...");
-        Intent intent = getIntent();
-
-        String fullName = intent.getStringExtra("fullName");
-        String userEmailAddress = intent.getStringExtra("emailAddress");
 
         String phoneNumber = phoneNumberTextInputEditText.getText().toString().trim();
         String dateOfBirth = dateofBirthTextInputEditText.getText().toString().trim();
+        String userType = userTypeSpinner.getSelectedItem().toString();
+
 
         if (!validateForm(phoneNumber, dateOfBirth)) {
             hideProgressDialog();
             return;
         }
-
-        if(userType.equalsIgnoreCase("Standard")){
-            hideProgressDialog();
-            Toast.makeText(this, "User details saved!",Toast.LENGTH_SHORT).show();
-            Intent guardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            guardianIntent.putExtra("fullName", fullName);
-            guardianIntent.putExtra("userEmailAddress", userEmailAddress);
-            guardianIntent.putExtra("phoneNumber", phoneNumber);
-            guardianIntent.putExtra("dateofBirth", dateOfBirth);
-            guardianIntent.putExtra("userType", userType);
-            startActivity(guardianIntent);
-            finish();
-        }else{
             databaseReference.child("phoneNumber").setValue(phoneNumber);
             databaseReference.child("dateOfBirth").setValue(dateOfBirth);
             databaseReference.child("userType").setValue(userType);
@@ -160,10 +175,13 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
                     Profile profile = dataSnapshot.getValue(Profile.class);
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContactDetailsActivity.this);
                     SharedPreferences.Editor editor = preferences.edit();
-                    if(profile != null) {
+                    if (profile != null) {
                         editor.putString(Preferences.NAME, profile.getFullName());
                         editor.putString(Preferences.EMAIL, profile.getEmail());
                         editor.putString(Preferences.USER_TYPE, profile.getUserType());
+                        Log.d("Name", profile.getFullName());
+                        Log.d("Email", profile.getEmail());
+                        Log.d("UserType", profile.getUserType());
                     }
                     editor.putString(Preferences.USERID, getUid());
                     editor.apply();
@@ -176,33 +194,56 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             });
 
             hideProgressDialog();
-            Toast.makeText(this, "Profile Created", Toast.LENGTH_SHORT).show();
-            Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
-            mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(mainMenuIntent);
-            finish();
+            Toast.makeText(this, "User Profile Created.. Redirecting", Toast.LENGTH_SHORT).show();
+            if(userType.equalsIgnoreCase("Standard")) {
+                Intent addGuardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
+                addGuardianIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(addGuardianIntent);
+                finish();
+            }else{
+                Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
+                mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                startActivity(mainMenuIntent);
+                finish();
+            }
+
         }
 
+    private boolean validateForm(String phoneNumber, String dateOfBirth) {
 
-    }
-    private boolean validateForm(String phone, String dob) {
         boolean valid = true;
-        if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(dob)) {
+
+        if (TextUtils.isEmpty(dateOfBirth)) {
+            dateOfBirthTextInputLayout.setError("Please enter your Date of Birth");
             valid = false;
+        } else {
+            dateOfBirthTextInputLayout.setError(null);
         }
-        if(!isValidPhoneNumber(phone)){
+        if (TextUtils.isEmpty(phoneNumber)) {
+            phoneNumberTextInputLayout.setError("Please enter your phone number");
+            valid = false;
+        } else {
+            phoneNumberTextInputLayout.setError(null);
+        }
+        if(!isValidPhoneNumber(phoneNumber)){
             phoneNumberTextInputLayout.setError("Please enter a valid Phone Number");
             valid = false;
         }else{
             phoneNumberTextInputLayout.setError(null);
         }
 
-        if(phone.length() <10){
+        if(phoneNumber.length() <14){
             phoneNumberTextInputLayout.setError("Phone number should be atleast 10 digits");
             valid = false;
         }else{
             phoneNumberTextInputLayout.setError(null);
         }
+
         return valid;
     }
 
@@ -210,27 +251,56 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         return !TextUtils.isEmpty(phoneNumber) && android.util.Patterns.PHONE.matcher(phoneNumber).matches();
     }
 
-
-
     private void onAuthFailure() {
 
         Intent intent = new Intent(ContactDetailsActivity.this, SplashScreen.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        switch (v.getId()) {
-
-            case R.id.phoneNumberTextInputEditText:
-                if (!hasFocus) {
-                    validateForm(phoneNumberTextInputEditText.getText().toString().trim(), dateofBirthTextInputEditText.getText().toString().trim());
-                } else {
-                    phoneNumberTextInputLayout.setError(null);
-                }
-                break;
+    public void onStart() {
+        super.onStart();
+        // Check auth on Activity start
+        if (firebaseAuth.getCurrentUser() == null) {
+            onAuthFailure();
         }
+    }
+
+    private void onAuthSuccess() {
+        if(userType.equalsIgnoreCase("Standard"))
+            startActivity(new Intent(ContactDetailsActivity.this, AddGuardianActivity.class));
+        else {
+            startActivity(new Intent(ContactDetailsActivity.this, MainMenuActivity.class));
+
+        }
+        finish();
 
     }
+
+    @Override
+    public void onClick(View v) {
+        if (v == dateofBirthTextInputEditText) {
+            Calendar c = Calendar.getInstance();
+            int mYear = c.get(Calendar.YEAR);
+            int mMonth = c.get(Calendar.MONTH);
+            int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year,
+                                              int monthOfYear, int dayOfMonth) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(year, monthOfYear, dayOfMonth);
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy");
+                            String startDate = dateFormat.format(calendar.getTime());
+                            dateofBirthTextInputEditText.setText(startDate);
+                        }
+                    }, mYear, mMonth, mDay);
+            datePickerDialog.show();
+        }
+    }
+
 }

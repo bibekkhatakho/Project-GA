@@ -3,6 +3,7 @@ package com.project.group.projectga.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -29,7 +30,7 @@ import com.project.group.projectga.preferences.Preferences;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AddGuardianActivity extends CoreActivity implements View.OnClickListener, View.OnFocusChangeListener{
+public class AddGuardianActivity extends CoreActivity{
 
     @BindView(R.id.addGuardianEmailTextInputLayout)
     protected TextInputLayout addGuardianEmailTextInputLayout;
@@ -43,10 +44,7 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
-
-    String userEmailAddress;
-    String guardianUserEmail;
-    String fullName;
+    DatabaseReference databaseReferenceGuardian;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,56 +58,39 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
             String userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+            databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child(userId);
 
         } else {
             onAuthFailure();
         }
 
-        addGuardianEmailTextInputEditText.setOnFocusChangeListener(this);
-
-        doneButton.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if(view == doneButton){
-            createUserProfile();
-        }
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createUserProfile();
+            }
+        });
     }
 
     private void createUserProfile(){
         showProgressDialog("Saving...");
 
-        Intent intent = getIntent();
-        fullName = intent.getStringExtra("fullName");
-        userEmailAddress = intent.getStringExtra("userEmailAddress");
-        String phoneNumber = intent.getStringExtra("phoneNumber");
-        String dateOfBirth = intent.getStringExtra("dateofBirth");
-        String userType = intent.getStringExtra("userType");
-        guardianUserEmail = addGuardianEmailTextInputEditText.getText().toString().trim();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AddGuardianActivity.this);
+
+        String fullName = sharedPreferences.getString(Preferences.NAME, "");
+        String userEmailAddress = sharedPreferences.getString(Preferences.EMAIL, "");
+        Log.d("fullName", fullName);
+        Log.d("userEmailAddress", userEmailAddress);
+
+        String guardianUserEmail = addGuardianEmailTextInputEditText.getText().toString().trim();
 
         if (!validateForm(guardianUserEmail, userEmailAddress)) {
             hideProgressDialog();
             return;
         }
-        databaseReference.child("phoneNumber").setValue(phoneNumber);
-        databaseReference.child("dateOfBirth").setValue(dateOfBirth);
-        databaseReference.child("guardianEmail").setValue(guardianUserEmail);
-        databaseReference.child("userType").setValue(userType);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Profile profile = dataSnapshot.getValue(Profile.class);
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(AddGuardianActivity.this);
-                SharedPreferences.Editor editor = preferences.edit();
-                if(profile != null) {
-                    editor.putString(Preferences.NAME, profile.getFullName());
-                    editor.putString(Preferences.EMAIL, profile.getEmail());
-                    editor.putString(Preferences.USER_TYPE, profile.getUserType());
-                }
-                editor.putString(Preferences.USERID, getUid());
-                editor.apply();
+        databaseReference.child("guardianEmail").setValue(guardianUserEmail);
+        databaseReferenceGuardian.child("guardianEmail").setValue(guardianUserEmail);
 
                 String subject = "App Invitation!";
                 String body = "Hi,\nThis email is to inform you that Mr." + fullName + " has invited you to be the guardian, as he/she is suffering from Alzheimer's."
@@ -127,10 +108,10 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
                                 public void onSuccess() {
                                     //do some magic
                                     Log.d("Email", "Sent Success");
+                                    hideProgressDialog();
                                     Intent intent = new Intent(AddGuardianActivity.this, MainMenuActivity.class);
-//                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
-//                                    finish();
+                                    finish();
                                 }
                             })
                             .withOnFailCallback(new BackgroundMail.OnFailCallback() {
@@ -142,20 +123,11 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
                             })
                             .send();
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        hideProgressDialog();
-        Toast.makeText(this, "Profile Created!", Toast.LENGTH_SHORT).show();
     }
 
     private boolean validateForm(String guardianEmailAddress, String userEmailAddress) {
         boolean valid = true;
+
         if (TextUtils.isEmpty(guardianEmailAddress)){
             Toast.makeText(this, "Please enter Email Address", Toast.LENGTH_SHORT).show();
             valid = false;
@@ -191,16 +163,12 @@ public class AddGuardianActivity extends CoreActivity implements View.OnClickLis
     }
 
     @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        switch (v.getId()) {
-
-            case R.id.emailTextEditText:
-                if (!hasFocus) {
-                    validateForm(addGuardianEmailTextInputEditText.getText().toString().trim(), userEmailAddress);
-                } else {
-                    addGuardianEmailTextInputLayout.setError(null);
-                }
-                break;
+    public void onStart() {
+        super.onStart();
+        // Check auth on Activity start
+        if (firebaseAuth.getCurrentUser() == null) {
+            onAuthFailure();
         }
     }
+
 }

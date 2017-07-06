@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import mehdi.sakout.fancybuttons.FancyButton;
 
-public class SplashScreen extends AppCompatActivity implements View.OnClickListener {
+public class SplashScreen extends AppCompatActivity{
 
     @BindView(R.id.signInButton)
     protected FancyButton signInButton;
@@ -25,22 +25,18 @@ public class SplashScreen extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_splash_screen);
         ButterKnife.bind(this);
 
-        signInButton.setOnClickListener(this);
-        signUpButton.setOnClickListener(this);
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SplashScreen.this, SignInActivity.class));
+            }
+        });
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SplashScreen.this, SignUpActivity.class));
+            }
+        });
     }
 
-    @Override
-    public void onClick(View view) {
-        if(view == signInButton){
-            Intent signInIntent = new Intent(SplashScreen.this, SignInActivity.class);
-            startActivity(signInIntent);
-            finish();
-        }
-
-        if(view == signUpButton){
-            Intent signUpIntent = new Intent(SplashScreen.this, SignUpActivity.class);
-            startActivity(signUpIntent);
-            finish();
-        }
-    }
 }

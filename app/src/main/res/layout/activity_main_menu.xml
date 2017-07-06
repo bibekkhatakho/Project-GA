@@ -14,7 +14,7 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="@string/homeScreen"
+        app:title="@string/googleAlzheimer"
         app:titleTextColor="@android:color/white" />
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

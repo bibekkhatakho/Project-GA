@@ -1,22 +1,22 @@
 package com.project.group.projectga.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +40,6 @@ import com.project.group.projectga.fragments.BackupFragment;
 import com.project.group.projectga.fragments.GalleryFragment;
 import com.project.group.projectga.fragments.GamesPuzzlesFragment;
 import com.project.group.projectga.fragments.HomeFragment;
-import com.project.group.projectga.fragments.HomeGuardianFragment;
 import com.project.group.projectga.fragments.MapsFragment;
 import com.project.group.projectga.fragments.ProfileFragment;
 import com.project.group.projectga.fragments.RecognitionFragment;
@@ -64,11 +63,10 @@ public class MainMenuActivity extends CoreActivity {
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
     boolean profileFlag, homeFlag = true;
-
-    public static final String Name = "nameKey";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,29 +74,27 @@ public class MainMenuActivity extends CoreActivity {
         setContentView(R.layout.activity_main_menu);
         ButterKnife.bind(this);
 
+        firebaseAuth = FirebaseAuth.getInstance();
         setSupportActionBar(toolbar);
-
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
-        final String userType = preferences.getString(Preferences.USER_TYPE, "");
-        Toast.makeText(this, userType , Toast.LENGTH_LONG).show();
 
         gaFragmentStack = new Stack<>();
 
         Fragment home_fragment = new HomeFragment();
-        Fragment home_guardian_fragment = new HomeGuardianFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            if(userType.equalsIgnoreCase("Standard")) {
-            transaction.replace(R.id.container_gaFragments, home_fragment);
-        }else{
-            transaction.replace(R.id.container_gaFragments, home_guardian_fragment);
-        }
+        transaction.replace(R.id.container_gaFragments, home_fragment);
         transaction.commit();
 
         Bundle extras = getIntent().getExtras();
-        if(extras != null){
+        if (extras != null) {
             profileFlag = extras.getBoolean("profileFlag");
             homeFlag = extras.getBoolean("homeFlag");
         }
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+        final String userType = preferences.getString(Preferences.USER_TYPE, "");
+        Toast.makeText(this, userType, Toast.LENGTH_LONG).show();
+
+        Log.d("userTypeMain", userType);
 
         if (getUid() != null) {
             String userId = getUid();
@@ -133,6 +129,8 @@ public class MainMenuActivity extends CoreActivity {
 
         String name = preferences.getString(Preferences.NAME, "");
         String email = preferences.getString(Preferences.EMAIL, "");
+        Log.d("NAMEMAIN", name);
+        Log.d("emailmain", email);
         final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
 
         headerResult = new AccountHeaderBuilder()
@@ -148,8 +146,8 @@ public class MainMenuActivity extends CoreActivity {
                 })
                 .build();
 
-        if(userType !=null && userType.equalsIgnoreCase("Standard")) {
 
+        if(userType.equalsIgnoreCase("Standard")) {
             result = new DrawerBuilder()
                     .withActivity(this)
                     .withAccountHeader(headerResult)
@@ -170,97 +168,7 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
-
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Profile profile = dataSnapshot.getValue(Profile.class);
-                    String profilePic = profile.getProfile();
-                    if (profilePic != null && !profilePic.equals("")) {
-                        userProfile.withIcon(profilePic);
-                        headerResult.updateProfile(userProfile);
-                    } else {
-                        userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
-                        headerResult.updateProfile(userProfile);
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                @Override
-                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-
-                    int drawItemId = (int) drawerItem.getIdentifier();
-                    Intent intent;
-                    Fragment fragment;
-                    switch (drawItemId) {
-
-                        case 1:
-                            if(userType != null && userType.equalsIgnoreCase("Standard")) {
-                                fragment = new HomeFragment();
-                                gaFragmentStack.add(home);
-                                break;
-                            }else {
-                                fragment = new HomeGuardianFragment();
-                                gaFragmentStack.add(home);
-                                break;
-                            }
-                        case 2:
-                            fragment = new ProfileFragment();
-                            gaFragmentStack.add(profile);
-                            break;
-                        case 3:
-                            fragment = new GalleryFragment();
-                            gaFragmentStack.add(gallery);
-                            break;
-                        case 4:
-                            fragment = new RecognitionFragment();
-                            gaFragmentStack.add(recognition);
-                            break;
-                        case 5:
-                            fragment = new MapsFragment();
-                            gaFragmentStack.add(maps);
-                            break;
-                        case 6:
-                            fragment = new TagLocateFragment();
-                            gaFragmentStack.add(tagAndLocate);
-                            break;
-                        case 7:
-                            fragment = new GamesPuzzlesFragment();
-                            gaFragmentStack.add(gamesAndPuzzle);
-                            break;
-                        case 8:
-                            fragment = new BackupFragment();
-                            gaFragmentStack.add(backup);
-                            break;
-                        default:
-                            fragment = new HomeFragment();
-                            break;
-                    }
-                    if (drawItemId == 9) {
-                        FirebaseAuth.getInstance().signOut();
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.clear();
-                        editor.apply();
-                        intent = new Intent(MainMenuActivity.this, SplashScreen.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.container_gaFragments, fragment);
-                    transaction.commit();
-                    return false;
-                }
-            });
-
-        }else {
+        }else if(userType.equalsIgnoreCase("Guardian")){
             result = new DrawerBuilder()
                     .withActivity(this)
                     .withAccountHeader(headerResult)
@@ -277,69 +185,105 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
-
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Profile profile = dataSnapshot.getValue(Profile.class);
-                    String profilePic = profile.getProfile();
-                    if (profilePic != null && !profilePic.equals("")) {
-                        userProfile.withIcon(profilePic);
-                        headerResult.updateProfile(userProfile);
-                    } else {
-                        userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
-                        headerResult.updateProfile(userProfile);
-                    }
+        }
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Profile profile = dataSnapshot.getValue(Profile.class);
+                String profilePic = profile.getProfile();
+                if (profilePic != null && !profilePic.equals("")) {
+                    userProfile.withIcon(profilePic);
+                    headerResult.updateProfile(userProfile);
+                } else {
+                    userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
+                    headerResult.updateProfile(userProfile);
                 }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
 
-
-            result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+        result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                 @Override
                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
                     int drawItemId = (int) drawerItem.getIdentifier();
                     Intent intent;
                     Fragment fragment;
-                    switch (drawItemId) {
+                    if(userType.equalsIgnoreCase("Standard")) {
+                        switch (drawItemId) {
 
-                        case 1:
-                            if(userType !=null && userType.equalsIgnoreCase("Standard")) {
+                            case 1:
                                 fragment = new HomeFragment();
                                 gaFragmentStack.add(home);
                                 break;
-                            }else {
-                                fragment = new HomeGuardianFragment();
+
+                            case 2:
+                                fragment = new ProfileFragment();
+                                gaFragmentStack.add(profile);
+                                break;
+                            case 3:
+                                fragment = new GalleryFragment();
+                                gaFragmentStack.add(gallery);
+                                break;
+                            case 4:
+                                fragment = new RecognitionFragment();
+                                gaFragmentStack.add(recognition);
+                                break;
+                            case 5:
+                                fragment = new MapsFragment();
+                                gaFragmentStack.add(maps);
+                                break;
+                            case 6:
+                                fragment = new TagLocateFragment();
+                                gaFragmentStack.add(tagAndLocate);
+                                break;
+                            case 7:
+                                fragment = new GamesPuzzlesFragment();
+                                gaFragmentStack.add(gamesAndPuzzle);
+                                break;
+                            case 8:
+                                fragment = new BackupFragment();
+                                gaFragmentStack.add(backup);
+                                break;
+                            default:
+                                fragment = new HomeFragment();
+                                break;
+                        }
+                    }else {
+                        switch (drawItemId) {
+
+                            case 1:
+                                fragment = new HomeFragment();
                                 gaFragmentStack.add(home);
                                 break;
-                            }
-                        case 2:
-                            fragment = new ProfileFragment();
-                            gaFragmentStack.add(profile);
-                            break;
-                        case 5:
-                            fragment = new MapsFragment();
-                            gaFragmentStack.add(maps);
-                            break;
-                        case 8:
-                            fragment = new BackupFragment();
-                            gaFragmentStack.add(backup);
-                            break;
-                        default:
-                            fragment = new HomeFragment();
-                            break;
+
+                            case 2:
+                                fragment = new ProfileFragment();
+                                gaFragmentStack.add(profile);
+                                break;
+                            case 5:
+                                fragment = new MapsFragment();
+                                gaFragmentStack.add(maps);
+                                break;
+                            case 8:
+                                fragment = new BackupFragment();
+                                gaFragmentStack.add(backup);
+                                break;
+                            default:
+                                fragment = new HomeFragment();
+                                break;
+                        }
                     }
                     if (drawItemId == 9) {
                         FirebaseAuth.getInstance().signOut();
                         SharedPreferences.Editor editor = preferences.edit();
                         editor.clear();
                         editor.apply();
-                        intent = new Intent(MainMenuActivity.this, SplashScreen.class);
+                        intent = new Intent(MainMenuActivity.this, SplashActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
@@ -351,9 +295,9 @@ public class MainMenuActivity extends CoreActivity {
                     return false;
                 }
             });
-        }
-
     }
+
+
     private void onAuthFailure() {
         Intent intent = new Intent(MainMenuActivity.this, SplashScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -380,12 +324,6 @@ public class MainMenuActivity extends CoreActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        result.closeDrawer();
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
     }
@@ -393,11 +331,6 @@ public class MainMenuActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
     }
 
 }

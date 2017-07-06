@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "964342061594-usk0gul4g16o3m41u4ma7dv6v1p9r0ro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.group.projectga",
+            "certificate_hash": "32437ef5802975dc2b6da2fee93d72cb1dc1676b"
+          }
+        },
+        {
+          "client_id": "964342061594-meqn3852i2k3hv9ac7nir4a7iqdgm96q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.group.projectga",
+            "certificate_hash": "85150a827d4b6cb3108776bf8d9cc12c291a511b"
+          }
+        },
+        {
           "client_id": "964342061594-midq7350bfrhrfi6ecefsoa4rk2h2622.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -30,6 +46,9 @@
       "api_key": [
         {
           "current_key": "AIzaSyDHqtEHxM3dMknSs5iwdPLdRINf16TnxcY"
+        },
+        {
+          "current_key": "AIzaSyDxyRnxFfVrVveDQnNwaVQeAuJjP0d5sAU"
         }
       ],
       "services": {

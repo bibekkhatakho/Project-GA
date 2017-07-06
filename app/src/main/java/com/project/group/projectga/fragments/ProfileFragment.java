@@ -12,6 +12,8 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,10 +58,11 @@ public class ProfileFragment extends Fragment {
     TextInputEditText nameText, phoneText;
     CircularImageView circularProfilePhoto;
     FancyButton cameraButton, galleryButton, removeButton;
-    //ConstraintLayout guardianDividerLayout, guardianLayout;
+
+    ConstraintLayout guardianDividerLayout, guardianLayout;
 
     public static final int RC_SIGN_IN = 123;
-    private static final int RC_PHOTO_PICKER = 2;
+    private static final int RC_PHOTO_PICKER = 3;
     public static final int RC_CAMERA_CODE = 123;
 
     String userId;
@@ -83,6 +86,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String userType = sharedPreferences.getString(Preferences.USER_TYPE, "");
         userId = sharedPreferences.getString(Preferences.USERID, null);
         if (userId != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
@@ -92,17 +96,27 @@ public class ProfileFragment extends Fragment {
         toolbar.setTitle(getString(R.string.profile));
         toolbar.setVisibility(View.VISIBLE);
 
-        // guardianDividerLayout = (ConstraintLayout) view.findViewById(R.id.guardianDividerLayout);
-        //guardianLayout = (ConstraintLayout) view.findViewById(R.id.guardianLayout);
+        guardianDividerLayout = (ConstraintLayout) view.findViewById(R.id.guardianDividerLayout);
+        guardianLayout = (ConstraintLayout) view.findViewById(R.id.guardianLayout);
+
+         if(userType.equalsIgnoreCase("Standard")) {
+             guardianLayout.setVisibility(View.VISIBLE);
+             guardianDividerLayout.setVisibility(View.VISIBLE);
+             guardianEmail = (TextView) view.findViewById(R.id.guardianEmail);
+         }else if(userType.equalsIgnoreCase("Guardian")){
+             guardianLayout.setVisibility(View.GONE);
+             guardianDividerLayout.setVisibility(View.GONE);
+         }else{
+             guardianLayout.setVisibility(View.VISIBLE);
+             guardianDividerLayout.setVisibility(View.VISIBLE);
+         }
 
         circularProfilePhoto = (CircularImageView) view.findViewById(R.id.circularPhoto);
         emailText = (TextView) view.findViewById(R.id.emailText);
         birthdayText = (TextView) view.findViewById(R.id.birthdayText);
         displayName = (TextView) view.findViewById(R.id.displayName);
-        guardianEmail = (TextView) view.findViewById(R.id.guardianEmail);
         phoneText = (TextInputEditText) view.findViewById(R.id.phoneText);
         nameText = (TextInputEditText) view.findViewById(R.id.nameText);
-
         galleryButton = (FancyButton) view.findViewById(R.id.galleryButton);
         cameraButton = (FancyButton) view.findViewById(R.id.cameraButton);
         removeButton = (FancyButton) view.findViewById(R.id.removeButton);
@@ -117,7 +131,9 @@ public class ProfileFragment extends Fragment {
                 Profile profile = dataSnapshot.getValue(Profile.class);
                 nameText.setText(profile.getFullName());
                 emailText.setText(profile.getEmail());
-                guardianEmail.setText(profile.getGuardianEmail());
+                if(userType.equalsIgnoreCase("Standard")) {
+                    guardianEmail.setText(profile.getGuardianEmail());
+                }
                 birthdayText.setText(profile.getDateOfBirth());
                 phoneText.setText(profile.getPhoneNumber());
                 Picasso.with(getContext()).load(profile.getProfile()).error(R.drawable.ic_error_outline_black_24dp).into(circularProfilePhoto);
@@ -145,7 +161,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("click", "remove");
-                databaseReference.child("profile").setValue("https://firebasestorage.googleapis.com/v0/b/phms-65aa3.appspot.com/o/ic_account_circle_black_48dp.png?alt=media&token=20dba348-4406-4117-86ee-d2b0a06280d5");
+                databaseReference.child("profile").setValue("https://firebasestorage.googleapis.com/v0/b/projectga-4c8e4.appspot.com/o/ic_account_circle_black_48dp.png?alt=media&token=20dba348-4406-4117-86ee-d2b0a06280d5");
                 Toast.makeText(getContext(), "Profile Picture Removed", Toast.LENGTH_SHORT).show();
             }
         });
@@ -218,6 +234,68 @@ public class ProfileFragment extends Fragment {
                 save.setVisible(true);
                 nameText.setEnabled(true);
                 phoneText.setEnabled(true);
+                phoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
+                    //we need to know if the user is erasing or inputing some new character
+                    private boolean backspacingFlag = false;
+                    //we need to block the :afterTextChanges method to be called again after we just replaced the EditText text
+                    private boolean editedFlag = false;
+                    //we need to mark the cursor position and restore it after the edition
+                    private int cursorComplement;
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        //we store the cursor local relative to the end of the string in the EditText before the edition
+                        cursorComplement = s.length()-phoneText.getSelectionStart();
+                        //we check if the user ir inputing or erasing a character
+                        if (count > after) {
+                            backspacingFlag = true;
+                        } else {
+                            backspacingFlag = false;
+                        }
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        // nothing to do here =D
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        String string = s.toString();
+                        //what matters are the phone digits beneath the mask, so we always work with a raw string with only digits
+                        String phone = string.replaceAll("[^\\d]", "");
+
+                        //if the text was just edited, :afterTextChanged is called another time... so we need to verify the flag of edition
+                        //if the flag is false, this is a original user-typed entry. so we go on and do some magic
+                        if (!editedFlag) {
+
+                            //we start verifying the worst case, many characters mask need to be added
+                            //example: 999999999 <- 6+ digits already typed
+                            // masked: (999) 999-999
+                            if (phone.length() >= 6 && !backspacingFlag) {
+                                //we will edit. next call on this textWatcher will be ignored
+                                editedFlag = true;
+                                //here is the core. we substring the raw digits and add the mask as convenient
+                                String ans = "(" + phone.substring(0, 3) + ") " + phone.substring(3,6) + "-" + phone.substring(6);
+                                phoneText.setText(ans);
+                                //we deliver the cursor to its original position relative to the end of the string
+                                phoneText.setSelection(phoneText.getText().length()-cursorComplement);
+
+                                //we end at the most simple case, when just one character mask is needed
+                                //example: 99999 <- 3+ digits already typed
+                                // masked: (999) 99
+                            } else if (phone.length() >= 3 && !backspacingFlag) {
+                                editedFlag = true;
+                                String ans = "(" +phone.substring(0, 3) + ") " + phone.substring(3);
+                                phoneText.setText(ans);
+                                phoneText.setSelection(phoneText.getText().length()-cursorComplement);
+                            }
+                            // We just edited the field, ignoring this cicle of the watcher and getting ready for the next
+                        } else {
+                            editedFlag = false;
+                        }
+                    }
+                });
                 return false;
             }
         });
@@ -252,6 +330,7 @@ public class ProfileFragment extends Fragment {
                 if (profile != null) {
                     editor.putString(Preferences.NAME, profile.getFullName());
                     editor.putString(Preferences.EMAIL, profile.getEmail());
+                    editor.putString(Preferences.EMAIL, profile.getEmail());
                 }
                 editor.apply();
             }
@@ -272,6 +351,7 @@ public class ProfileFragment extends Fragment {
 
     private boolean validateForm(String name, String phoneNumber) {
         boolean valid = true;
+
         String textOnlyRegex = "^[\\p{L} .'-]+$";
         if (TextUtils.isEmpty(name) || !Pattern.matches(textOnlyRegex, name)) {
             nameText.setError("Please enter a valid name");
@@ -292,7 +372,7 @@ public class ProfileFragment extends Fragment {
             phoneText.setError(null);
         }
 
-        if(phoneNumber.length() <10){
+        if(phoneNumber.length() <14){
             phoneText.setError("Phone number should be atleast 10 digits");
             valid = false;
         }else{

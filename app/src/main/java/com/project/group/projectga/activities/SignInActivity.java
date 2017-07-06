@@ -1,21 +1,19 @@
 package com.project.group.projectga.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,14 +43,10 @@ import com.project.group.projectga.preferences.Preferences;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SignInActivity extends CoreActivity implements View.OnFocusChangeListener, View.OnClickListener {
+import static java.lang.Thread.sleep;
 
-    GoogleApiClient mGoogleApiClient;
-    private static int RC_SIGN_IN = 100;
-    private static final String TAG = "MainActivity";
-    FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private ProgressDialog progressDialog;
+public class SignInActivity extends CoreActivity implements View.OnFocusChangeListener {
+
 
     @BindView(R.id.emailLoginTextInputLayout)
     protected TextInputLayout emailLoginTextInputLayout;
@@ -67,9 +62,27 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
     protected TextView loginButton;
     @BindView(R.id.forgotPasswordTextView)
     protected TextView forgotPasswordTextView;
-    @BindView(R.id.singinGoogleButton)
+
+    //Code for Google Sign In - Start
+
+    @BindView(R.id.signInWithGoogle)
     protected Button signInWithGoogleButton;
 
+    private final static int RC_SIGN_IN = 2;
+    private static final String TAG = "MainActivity";
+    FirebaseAuth.AuthStateListener firebaseAuthListener;
+    GoogleApiClient mGoogleApiClient;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        firebaseAuth.addAuthStateListener(firebaseAuthListener);
+    }
+
+    //Code for Google Sign In - End
+
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,116 +90,83 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
 
-        signUpTextView.setOnClickListener(this);
-        loginButton.setOnClickListener(this);
-        forgotPasswordTextView.setOnClickListener(this);
-        signInWithGoogleButton.setOnClickListener(this);
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        emailLoginTextInputEditText.setOnFocusChangeListener(this);
-        passwordLoginEditText.setOnFocusChangeListener(this);
+        // Configure Google Sign In - Start
 
-        progressDialog = new ProgressDialog(this);
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(SignInActivity.this,MainMenuActivity.class));
+                    Intent mainMenuIntent = new Intent(SignInActivity.this, ContactDetailsActivity.class);
+                    mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(mainMenuIntent);
                 }
             }
         };
+
+        signInWithGoogleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signIn();
+            }
+        });
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
+        // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+                        Toast.makeText(SignInActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                     }
-                } /* OnConnectionFailedListener */)
+                })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
+        // Configure Google Sign In - End
+
+        emailLoginTextInputEditText.setOnFocusChangeListener(this);
+        passwordLoginEditText.setOnFocusChangeListener(this);
+        emailLoginTextInputEditText.addTextChangedListener(new MyTextWatcher(emailLoginTextInputEditText));
+        passwordLoginEditText.addTextChangedListener(new MyTextWatcher(passwordLoginEditText));
+
+        signUpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signUpIntent = new Intent(SignInActivity.this, SignUpActivity.class);
+                startActivity(signUpIntent);
+                finish();
+            }
+        });
+
+        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignInActivity.this,ResetPasswordActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signInUser();
+            }
+        });
+
     }
 
-    @Override
-    public void onClick(View view){
-
-        String email;
-
-        if(view == loginButton){
-            email = emailLoginTextInputEditText.getText().toString();
-            String password = passwordLoginEditText.getText().toString();
-
-            if (!validateEmail(email)) {
-                return;
-            }
-            if (!validateSetPass(password)) {
-                return;
-            }
-            showProgressDialog("Signing in...");
-            mAuth.signInWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            progressDialog.dismiss();
-                            if(!task.isSuccessful()){
-                                hideProgressDialog();
-                                Toast.makeText(SignInActivity.this, task.getException().getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-
-                            }else if(task.isSuccessful()){
-                                hideProgressDialog();
-                                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
-                                databaseReference.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        Profile profile = dataSnapshot.getValue(Profile.class);
-                                        Log.e("key", dataSnapshot.getKey());
-                                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        if(profile !=null){
-                                            editor.putString(Preferences.EMAIL, profile.getEmail());
-                                            editor.putString(Preferences.NAME, profile.getFullName());
-                                            editor.putString(Preferences.USER_TYPE,profile.getUserType());
-                                        }
-                                        editor.putString(Preferences.USERID, getUid());
-                                        editor.apply();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                                Intent loginIntent = new Intent(SignInActivity.this,MainMenuActivity.class);
-                                loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(loginIntent);
-                                finish();
-                            }
-                        }
-                    });
-        }
-        else if(view == signInWithGoogleButton)
-        {
-            Toast.makeText(SignInActivity.this,"Signing in with google...",Toast.LENGTH_SHORT).show();
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-
-        }else if(view == signUpTextView){
-            Intent signUpIntent = new Intent(SignInActivity.this, SignUpActivity.class);
-            startActivity(signUpIntent);
-            finish();
-        }
-        else if (view == forgotPasswordTextView) {
-
-            Intent intent = new Intent(SignInActivity.this,ResetPasswordActivity.class);
-            startActivity(intent);
-            finish();
-        }
+    // Google Sign In Integration - Start
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
@@ -202,45 +182,94 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
-                // ...
-                Toast.makeText(this,"not signed in",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignInActivity.this, "Authentication Failed. Please try again.", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
-    }
-
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //  updateUI(user);
+                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            // updateUI(null);
+                            //updateUI(null);
                         }
 
                         // ...
+                    }
+                });
+    }
+
+    // Google Sign In Integration - End
+
+
+    private void signInUser(){
+        String email = emailLoginTextInputEditText.getText().toString();
+        String password = passwordLoginEditText.getText().toString();
+
+        if (!validateEmail(email)) {
+            return;
+        }
+        if (!validateSetPass(password)) {
+            return;
+        }
+        showProgressDialog("Signing in...");
+        firebaseAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(!task.isSuccessful()){
+                            hideProgressDialog();
+                            Toast.makeText(SignInActivity.this, task.getException().getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+
+                        }else if(task.isSuccessful()){
+                            hideProgressDialog();
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
+                            databaseReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Profile profile = dataSnapshot.getValue(Profile.class);
+                                    Log.e("key", dataSnapshot.getKey());
+                                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    if(profile !=null){
+                                        editor.putString(Preferences.EMAIL, profile.getEmail());
+                                        editor.putString(Preferences.NAME, profile.getFullName());
+                                        editor.putString(Preferences.USER_TYPE, profile.getUserType());
+                                    }
+                                    editor.putString(Preferences.USERID, getUid());
+                                    editor.apply();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                            Intent loginIntent = new Intent(SignInActivity.this,MainMenuActivity.class);
+                            loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            try {
+                                sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            startActivity(loginIntent);
+                            finish();
+                        }
                     }
                 });
     }
@@ -291,6 +320,32 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                 }
 
                 break;
+        }
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+                case R.id.emailTextEditText:
+                    emailLoginTextInputLayout.setError(null);
+                    break;
+                case R.id.passwordTextEditText:
+                    passwordLoginInputLayout.setError(null);
+                    break;
+            }
         }
     }
 

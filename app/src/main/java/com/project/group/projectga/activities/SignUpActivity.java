@@ -2,18 +2,15 @@ package com.project.group.projectga.activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Toast;
-import android.content.Context;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,7 +27,8 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SignUpActivity extends CoreActivity implements View.OnClickListener, View.OnFocusChangeListener {
+public class SignUpActivity extends CoreActivity implements View.OnFocusChangeListener {
+
 
     @BindView(R.id.fullNameTextInputLayout)
     protected TextInputLayout fullNameTextInputLayout;
@@ -50,18 +48,19 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
     protected TextInputEditText confirmPasswordTextEditText;
     @BindView(R.id.nextButton)
     protected FloatingActionButton nextButton;
-
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
+
     private FirebaseAuth firebaseAuth;
 
-    public static final String Name = "nameKey";
+    String TAG = SignUpActivity.class.getSimpleName();
 
-    String fullName;
     DatabaseReference databaseReference;
 
+    String fullName;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
@@ -71,21 +70,22 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
 
         setSupportActionBar(toolbar);
 
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                authUser();
+            }
+        });
+
+        fullNameTextInputEditText.addTextChangedListener(new MyTextWatcher(fullNameTextInputEditText));
+        emailTextEditText.addTextChangedListener(new MyTextWatcher(emailTextEditText));
+        passwordTextEditText.addTextChangedListener(new MyTextWatcher(passwordTextEditText));
+        confirmPasswordTextEditText.addTextChangedListener(new MyTextWatcher(confirmPasswordTextEditText));
+
         fullNameTextInputEditText.setOnFocusChangeListener(this);
         emailTextEditText.setOnFocusChangeListener(this);
         passwordTextEditText.setOnFocusChangeListener(this);
         confirmPasswordTextEditText.setOnFocusChangeListener(this);
-
-        nextButton.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        if(view == nextButton){
-            authUser();
-        }
-
     }
 
     private void authUser()
@@ -118,53 +118,33 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
                 if(task.isSuccessful())
                 {
                     hideProgressDialog();
-                    Toast.makeText(SignUpActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
                     onAuthSuccess(task.getResult().getUser());
                 }
                 else
                     hideProgressDialog();
-                Toast.makeText(SignUpActivity.this, "Could not Register user", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void onAuthSuccess(FirebaseUser user) {
-        // Write new user
-        writeNewUser(user.getUid(), user.getEmail());
-        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
-        contactIntent.putExtra("fullName", fullName);
-        startActivity(contactIntent);
-        finish();
-    }
+    private boolean validateFullName(String fullName) {
 
-    private void writeNewUser(String userId, String email) {
-
-        databaseReference.child("users").child(userId);
-        databaseReference.child("users").child(userId).child("fullName").setValue(fullName);
-        databaseReference.child("users").child(userId).child("email").setValue(email);
-        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
-        contactIntent.putExtra("fullName", fullName);
-        contactIntent.putExtra("emailAddress", email);
-        startActivity(contactIntent);
-        finish();
-
-    }
-
-    private boolean validateFullName(String name) {
-        boolean valid = true;
         String textOnlyRegex = "^[\\p{L} .'-]+$";
-        if (TextUtils.isEmpty(name) || !Pattern.matches(textOnlyRegex, name)) {
+
+        if (fullName.isEmpty()){
+            fullNameTextInputLayout.setError("Full Name field cannot be empty");
+            return false;
+        }else{
+            fullNameTextInputLayout.setError(null);
+        }
+        if (TextUtils.isEmpty(fullName) || !Pattern.matches(textOnlyRegex, fullName)) {
             fullNameTextInputLayout.setError("Enter a valid name");
-            valid = false;
+            return false;
         } else {
             fullNameTextInputLayout.setError(null);
         }
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putString(Name, fullName);
-        editor.commit();
-        return valid;
+        return true;
     }
+
 
     private boolean validateEmail(String emailText) {
 
@@ -184,7 +164,7 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
 
     private boolean validateSetPass(String setPass) {
         if (setPass.length() < 8) {
-            passwordTextInputLayout.setError("Password should be a minimum of 8 characters");
+            passwordTextInputLayout.setError("Password should contain at least 8 characters");
             return false;
         } else {
             passwordTextInputLayout.setError(null);
@@ -201,6 +181,24 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
         }
         return true;
     }
+
+
+    private void onAuthSuccess(FirebaseUser user) {
+        // Write new user
+        writeNewUser(user.getUid(), user.getEmail());
+        startActivity(new Intent(SignUpActivity.this, ContactDetailsActivity.class));
+        finish();
+    }
+
+    private void writeNewUser(String userId, String email) {
+
+        databaseReference.child("users").child(userId);
+        databaseReference.child("users").child(userId).child("email").setValue(email);
+        databaseReference.child("users").child(userId).child("fullName").setValue(fullName);
+        startActivity(new Intent(SignUpActivity.this, ContactDetailsActivity.class));
+        finish();
+    }
+
 
     @Override
     public void onStart() {
@@ -222,7 +220,9 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
                 } else {
                     fullNameTextInputLayout.setError(null);
                 }
+
                 break;
+
             case R.id.emailTextEditText:
                 if (!hasFocus) {
                     validateEmail(emailTextEditText.getText().toString().trim());
@@ -251,5 +251,39 @@ public class SignUpActivity extends CoreActivity implements View.OnClickListener
                 break;
         }
 
+    }
+
+    private class MyTextWatcher implements TextWatcher {
+
+        private View view;
+
+        private MyTextWatcher(View view) {
+            this.view = view;
+        }
+
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        public void afterTextChanged(Editable editable) {
+            switch (view.getId()) {
+
+                case R.id.fullNameTextInputEditText:
+                    fullNameTextInputLayout.setError(null);
+                    break;
+                case R.id.emailTextEditText:
+                    emailTextInputLayout.setError(null);
+                    break;
+                case R.id.passwordTextEditText:
+                    passwordTextInputLayout.setError(null);
+                    break;
+                case R.id.confirmpasswordTextEditText:
+                    confirmPasswordTextInputLayout.setError(null);
+                    break;
+
+            }
+        }
     }
 }
