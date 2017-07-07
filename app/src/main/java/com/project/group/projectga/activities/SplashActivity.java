@@ -37,7 +37,6 @@ public class SplashActivity extends AppCompatActivity {
                         finish();
                     }else{
                         Intent splashScreenIntent = new Intent(SplashActivity.this, SplashScreen.class);
-                        splashScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(splashScreenIntent);
                         finish();
                     }

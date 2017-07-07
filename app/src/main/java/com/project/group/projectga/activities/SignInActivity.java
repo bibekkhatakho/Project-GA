@@ -99,7 +99,6 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null){
                     Intent mainMenuIntent = new Intent(SignInActivity.this, ContactDetailsActivity.class);
-                    mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(mainMenuIntent);
                 }
             }
@@ -140,7 +139,6 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
             public void onClick(View v) {
                 Intent signUpIntent = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(signUpIntent);
-                finish();
             }
         });
 
@@ -148,9 +146,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SignInActivity.this,ResetPasswordActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
-                finish();
             }
         });
 

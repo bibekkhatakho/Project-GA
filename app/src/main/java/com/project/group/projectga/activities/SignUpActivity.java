@@ -58,6 +58,7 @@ public class SignUpActivity extends CoreActivity implements View.OnFocusChangeLi
     DatabaseReference databaseReference;
 
     String fullName;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class SignUpActivity extends CoreActivity implements View.OnFocusChangeLi
     private void authUser()
     {
         fullName = fullNameTextInputEditText.getText().toString().trim();
-        String email = emailTextEditText.getText().toString().trim();
+        email = emailTextEditText.getText().toString().trim();
         String password = passwordTextEditText.getText().toString().trim();
         String confirmPassword = confirmPasswordTextEditText.getText().toString().trim();
 
@@ -186,7 +187,9 @@ public class SignUpActivity extends CoreActivity implements View.OnFocusChangeLi
     private void onAuthSuccess(FirebaseUser user) {
         // Write new user
         writeNewUser(user.getUid(), user.getEmail());
-        startActivity(new Intent(SignUpActivity.this, ContactDetailsActivity.class));
+        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
+        contactIntent.putExtra("userEmailAddress", email);
+        startActivity(contactIntent);
         finish();
     }
 
@@ -195,7 +198,9 @@ public class SignUpActivity extends CoreActivity implements View.OnFocusChangeLi
         databaseReference.child("users").child(userId);
         databaseReference.child("users").child(userId).child("email").setValue(email);
         databaseReference.child("users").child(userId).child("fullName").setValue(fullName);
-        startActivity(new Intent(SignUpActivity.this, ContactDetailsActivity.class));
+        Intent contactIntent = new Intent(SignUpActivity.this, ContactDetailsActivity.class);
+        contactIntent.putExtra("userEmailAddress", email);
+        startActivity(contactIntent);
         finish();
     }
 

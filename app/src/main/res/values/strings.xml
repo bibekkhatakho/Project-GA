@@ -26,11 +26,6 @@
     <string name="contactNumber">Phone Number</string>
     <string name="userType">User Type</string>
 
-    <array name="userType">
-        <item>Standard</item>
-        <item>Guardian</item>
-    </array>
-
     //Sign Up - Final Screen
     <string name="addGuardian"> Add Guardian </string>
     <string name="continueFab">Continue</string>

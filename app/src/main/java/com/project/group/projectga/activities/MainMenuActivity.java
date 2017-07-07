@@ -82,6 +82,7 @@ public class MainMenuActivity extends CoreActivity {
         Fragment home_fragment = new HomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_gaFragments, home_fragment);
+        transaction.addToBackStack("home");
         transaction.commit();
 
         Bundle extras = getIntent().getExtras();
@@ -291,6 +292,7 @@ public class MainMenuActivity extends CoreActivity {
 
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.replace(R.id.container_gaFragments, fragment);
+                    transaction.addToBackStack(null);
                     transaction.commit();
                     return false;
                 }
@@ -311,6 +313,12 @@ public class MainMenuActivity extends CoreActivity {
         if (result.isDrawerOpen()) {
             result.closeDrawer();
         }
+        else if (getFragmentManager().getBackStackEntryCount() > 0 ){
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
     @Override

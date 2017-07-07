@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment {
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.container_gaFragments, galleryFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-
+                    ft.addToBackStack(null);
                     ft.commit();
                 }
             });
@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment {
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.container_gaFragments, mapsFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-
+                    ft.addToBackStack(null);
                     ft.commit();
                 }
             });
@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment {
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.container_gaFragments, mapsFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-
+                    ft.addToBackStack(null);
                     ft.commit();
                 }
             });

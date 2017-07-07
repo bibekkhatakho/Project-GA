@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.os.Bundle;
+import android.support.v7.widget.FitWindowsFrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.telephony.PhoneNumberUtils;
@@ -16,8 +17,11 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,13 +29,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -59,6 +67,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
     private FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceGuardian;
     String userType;
 
     @Override
@@ -68,6 +77,44 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        // Initializing a String Array
+        final String[] userType = new String[]{
+                "Standard",
+                "Guardian"
+        };
+
+        final List<String> userTypeList = new ArrayList<>(Arrays.asList(userType));
+
+        // Initializing an ArrayAdapter
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this,R.layout.spinner_item,userTypeList);
+
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        userTypeSpinner.setAdapter(spinnerArrayAdapter);
+
+        Intent intent = getIntent();
+        final String userEmailAddress = intent.getStringExtra("userEmailAddress");
+
+        databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians");
+        Query query = databaseReferenceGuardian.orderByChild("guardianEmail").equalTo(userEmailAddress);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()){
+                    userTypeList.remove(0);
+                    spinnerArrayAdapter.notifyDataSetChanged();
+                }else{
+                    userTypeList.remove(1);
+                    spinnerArrayAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
 
         phoneNumberTextInputEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher() {
             //we need to know if the user is erasing or inputing some new character
