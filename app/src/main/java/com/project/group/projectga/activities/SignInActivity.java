@@ -2,6 +2,8 @@ package com.project.group.projectga.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +24,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -97,9 +98,47 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() != null){
-                    Intent mainMenuIntent = new Intent(SignInActivity.this, ContactDetailsActivity.class);
-                    startActivity(mainMenuIntent);
+                if (firebaseAuth.getCurrentUser() != null) {
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
+                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Profile profile = dataSnapshot.getValue(Profile.class);
+                            if (dataSnapshot.exists()) {
+                                if (profile.getUserType() != null) {
+                                    Log.e("key", dataSnapshot.getKey());
+                                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    if (profile != null) {
+                                        editor.putString(Preferences.EMAIL, profile.getEmail());
+                                        editor.putString(Preferences.NAME, profile.getFullName());
+                                        editor.putString(Preferences.USER_TYPE, profile.getUserType());
+                                    }
+                                    editor.putString(Preferences.USERID, getUid());
+                                    editor.apply();
+
+                                    Intent loginIntent = new Intent(SignInActivity.this, MainMenuActivity.class);
+                                    try {
+                                        sleep(1000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    startActivity(loginIntent);
+                                    finish();
+                                } else {
+                                    startActivity(new Intent(SignInActivity.this, ContactDetailsActivity.class));
+                                    finish();
+                                }
+                            } else {
+                                Toast.makeText(SignInActivity.this, "Snapshot not yet saved", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
         };
@@ -145,7 +184,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
         forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this,ResetPasswordActivity.class);
+                Intent intent = new Intent(SignInActivity.this, ResetPasswordActivity.class);
                 startActivity(intent);
             }
         });
@@ -195,6 +234,30 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+                            databaseReference.child("fullName").setValue(user.getDisplayName());
+                            databaseReference.child("email").setValue(user.getEmail());
+                            databaseReference.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Profile profile = dataSnapshot.getValue(Profile.class);
+                                    Log.e("key", dataSnapshot.getKey());
+                                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    if (profile != null) {
+                                        editor.putString(Preferences.EMAIL, profile.getEmail());
+                                        editor.putString(Preferences.NAME, profile.getFullName());
+                                        editor.putString(Preferences.USER_TYPE, profile.getUserType());
+                                    }
+                                    editor.putString(Preferences.USERID, getUid());
+                                    editor.apply();
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -212,7 +275,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
     // Google Sign In Integration - End
 
 
-    private void signInUser(){
+    private void signInUser() {
         String email = emailLoginTextInputEditText.getText().toString();
         String password = passwordLoginEditText.getText().toString();
 
@@ -223,16 +286,16 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
             return;
         }
         showProgressDialog("Signing in...");
-        firebaseAuth.signInWithEmailAndPassword(email,password)
+        firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(!task.isSuccessful()){
+                        if (!task.isSuccessful()) {
                             hideProgressDialog();
                             Toast.makeText(SignInActivity.this, task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
 
-                        }else if(task.isSuccessful()){
+                        } else if (task.isSuccessful()) {
                             hideProgressDialog();
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
                             databaseReference.addValueEventListener(new ValueEventListener() {
@@ -242,7 +305,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                                     Log.e("key", dataSnapshot.getKey());
                                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    if(profile !=null){
+                                    if (profile != null) {
                                         editor.putString(Preferences.EMAIL, profile.getEmail());
                                         editor.putString(Preferences.NAME, profile.getFullName());
                                         editor.putString(Preferences.USER_TYPE, profile.getUserType());
@@ -256,7 +319,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
 
                                 }
                             });
-                            Intent loginIntent = new Intent(SignInActivity.this,MainMenuActivity.class);
+                            Intent loginIntent = new Intent(SignInActivity.this, MainMenuActivity.class);
                             loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             try {
                                 sleep(1000);
@@ -295,6 +358,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
     private static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
 

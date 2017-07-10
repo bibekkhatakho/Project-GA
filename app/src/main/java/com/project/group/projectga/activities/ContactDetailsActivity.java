@@ -9,15 +9,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.os.Bundle;
-import android.support.v7.widget.FitWindowsFrameLayout;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
-import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
@@ -40,8 +36,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -212,54 +206,51 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             hideProgressDialog();
             return;
         }
-            databaseReference.child("phoneNumber").setValue(phoneNumber);
-            databaseReference.child("dateOfBirth").setValue(dateOfBirth);
-            databaseReference.child("userType").setValue(userType);
+        databaseReference.child("phoneNumber").setValue(phoneNumber);
+        databaseReference.child("dateOfBirth").setValue(dateOfBirth);
+        databaseReference.child("userType").setValue(userType);
 
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    Profile profile = dataSnapshot.getValue(Profile.class);
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContactDetailsActivity.this);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    if (profile != null) {
-                        editor.putString(Preferences.NAME, profile.getFullName());
-                        editor.putString(Preferences.EMAIL, profile.getEmail());
-                        editor.putString(Preferences.USER_TYPE, profile.getUserType());
-                        Log.d("Name", profile.getFullName());
-                        Log.d("Email", profile.getEmail());
-                        Log.d("UserType", profile.getUserType());
-                    }
-                    editor.putString(Preferences.USERID, getUid());
-                    editor.apply();
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Profile profile = dataSnapshot.getValue(Profile.class);
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ContactDetailsActivity.this);
+                SharedPreferences.Editor editor = preferences.edit();
+                if (profile != null) {
+                    editor.putString(Preferences.NAME, profile.getFullName());
+                    editor.putString(Preferences.EMAIL, profile.getEmail());
+                    editor.putString(Preferences.USER_TYPE, profile.getUserType());
                 }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            hideProgressDialog();
-            Toast.makeText(this, "User Profile Created.. Redirecting", Toast.LENGTH_SHORT).show();
-            if(userType.equalsIgnoreCase("Standard")) {
-                Intent addGuardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
-                addGuardianIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(addGuardianIntent);
-                finish();
-            }else{
-                Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
-                mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                try {
-                    sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                startActivity(mainMenuIntent);
-                finish();
+                editor.putString(Preferences.USERID, getUid());
+                editor.apply();
             }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        hideProgressDialog();
+        Toast.makeText(this, "User Profile Created.. Redirecting", Toast.LENGTH_SHORT).show();
+        if(userType.equalsIgnoreCase("Standard")) {
+            Intent addGuardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
+            addGuardianIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(addGuardianIntent);
+            finish();
+        }else{
+            Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
+            mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            startActivity(mainMenuIntent);
+            finish();
         }
+
+    }
 
     private boolean validateForm(String phoneNumber, String dateOfBirth) {
 
