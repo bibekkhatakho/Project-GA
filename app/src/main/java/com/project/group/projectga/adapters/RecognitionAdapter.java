@@ -35,7 +35,7 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
 
     private Context mContext;
     private ArrayList<Recognition> mRecognitionList;
-    String tempUrl;
+    //String tempUrl;
 
     public RecognitionAdapter(Context context, ArrayList<Recognition> recognitionsList) {
         mContext = context;
@@ -61,8 +61,8 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
         holder.shortDescription.setText(recognition.getShortDescription());
         holder.longDescription.setText(recognition.getLongDescription());
         holder.recognitionKey.setText(recognition.getKey());
-        Glide.with(mContext).load(recognition.getProfile()).into(holder.profilePicture);
-        tempUrl = recognition.getProfile();
+        //Glide.with(mContext).load(recognition.getProfile()).into(holder.profilePicture);
+        //tempUrl = mRecognitionList.get(position).getProfile();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
                 public boolean onMenuItemClick(MenuItem item) {
                     Intent intent = new Intent(mContext, RecognitionActivity.class);
                     intent.putExtra("Key", recognitionKey.getText().toString());
-                    intent.putExtra("tempUrl", tempUrl);
+                    //intent.putExtra("tempUrl", tempUrl);
                     mContext.startActivity(intent);
                     return false;
                 }

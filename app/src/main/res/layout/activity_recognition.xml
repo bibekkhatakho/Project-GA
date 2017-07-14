@@ -39,13 +39,20 @@
             android:padding="16dp">
 
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="174dp"
+                android:background="@drawable/tile_red">
+
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/personImage"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_centerInParent="true"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_account_circle_white_24dp" />
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

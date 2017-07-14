@@ -2,6 +2,7 @@ package com.project.group.projectga.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.Recognition;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
@@ -69,8 +71,8 @@ public class RecognitionActivity extends CoreActivity {
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
-    String imgURL;
-    String tempURL;
+    Uri imgURL;
+    String imageData;
 
 
     FirebaseAuth firebaseAuth;
@@ -86,7 +88,7 @@ public class RecognitionActivity extends CoreActivity {
     public static final int RC_CAMERA_CODE = 123;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recognition);
         ButterKnife.bind(this);
@@ -108,7 +110,7 @@ public class RecognitionActivity extends CoreActivity {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("personsList");
-            storageReference = FirebaseStorage.getInstance().getReference();
+            storageReference = FirebaseStorage.getInstance().getReference().child("users").child(userId);
 
         } else {
 
@@ -119,7 +121,7 @@ public class RecognitionActivity extends CoreActivity {
 
         if(intent!=null) {
             recognitionKey = intent.getStringExtra("Key");
-            tempURL = intent.getStringExtra("tempUrl");
+            //tempURL = intent.getStringExtra("tempUrl");
         }
 
 
@@ -130,7 +132,7 @@ public class RecognitionActivity extends CoreActivity {
 
         else
         {
-            Toast.makeText(this, "TempUrl" + tempURL , Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "TempUrl" + tempURL , Toast.LENGTH_SHORT).show();
             final String recognitionKeyValue = recognitionKey;
             recog_key.setText(recognitionKey);
             valueEventListener = new ValueEventListener() {
@@ -142,7 +144,19 @@ public class RecognitionActivity extends CoreActivity {
                         personRelationTextInputEditText.setText(recognition.getRelation());
                         shortDescrptionTextInputEditText.setText(recognition.getShortDescription());
                         longDescriptionTextInputEditText.setText(recognition.getLongDescription());
-                        Glide.with(RecognitionActivity.this).load(recognition.getProfile()).into(personImage);
+                        storageReference = FirebaseStorage.getInstance().getReference().child("users").child(userId);
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Glide.with(RecognitionActivity.this).load(uri.toString()).into(personImage);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                            }
+                        });
+
                     }
                 }
                 @Override
@@ -175,9 +189,9 @@ public class RecognitionActivity extends CoreActivity {
             return;
         }
 
-        if(imgURL == null){
-            imgURL = tempURL;
-        }
+//        if(imgURL == null){
+//            imgURL = tempURL;
+//        }
 
         HashMap<String, String> personsListMap = new HashMap<>();
         personsListMap.put("name", personName);
@@ -203,7 +217,6 @@ public class RecognitionActivity extends CoreActivity {
         Intent intent = new Intent(RecognitionActivity.this,MainMenuActivity.class);
         intent.putExtra("recognitionFlag", true);
         startActivity(intent);
-        finish();
 
     }
 
@@ -212,31 +225,9 @@ public class RecognitionActivity extends CoreActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            personImage.setImageBitmap(imageBitmap);
-            personImage.setDrawingCacheEnabled(true);
-            personImage.buildDrawingCache();
-            Bitmap bitmap = personImage.getDrawingCache();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] d = baos.toByteArray();
 
-            final UploadTask uploadTask = storageReference.child(userId).putBytes(d);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(RecognitionActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(RecognitionActivity.this, "Person image set", Toast.LENGTH_SHORT).show();
-                    imgURL = taskSnapshot.getDownloadUrl().toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("fail", "fail");
-                }
-            });
-
+            imgURL = data.getData();
+                      Picasso.with(RecognitionActivity.this).load(imgURL).resize(600,550).centerCrop().into(personImage);
         }
     }
 

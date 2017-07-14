@@ -10,19 +10,27 @@ public class Recognition {
     private String relation;
     private String shortDescription;
     private String longDescription;
-    private String profile;
+    private String imageName;
     private String key;
 
     public Recognition() {
     }
 
-    public Recognition(String name, String relation, String shortDescription, String longDescription, String profile, String key) {
+    public Recognition(String name, String relation, String shortDescription, String longDescription, String imageName, String key) {
         this.name = name;
         this.relation = relation;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
-        this.profile = profile;
+        this.imageName = imageName;
         this.key = key;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public String getKey() {
@@ -65,11 +73,4 @@ public class Recognition {
         this.longDescription = longDescription;
     }
 
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
 }
