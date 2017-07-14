@@ -330,7 +330,6 @@ public class ProfileFragment extends Fragment {
                 if (profile != null) {
                     editor.putString(Preferences.NAME, profile.getFullName());
                     editor.putString(Preferences.EMAIL, profile.getEmail());
-                    editor.putString(Preferences.EMAIL, profile.getEmail());
                 }
                 editor.apply();
             }

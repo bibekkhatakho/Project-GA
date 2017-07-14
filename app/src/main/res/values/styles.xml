@@ -9,6 +9,16 @@
         <item name="android:textColorHint">#ABADB0</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="AppThemeToolbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorHint">#ABADB0</item>
+        <item name ="android:layout_gravity">center_horizontal</item>
+    </style>
+
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->

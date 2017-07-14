@@ -16,4 +16,5 @@
     <color name="appNameColor">#8C8E90</color>
     <color name="textInputEditTextColor">#484849</color>
     <color name="textViewColor">#ABADB0</color>
+    <color name="toolbarColor">#202020</color>
 </resources>

@@ -66,7 +66,7 @@ public class MainMenuActivity extends CoreActivity {
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
-    boolean profileFlag, homeFlag = true;
+    boolean profileFlag, homeFlag = true, recognitionFlag=false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +89,7 @@ public class MainMenuActivity extends CoreActivity {
         if (extras != null) {
             profileFlag = extras.getBoolean("profileFlag");
             homeFlag = extras.getBoolean("homeFlag");
+            recognitionFlag = extras.getBoolean("recognitionFlag");
         }
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
@@ -132,7 +133,7 @@ public class MainMenuActivity extends CoreActivity {
         String email = preferences.getString(Preferences.EMAIL, "");
         Log.d("NAMEMAIN", name);
         Log.d("emailmain", email);
-        final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
+        final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.mipmap.ic_account_circle_white_24dp);
 
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -196,7 +197,7 @@ public class MainMenuActivity extends CoreActivity {
                     userProfile.withIcon(profilePic);
                     headerResult.updateProfile(userProfile);
                 } else {
-                    userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
+                    userProfile.withIcon(R.mipmap.ic_account_circle_white_24dp);
                     headerResult.updateProfile(userProfile);
                 }
             }
@@ -206,6 +207,13 @@ public class MainMenuActivity extends CoreActivity {
 
             }
         });
+
+        if (recognitionFlag) {
+            recognitionFlag = false;
+            Fragment fragment = new RecognitionFragment();
+            startFragment(fragment);
+            result.setSelection(recognition);
+        }
 
         result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                 @Override
@@ -299,6 +307,14 @@ public class MainMenuActivity extends CoreActivity {
             });
     }
 
+    private void startFragment(Fragment fragment) {
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_gaFragments, fragment);
+        transaction.commit();
+
+    }
+
 
     private void onAuthFailure() {
         Intent intent = new Intent(MainMenuActivity.this, SplashScreen.class);
@@ -340,5 +356,6 @@ public class MainMenuActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
     }
+
 
 }

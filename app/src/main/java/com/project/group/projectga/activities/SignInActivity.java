@@ -237,6 +237,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
                             databaseReference.child("fullName").setValue(user.getDisplayName());
                             databaseReference.child("email").setValue(user.getEmail());
+                            databaseReference.child("profile").setValue(user.getPhotoUrl().toString());
                             databaseReference.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {

@@ -61,6 +61,17 @@
     <string name="tempDate">12/31/1999</string>
     <string name="tempPhone">(555)555-5555</string>
 
+    //Gallery Screen
+    <string name="shortDesc">Short Description</string>
+    <string name="longDesc">Long Description</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    
+    //Recognition Screen
+    <string name="None">None</string>
+    <string name="personName">Person Name</string>
+    <string name="personRelation">Person Relation</string>
+
 
 </resources>
 
