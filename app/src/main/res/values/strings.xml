@@ -64,6 +64,8 @@
     //Gallery Screen
     <string name="shortDesc">Short Description</string>
     <string name="longDesc">Long Description</string>
+    <string name="shortDescSpecial">Quick Description: (10 words)</string>
+    <string name="longDescSpecial">Detailed Description: (50 words)</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     

@@ -37,9 +37,9 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
     private ArrayList<Recognition> mRecognitionList;
     String tempUrl;
 
-    public RecognitionAdapter(Context context, ArrayList<Recognition> recognitionArrayList) {
+    public RecognitionAdapter(Context context, ArrayList<Recognition> recognitionsList) {
         mContext = context;
-        mRecognitionList = recognitionArrayList;
+        mRecognitionList = recognitionsList;
 
     }
 
@@ -76,13 +76,13 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         TextView personName, personRelation, shortDescription, longDescription, recognitionKey;
-        ImageView profilePicture;
+        CircularImageView profilePicture;
 
 
         ViewHolder(View v) {
             super(v);
             v.setOnCreateContextMenuListener(this);
-            profilePicture = (ImageView) v.findViewById(R.id.profilePicture);
+            profilePicture = (CircularImageView) v.findViewById(R.id.profilePicture);
             personName = (TextView) v.findViewById(R.id.personName);
             personRelation = (TextView) v.findViewById(R.id.personRelation);
             shortDescription = (TextView) v.findViewById(R.id.shortDescription);

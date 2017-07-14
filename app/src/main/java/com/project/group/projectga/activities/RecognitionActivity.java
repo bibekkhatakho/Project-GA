@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.Recognition;
 
@@ -60,7 +61,7 @@ public class RecognitionActivity extends CoreActivity {
     @BindView(R.id.longDescTextInputEditText)
     protected TextInputEditText longDescriptionTextInputEditText;
     @BindView(R.id.personImage)
-    protected ImageView personImage;
+    protected CircularImageView personImage;
     @BindView(R.id.recog_key)
     protected TextView recog_key;
     @BindView(R.id.doneButton)
@@ -81,7 +82,6 @@ public class RecognitionActivity extends CoreActivity {
 
     String recognitionKey = null;
     String userId;
-    HashMap<String, String> personsListMap;
 
     public static final int RC_CAMERA_CODE = 123;
 
@@ -92,8 +92,8 @@ public class RecognitionActivity extends CoreActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+        Intent intent = getIntent();
 
-        personsListMap = new HashMap<>();
 
         personImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,14 +115,13 @@ public class RecognitionActivity extends CoreActivity {
             onAuthFailure();
         }
 
-        Intent intent = getIntent();
-
         recognitionKey = null;
 
         if(intent!=null) {
             recognitionKey = intent.getStringExtra("Key");
             tempURL = intent.getStringExtra("tempUrl");
         }
+
 
         if (recognitionKey==null)
         {
@@ -176,8 +175,11 @@ public class RecognitionActivity extends CoreActivity {
             return;
         }
 
-        personsListMap.clear();
+        if(imgURL == null){
+            imgURL = tempURL;
+        }
 
+        HashMap<String, String> personsListMap = new HashMap<>();
         personsListMap.put("name", personName);
         personsListMap.put("relation", personRelation);
         personsListMap.put("shortDescription", shortDescription);
