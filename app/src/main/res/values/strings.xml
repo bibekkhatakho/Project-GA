@@ -73,6 +73,8 @@
     <string name="None">None</string>
     <string name="personName">Person Name</string>
     <string name="personRelation">Person Relation</string>
+    
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

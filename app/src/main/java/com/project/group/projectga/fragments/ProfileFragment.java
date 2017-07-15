@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,8 +93,16 @@ public class ProfileFragment extends Fragment {
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
             storageReference = FirebaseStorage.getInstance().getReference();
         }
+
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.profile));
+        ImageView icon = (ImageView) getActivity().findViewById(R.id.toolbarIcon);
+        icon.setImageResource(R.drawable.logoga);
+        icon.setColorFilter(null);
+        TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
+        title.setText("Profile");
+        toolbar.setBackground(getResources().getDrawable(R.drawable.tile_gray));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
+
         toolbar.setVisibility(View.VISIBLE);
 
         guardianDividerLayout = (ConstraintLayout) view.findViewById(R.id.guardianDividerLayout);
@@ -225,8 +234,8 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        edit = menu.add("Edit").setIcon(R.drawable.ic_edit_white_24dp).setShowAsActionFlags(1);
-        save = menu.add("Save").setIcon(R.drawable.ic_save_white_24dp).setVisible(false).setShowAsActionFlags(1);
+        edit = menu.add("Edit").setIcon(R.drawable.ic_edit_black_24dp).setShowAsActionFlags(1);
+        save = menu.add("Save").setIcon(R.drawable.ic_save_black_24dp).setVisible(false).setShowAsActionFlags(1);
         edit.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

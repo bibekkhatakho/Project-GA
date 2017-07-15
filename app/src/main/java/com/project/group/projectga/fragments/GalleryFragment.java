@@ -19,12 +19,16 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.project.group.projectga.R;
@@ -37,7 +41,7 @@ import java.util.ArrayList;
 public class GalleryFragment extends Fragment {
 
     Toolbar toolbar;
-
+	MenuItem search;
     public static ArrayList<Model_images> al_images = new ArrayList<>();
     boolean boolean_folder;
     Adapter_PhotosFolder obj_adapter;
@@ -50,22 +54,22 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
-
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.galleryLabel);
-        toolbar.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 250));
+        ImageView icon = (ImageView) getActivity().findViewById(R.id.toolbarIcon);
+        icon.setImageResource(R.drawable.ic_perm_media_black_24dp);
+        icon.setColorFilter(getResources().getColor(R.color.Gallery));
+        TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
+        title.setText("Gallery");
         toolbar.setBackground(getResources().getDrawable(R.drawable.tile_green));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.toolbarColor));
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
-        toolbar.setLogo(getResources().getDrawable(R.drawable.ic_perm_media_green_24dp));
-        toolbar.setContentInsetsRelative(350,100);
-        toolbar.setTitleMargin(0,150,0,0);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_green_24dp));
 
 
         gv_folder = (GridView)view.findViewById(R.id.gv_folder);
@@ -94,8 +98,18 @@ public class GalleryFragment extends Fragment {
             Log.e("Else","Else");
             fn_imagespath();
         }
-
+		
+		
+		setHasOptionsMenu(true);
+		
         return view;
+    }
+	
+	 @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        search = menu.add("search").setIcon(R.drawable.ic_search_green_24dp).setShowAsActionFlags(1);
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     public ArrayList<Model_images> fn_imagespath() {

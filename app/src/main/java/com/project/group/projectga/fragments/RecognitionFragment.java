@@ -12,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -27,6 +30,9 @@ import com.project.group.projectga.adapters.RecognitionAdapter;
 import com.project.group.projectga.models.Recognition;
 import com.project.group.projectga.preferences.Preferences;
 
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 /**
@@ -40,6 +46,7 @@ public class RecognitionFragment extends Fragment  {
     FloatingActionButton addButton;
     DatabaseReference databaseReference;
     ArrayList<Recognition> recognitionsList;
+	MenuItem search;
 
     public RecognitionFragment(){
 
@@ -62,7 +69,15 @@ public class RecognitionFragment extends Fragment  {
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("personsList");
         }
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.recognitionLabel));
+		toolbar.setBackground(getResources().getDrawable(R.drawable.tile_red));
+		toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_red_24dp));
+        // change the icon on the toolbar
+        ImageView icon = (ImageView) getActivity().findViewById(R.id.toolbarIcon);
+        icon.setImageResource(R.drawable.ic_face_black_24dp);
+        icon.setColorFilter(getResources().getColor(R.color.Recognition));
+        // change the title on the toolbar
+        TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
+        title.setText(R.string.recognitionLabel);
         toolbar.setVisibility(View.VISIBLE);
         addButton = (FloatingActionButton) view.findViewById(R.id.addButton);
         recyclerView = (RecyclerView) view.findViewById(R.id.people_recycler);
@@ -99,7 +114,19 @@ public class RecognitionFragment extends Fragment  {
                 startActivity(intent);
             }
         });
+		
+		setHasOptionsMenu(true);
         return view;
+    }
+	
+	@Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // add the search icon to the toolbar
+        search = menu.add("search").setIcon(R.drawable.ic_search_red_24dp).setShowAsActionFlags(1);
+
+        // implement search functionality here
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 

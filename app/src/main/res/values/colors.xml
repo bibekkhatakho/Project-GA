@@ -16,5 +16,10 @@
     <color name="appNameColor">#8C8E90</color>
     <color name="textInputEditTextColor">#484849</color>
     <color name="textViewColor">#ABADB0</color>
-    <color name="toolbarColor">#202020</color>
+    <color name="Gallery">#4caf50</color>
+    <color name="Recognition">#f44336</color>
+    <color name="Map">#fbc02d</color>
+    <color name="TagLocate">#4890cb</color>
+    <color name="GamesPuzzles">#914099</color>
+    <color name="Backup">#607d8b</color>
 </resources>

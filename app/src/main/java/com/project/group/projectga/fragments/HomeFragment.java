@@ -9,8 +9,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.project.group.projectga.R;
 import com.project.group.projectga.preferences.Preferences;
@@ -26,6 +30,8 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setHasOptionsMenu(true);
+
     }
 
     @Nullable
@@ -40,7 +46,14 @@ public class HomeFragment extends Fragment {
             view = inflater.inflate(R.layout.fragment_home_guardian, container, false);
         }
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.googleAlzheimer));
+        ImageView icon = (ImageView) getActivity().findViewById(R.id.toolbarIcon);
+        icon.setImageResource(R.drawable.logoga);
+        icon.setColorFilter(null);
+        TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
+        title.setText("Google Alzheimer");
+        toolbar.setBackground(getResources().getDrawable(R.drawable.tile_gray));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
+
         initControls(view, userType);
         return view;
     }
@@ -151,5 +164,12 @@ public class HomeFragment extends Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.add(null).setIcon(R.drawable.ic_android_trans_24dp).setShowAsActionFlags(1);
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
