@@ -1,5 +1,7 @@
 package com.project.group.projectga.models;
 
+import android.net.Uri;
+
 /**
  * Created by ramjiseetharaman on 7/13/17.
  */

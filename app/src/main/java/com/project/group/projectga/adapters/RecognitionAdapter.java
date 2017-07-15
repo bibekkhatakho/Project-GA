@@ -2,14 +2,12 @@ package com.project.group.projectga.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
@@ -22,7 +20,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.RecognitionActivity;
 import com.project.group.projectga.models.Recognition;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -35,7 +32,6 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
 
     private Context mContext;
     private ArrayList<Recognition> mRecognitionList;
-    String tempUrl;
 
     public RecognitionAdapter(Context context, ArrayList<Recognition> recognitionsList) {
         mContext = context;
@@ -55,14 +51,13 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
 
         Recognition recognition = mRecognitionList.get(position);
 
-        //holder.profilePicture.setImageResource(Integer.parseInt(recognition.getProfile()));
         holder.personName.setText(recognition.getName());
         holder.personRelation.setText(recognition.getRelation());
         holder.shortDescription.setText(recognition.getShortDescription());
         holder.longDescription.setText(recognition.getLongDescription());
         holder.recognitionKey.setText(recognition.getKey());
         Glide.with(mContext).load(recognition.getProfile()).into(holder.profilePicture);
-        tempUrl = recognition.getProfile();
+
     }
 
     @Override
@@ -101,7 +96,6 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
                 public boolean onMenuItemClick(MenuItem item) {
                     Intent intent = new Intent(mContext, RecognitionActivity.class);
                     intent.putExtra("Key", recognitionKey.getText().toString());
-                    intent.putExtra("tempUrl", tempUrl);
                     mContext.startActivity(intent);
                     return false;
                 }

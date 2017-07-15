@@ -2,6 +2,7 @@ package com.project.group.projectga.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -70,7 +71,6 @@ public class RecognitionActivity extends CoreActivity {
     protected Toolbar toolbar;
 
     String imgURL;
-    String tempURL;
 
 
     FirebaseAuth firebaseAuth;
@@ -103,7 +103,6 @@ public class RecognitionActivity extends CoreActivity {
             }
         });
 
-
         if (getUid() != null) {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
@@ -119,7 +118,6 @@ public class RecognitionActivity extends CoreActivity {
 
         if(intent!=null) {
             recognitionKey = intent.getStringExtra("Key");
-            tempURL = intent.getStringExtra("tempUrl");
         }
 
 
@@ -130,7 +128,6 @@ public class RecognitionActivity extends CoreActivity {
 
         else
         {
-            Toast.makeText(this, "TempUrl" + tempURL , Toast.LENGTH_SHORT).show();
             final String recognitionKeyValue = recognitionKey;
             recog_key.setText(recognitionKey);
             valueEventListener = new ValueEventListener() {
@@ -143,6 +140,7 @@ public class RecognitionActivity extends CoreActivity {
                         shortDescrptionTextInputEditText.setText(recognition.getShortDescription());
                         longDescriptionTextInputEditText.setText(recognition.getLongDescription());
                         Glide.with(RecognitionActivity.this).load(recognition.getProfile()).into(personImage);
+                        imgURL = recognition.getProfile();
                     }
                 }
                 @Override
@@ -175,10 +173,6 @@ public class RecognitionActivity extends CoreActivity {
             return;
         }
 
-        if(imgURL == null){
-            imgURL = tempURL;
-        }
-
         HashMap<String, String> personsListMap = new HashMap<>();
         personsListMap.put("name", personName);
         personsListMap.put("relation", personRelation);
@@ -203,8 +197,6 @@ public class RecognitionActivity extends CoreActivity {
         Intent intent = new Intent(RecognitionActivity.this,MainMenuActivity.class);
         intent.putExtra("recognitionFlag", true);
         startActivity(intent);
-        finish();
-
     }
 
     @Override
