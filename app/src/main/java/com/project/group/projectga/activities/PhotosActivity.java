@@ -5,6 +5,9 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,6 +34,8 @@ public class PhotosActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
 
+    MenuItem search;
+
     GridViewAdapter adapter;
 
     Button cancelButton;
@@ -43,9 +48,8 @@ public class PhotosActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        toolbar.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 250));
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
-        toolbar.setTitleMargin(250,150,350,0);
+
+
 
         gridView = (GridView)findViewById(R.id.gv_folder);
         int_position = getIntent().getIntExtra("value", 0);
@@ -81,5 +85,8 @@ public class PhotosActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
+
 }

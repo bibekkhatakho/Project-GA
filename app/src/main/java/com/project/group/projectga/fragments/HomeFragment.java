@@ -50,8 +50,8 @@ public class HomeFragment extends Fragment {
         icon.setImageResource(R.drawable.logoga);
         icon.setColorFilter(null);
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
-        title.setText("Google Alzheimer");
-        toolbar.setBackground(getResources().getDrawable(R.drawable.tile_gray));
+        title.setText(getString(R.string.mainMenu));
+        toolbar.setBackground(null);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
 
         initControls(view, userType);

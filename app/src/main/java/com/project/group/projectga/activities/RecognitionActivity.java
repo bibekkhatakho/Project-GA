@@ -10,9 +10,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +39,7 @@ import com.project.group.projectga.models.Recognition;
 
 import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +48,7 @@ import butterknife.ButterKnife;
  * Created by ramjiseetharaman on 7/13/17.
  */
 
-public class RecognitionActivity extends CoreActivity {
+public class RecognitionActivity extends CoreActivity implements View.OnFocusChangeListener {
 
     @BindView(R.id.personNameTextInputLayout)
     protected TextInputLayout personNameTextInputLayout;
@@ -53,12 +58,12 @@ public class RecognitionActivity extends CoreActivity {
     protected TextInputLayout personRelationTextInputLayout;
     @BindView(R.id.personRelationTextInputEditText)
     protected TextInputEditText personRelationTextInputEditText;
-    @BindView(R.id.shortDescTextInputLayout)
-    protected TextInputLayout shortDescrptionTextInputLayout;
+    @BindView(R.id.shortDescTextView)
+    protected TextView shortDescTextView;
     @BindView(R.id.shortDescTextInputEditText)
     protected TextInputEditText shortDescrptionTextInputEditText;
-    @BindView(R.id.longDescTextInputLayout)
-    protected TextInputLayout longDescriptionTextInputLayout;
+    @BindView(R.id.longDescTextView)
+    protected TextView longDescTextView;
     @BindView(R.id.longDescTextInputEditText)
     protected TextInputEditText longDescriptionTextInputEditText;
     @BindView(R.id.personImage)
@@ -84,6 +89,10 @@ public class RecognitionActivity extends CoreActivity {
     String userId;
 
     public static final int RC_CAMERA_CODE = 123;
+    private final int MAX_WORD_LIMIT_SHORT = 10;
+    private final int MAX_WORD_LIMIT_LONG = 50;
+
+    private InputFilter mInputFilter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,6 +101,64 @@ public class RecognitionActivity extends CoreActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        personNameTextInputEditText.setOnFocusChangeListener(this);
+        personRelationTextInputEditText.setOnFocusChangeListener(this);
+        shortDescrptionTextInputEditText.setOnFocusChangeListener(this);
+        longDescriptionTextInputEditText.setOnFocusChangeListener(this);
+
+        shortDescrptionTextInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                int totalWordCount = getWordsCount(s.toString());
+
+                // totalWordCount = 0 means a new word is going to start
+                if (count == 0 && totalWordCount >= MAX_WORD_LIMIT_SHORT) {
+                    forceFilter(shortDescrptionTextInputEditText, shortDescrptionTextInputEditText.getText().length());
+                    shortDescTextView.setHint("Exceeded the word limit of 10 words");
+                } else {
+                    removeFilter(shortDescrptionTextInputEditText);
+                    shortDescTextView.setHint(getString(R.string.shortDescSpecial));
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        longDescriptionTextInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                int totalWordCount = getWordsCount(s.toString());
+
+                // totalWordCount = 0 means a new word is going to start
+                if (count == 0 && totalWordCount >= MAX_WORD_LIMIT_LONG) {
+                    forceFilter(longDescriptionTextInputEditText, longDescriptionTextInputEditText.getText().length());
+                    longDescTextView.setHint("Exceeded the word limit of 50 words");
+                } else {
+                    removeFilter(shortDescrptionTextInputEditText);
+                    longDescTextView.setHint(getString(R.string.longDescSpecial));
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         Intent intent = getIntent();
 
 
@@ -168,8 +235,17 @@ public class RecognitionActivity extends CoreActivity {
         String shortDescription = shortDescrptionTextInputEditText.getText().toString().trim();
         String longDescription = longDescriptionTextInputEditText.getText().toString().trim();
 
-        if (!validateForm(personName, personRelation, shortDescription, longDescription)) {
-            hideProgressDialog();
+        if (!validatePersonName(personName)) {
+            return;
+        }
+
+        if (!validatePersonRelation(personRelation)) {
+            return;
+        }
+        if (!validateShortDescription(shortDescription)) {
+            return;
+        }
+        if (!validateLongDescription(longDescription)) {
             return;
         }
 
@@ -232,15 +308,65 @@ public class RecognitionActivity extends CoreActivity {
         }
     }
 
-    private boolean validateForm(String personName, String personRelation, String shortDesc, String longDesc) {
+    private boolean validatePersonName(String personName) {
 
-        boolean valid = true;
-        if (TextUtils.isEmpty(personName) || TextUtils.isEmpty(personRelation) || TextUtils.isEmpty(shortDesc) || TextUtils.isEmpty(longDesc)) {
-            Toast.makeText(this, "Please enter all mandatory values.", Toast.LENGTH_SHORT).show();
+        String textOnlyRegex = "^[\\p{L} .'-]+$";
+
+        if (personName.isEmpty()){
+            personNameTextInputLayout.setError("Person Name cannot be empty. Please enter a value");
             return false;
+        }else{
+            personNameTextInputLayout.setError(null);
+        }
+        if (TextUtils.isEmpty(personName) || !Pattern.matches(textOnlyRegex, personName)) {
+            personNameTextInputLayout.setError("Enter a valid Person name");
+            return false;
+        } else {
+            personNameTextInputLayout.setError(null);
+        }
+        return true;
+    }
+
+
+    private boolean validatePersonRelation(String personRelation) {
+
+        String textOnly = "^[A-Za-z -]+$";
+
+        if (personRelation.isEmpty()) {
+            personRelationTextInputLayout.setError("Relation cannot be empty. Please enter a value");
+            return false;
+        } else {
+            personRelationTextInputLayout.setError(null);
+        }
+        if(!Pattern.matches(textOnly, personRelation)){
+            personRelationTextInputLayout.setError("Please enter a valid relation");
+            return false;
+        } else{
+            personRelationTextInputLayout.setError(null);
         }
 
-        return valid;
+        return true;
+    }
+
+
+    private boolean validateShortDescription(String shortDescription) {
+        if (shortDescription.isEmpty()) {
+            shortDescrptionTextInputEditText.setError("Quick Description cannot be empty. Please enter a valid Quick Descriprtion");
+            return false;
+        } else {
+            shortDescrptionTextInputEditText.setError(null);
+        }
+        return true;
+    }
+
+    private boolean validateLongDescription(String longDescription) {
+        if (longDescription.isEmpty()) {
+            longDescriptionTextInputEditText.setError("Detailed Description cannot be empty. Please enter a valid Detailed Description");
+            return false;
+        } else {
+            longDescriptionTextInputEditText.setError(null);
+        }
+        return true;
     }
 
     private void onAuthFailure() {
@@ -261,4 +387,69 @@ public class RecognitionActivity extends CoreActivity {
             onAuthFailure();
         }
     }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+
+        switch (v.getId()) {
+
+            case R.id.personNameTextInputEditText:
+                if (!hasFocus) {
+                    validatePersonName(personNameTextInputEditText.getText().toString().trim());
+                } else {
+                    personNameTextInputLayout.setError(null);
+                }
+
+                break;
+
+            case R.id.personRelationTextInputEditText:
+                if (!hasFocus) {
+                    validatePersonRelation(personRelationTextInputEditText.getText().toString().trim());
+                } else {
+                    personRelationTextInputLayout.setError(null);
+                }
+
+                break;
+
+            case R.id.shortDescTextInputEditText:
+                if (!hasFocus) {
+                    validateShortDescription(shortDescrptionTextInputEditText.getText().toString().trim());
+                } else {
+                    shortDescrptionTextInputEditText.setError(null);
+                }
+
+                break;
+
+            case R.id.longDescTextInputEditText:
+                if (!hasFocus) {
+                    validateLongDescription(longDescriptionTextInputEditText.getText().toString().trim());
+                } else {
+                    longDescriptionTextInputEditText.setError(null);
+                }
+
+                break;
+        }
+
+    }
+
+    private int getWordsCount(String input) {
+        String trim = input.trim();
+        if (trim.isEmpty())
+            return 0;
+        return trim.split("\\s+").length; // Separate string by spaces
+    }
+
+    // Helping functions to dynamically add or remove filters from your EditText
+    private void forceFilter(EditText mEditText, int charCount) {
+        mInputFilter = new InputFilter.LengthFilter(charCount);
+        mEditText.setFilters(new InputFilter[] { mInputFilter });
+    }
+
+    private void removeFilter(EditText mEditText) {
+        if (mEditText != null) {
+            mEditText.setFilters(new InputFilter[0]);
+            mInputFilter = null;
+        }
+    }
+
 }

@@ -96,11 +96,11 @@ public class ProfileFragment extends Fragment {
 
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         ImageView icon = (ImageView) getActivity().findViewById(R.id.toolbarIcon);
-        icon.setImageResource(R.drawable.logoga);
+        icon.setImageResource(R.drawable.ic_person_black_24dp);
         icon.setColorFilter(null);
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
-        title.setText("Profile");
-        toolbar.setBackground(getResources().getDrawable(R.drawable.tile_gray));
+        title.setText(getString(R.string.profile));
+        toolbar.setBackground(null);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
 
         toolbar.setVisibility(View.VISIBLE);
