@@ -41,6 +41,8 @@ import com.project.group.projectga.helpers.BitmapHelper;
 import com.project.group.projectga.models.GridViewItem;
 import com.project.group.projectga.models.Model_images;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
@@ -84,7 +86,7 @@ public class GalleryFragment extends Fragment {
 
         gridView = (GridView) view.findViewById(R.id.gridView);
 
-        setGridAdapter(Environment.getExternalStorageDirectory().getAbsolutePath());
+        setGridAdapter(Environment.getExternalStorageDirectory().getPath());
 
 
 //        gv_folder = (GridView)view.findViewById(R.id.gv_folder);
@@ -206,7 +208,9 @@ public class GalleryFragment extends Fragment {
 //    }
 private void setGridAdapter(String path) {
     // Create a new grid adapter
+
     gridItems = createGridItems(path);
+
     MyGridAdapter adapter = new MyGridAdapter(getContext(), gridItems);
 
     // Set the grid adapter
@@ -249,26 +253,30 @@ private void setGridAdapter(String path) {
         List<GridViewItem> items = new ArrayList<>();
 
         // List all the items within the folder.
-        File[] files = new File(directoryPath).listFiles(new ImageFileFilter());
-        for (File file : files) {
+        File[]  files = new File(directoryPath).listFiles(new ImageFileFilter());
+        if(files != null && files.length !=0) {
+            for (File file : files) {
 
-            // Add the directories containing images or sub-directories
-            if (file.isDirectory()
-                    && file.listFiles(new ImageFileFilter()).length > 0) {
+                // Add the directories containing images or sub-directories
+                if (file.isDirectory()
+                        && file.listFiles(new ImageFileFilter()).length > 0) {
 
-                items.add(new GridViewItem(file.getAbsolutePath(), true, null));
+                    items.add(new GridViewItem(file.getAbsolutePath(), true, null));
+                }
+                // Add the images
+                else {
+                    Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(),
+                            50,
+                            50);
+                    items.add(new GridViewItem(file.getAbsolutePath(), false, image));
+                }
             }
-            // Add the images
-            else {
-                Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(),
-                        50,
-                        50);
-                items.add(new GridViewItem(file.getAbsolutePath(), false, image));
-            }
+        }else{
+            Toast.makeText(getContext(), "There are no items in the specified path to be displayed.", Toast.LENGTH_LONG).show();
         }
-
         return items;
     }
+
 
 
     /**

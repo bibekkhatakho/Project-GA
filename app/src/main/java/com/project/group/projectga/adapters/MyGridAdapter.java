@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.GridViewItem;
@@ -25,7 +26,6 @@ import java.util.List;
         List<GridViewItem> items;
         private Context mContext;
 
-
         public MyGridAdapter(Context context, List<GridViewItem> items) {
             mContext = context;
             this.items = items;
@@ -35,6 +35,7 @@ import java.util.List;
 
         @Override
         public int getCount() {
+
             return items.size();
         }
 
