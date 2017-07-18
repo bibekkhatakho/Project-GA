@@ -1,9 +1,11 @@
 package com.project.group.projectga.activities;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -35,10 +37,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
+import com.project.group.projectga.adapters.Voice;
 import com.project.group.projectga.models.Recognition;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
@@ -76,7 +81,8 @@ public class RecognitionActivity extends CoreActivity implements View.OnFocusCha
     protected Toolbar toolbar;
 
     String imgURL;
-
+    Voice voice;
+    boolean isPlaying;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
@@ -91,6 +97,9 @@ public class RecognitionActivity extends CoreActivity implements View.OnFocusCha
     public static final int RC_CAMERA_CODE = 123;
     private final int MAX_WORD_LIMIT_SHORT = 10;
     private final int MAX_WORD_LIMIT_LONG = 50;
+    private final int REQ_CODE_SPEECH_INPUT_SHORT = 100;
+    private final int REQ_CODE_SPEECH_INPUT_LONG = 200;
+
 
     private InputFilter mInputFilter;
 
@@ -101,7 +110,8 @@ public class RecognitionActivity extends CoreActivity implements View.OnFocusCha
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
+        isPlaying = false;
+        voice  = new Voice(getApplicationContext());
         personNameTextInputEditText.setOnFocusChangeListener(this);
         personRelationTextInputEditText.setOnFocusChangeListener(this);
         shortDescrptionTextInputEditText.setOnFocusChangeListener(this);
@@ -306,6 +316,18 @@ public class RecognitionActivity extends CoreActivity implements View.OnFocusCha
             });
 
         }
+
+        if(requestCode == REQ_CODE_SPEECH_INPUT_SHORT && data!=null ){
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            shortDescrptionTextInputEditText.setText(result.get(0));
+        }
+
+        if(requestCode == REQ_CODE_SPEECH_INPUT_LONG && data!=null ){
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            longDescriptionTextInputEditText.setText(result.get(0));
+        }
     }
 
     private boolean validatePersonName(String personName) {
@@ -451,5 +473,53 @@ public class RecognitionActivity extends CoreActivity implements View.OnFocusCha
             mInputFilter = null;
         }
     }
+
+    public void onClick(View v){
+        if (v.getId() == R.id.playShortDescription){
+
+
+                String shortStr = shortDescrptionTextInputEditText.getText().toString().trim();
+                voice.say(shortStr);
+
+
+        }
+        else if (v.getId() == R.id.playLongDescription){
+            String longStr = longDescriptionTextInputEditText.getText().toString().trim();
+            voice.say(longStr);
+        }
+
+
+    }
+
+    public void recordDescription (View v){
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+
+
+        if(v.getId() == R.id.recordShortDescription){
+            try {
+                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
+            } catch (ActivityNotFoundException a) {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.speech_not_supported),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (v.getId() == R.id.recordLongDescription){
+            try {
+                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
+            } catch (ActivityNotFoundException a) {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.speech_not_supported),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
 }

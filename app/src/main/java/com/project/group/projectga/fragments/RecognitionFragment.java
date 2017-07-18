@@ -78,6 +78,7 @@ public class RecognitionFragment extends Fragment  {
         // change the title on the toolbar
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(R.string.recognitionLabel);
+        title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setVisibility(View.VISIBLE);
         addButton = (FloatingActionButton) view.findViewById(R.id.addButton);
         recyclerView = (RecyclerView) view.findViewById(R.id.people_recycler);

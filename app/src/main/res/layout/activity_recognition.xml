@@ -137,19 +137,23 @@
 
 
                 <ImageView
+                    android:id="@+id/playShortDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/shortDesc"
                     android:src="@drawable/ic_volume_up_black_24dp"
                     android:layout_marginStart="30dp"
+                    android:onClick="onClick"
                     />
 
                 <ImageView
+                    android:id="@+id/recordShortDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/shortDesc"
                     android:src="@drawable/ic_mic_black_24dp"
-                    android:layout_marginStart="20dp"
+
+                    android:onClick="recordDescription"
                     />
 
             </LinearLayout>
@@ -185,19 +189,23 @@
 
 
                 <ImageView
+                    android:id="@+id/playLongDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/longDesc"
                     android:src="@drawable/ic_volume_up_black_24dp"
                     android:layout_marginStart="20dp"
+                    android:onClick="onClick"
                     />
 
                 <ImageView
+                    android:id="@+id/recordLongDescription"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/longDesc"
                     android:src="@drawable/ic_mic_black_24dp"
-                    android:layout_marginStart="20dp"
+
+                    android:onClick="recordDescription"
                     />
 
             </LinearLayout>

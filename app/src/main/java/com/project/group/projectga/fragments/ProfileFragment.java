@@ -100,8 +100,9 @@ public class ProfileFragment extends Fragment {
         icon.setColorFilter(null);
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(getString(R.string.profile));
+        title.setTextColor(getResources().getColor(R.color.colorPrimary));
         toolbar.setBackground(null);
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_black_24dp));
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_red_24dp));
 
         toolbar.setVisibility(View.VISIBLE);
 

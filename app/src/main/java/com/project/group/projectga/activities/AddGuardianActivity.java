@@ -92,9 +92,9 @@ public class AddGuardianActivity extends CoreActivity{
         databaseReference.child("guardianEmail").setValue(guardianUserEmail);
         databaseReferenceGuardian.child("guardianEmail").setValue(guardianUserEmail);
 
-                String subject = "App Invitation!";
-                String body = "Hi,\nThis email is to inform you that Mr." + fullName + " has invited you to be the guardian, as he/she is suffering from Alzheimer's."
-                        + " Check out the Google Play store to find our application to protect your loved one. \n APP NAME: Google Alzheimer \n\nRegards,\nGA Team.";
+                String subject = "Welcome to the GA Family";
+                String body = "Hi,\nThis email is to inform you that Mr." + fullName + " has invited you to be his/her “Alzheimer’s Guardian”. As such, if you accept his invitation you will be able to track his/her."
+                        + " whereabouts, to reach out to him/her in case of emergency and to fulfill other roles in order to protect your loved one”. Please check our GA app at Google Play store . \n APP NAME: Google Alzheimer \n\nBest Regards,\nGA Team.";
                 if (!TextUtils.isEmpty(guardianUserEmail)) {
                     BackgroundMail.newBuilder(AddGuardianActivity.this)
                             .withUsername("projectgateam@gmail.com")

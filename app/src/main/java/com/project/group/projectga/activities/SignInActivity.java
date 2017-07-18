@@ -72,6 +72,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
     private final static int RC_SIGN_IN = 2;
     private static final String TAG = "MainActivity";
     FirebaseAuth.AuthStateListener firebaseAuthListener;
+    DatabaseReference databaseReference;
     GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -99,8 +100,8 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
-                    reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
+                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Profile profile = dataSnapshot.getValue(Profile.class);
@@ -234,7 +235,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
-                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+                            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
                             databaseReference.child("fullName").setValue(user.getDisplayName());
                             databaseReference.child("email").setValue(user.getEmail());
                             databaseReference.child("profile").setValue(user.getPhotoUrl().toString());

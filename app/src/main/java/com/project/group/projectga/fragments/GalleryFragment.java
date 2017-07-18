@@ -81,6 +81,7 @@ public class GalleryFragment extends Fragment {
         icon.setColorFilter(getResources().getColor(R.color.Gallery));
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(getString(R.string.galleryLabel));
+        title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setBackground(getResources().getDrawable(R.drawable.tile_green));
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_green_24dp));
 

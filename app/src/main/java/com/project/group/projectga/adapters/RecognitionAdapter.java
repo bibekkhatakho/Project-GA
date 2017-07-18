@@ -2,12 +2,14 @@ package com.project.group.projectga.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
@@ -32,10 +34,12 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
 
     private Context mContext;
     private ArrayList<Recognition> mRecognitionList;
+    Voice play;
 
     public RecognitionAdapter(Context context, ArrayList<Recognition> recognitionsList) {
         mContext = context;
         mRecognitionList = recognitionsList;
+        play = new Voice(mContext);
 
     }
 
@@ -49,14 +53,24 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        Recognition recognition = mRecognitionList.get(position);
+        final Recognition recognition = mRecognitionList.get(position);
 
         holder.personName.setText(recognition.getName());
         holder.personRelation.setText(recognition.getRelation());
         holder.shortDescription.setText(recognition.getShortDescription());
         holder.longDescription.setText(recognition.getLongDescription());
         holder.recognitionKey.setText(recognition.getKey());
+        holder.play.setOnClickListener(new View.OnClickListener() {
+            String myString  = recognition.getShortDescription().replaceAll("\\.","") + recognition.getLongDescription().replaceAll("\\.","               ");
+
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext,myString,Toast.LENGTH_SHORT).show();
+                play.say(myString);
+            }
+        });
         Glide.with(mContext).load(recognition.getProfile()).into(holder.profilePicture);
+
 
     }
 
@@ -72,6 +86,7 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         TextView personName, personRelation, shortDescription, longDescription, recognitionKey;
         CircularImageView profilePicture;
+        ImageView play;
 
 
         ViewHolder(View v) {
@@ -83,6 +98,9 @@ public class RecognitionAdapter extends RecyclerView.Adapter<RecognitionAdapter.
             shortDescription = (TextView) v.findViewById(R.id.shortDescription);
             longDescription = (TextView) v.findViewById(R.id.longDescription);
             recognitionKey = (TextView) v.findViewById(R.id.recognition_key);
+            play = (ImageView)v.findViewById(R.id.playInfoView);
+
+
 
         }
 

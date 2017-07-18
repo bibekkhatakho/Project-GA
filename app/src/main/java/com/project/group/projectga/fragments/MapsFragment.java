@@ -43,6 +43,7 @@ public class MapsFragment extends Fragment {
         // change the title on the toolbar
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(R.string.mapLabel);
+        title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
 
         // enable the option menu
         setHasOptionsMenu(true);

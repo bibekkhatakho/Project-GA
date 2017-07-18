@@ -143,6 +143,11 @@ public class MainMenuActivity extends CoreActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        Fragment profileFragment = new ProfileFragment();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.container_gaFragments, profileFragment);
+                        transaction.addToBackStack("profile");
+                        transaction.commit();
                         return false;
                     }
                 })
