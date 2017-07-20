@@ -49,8 +49,6 @@ public class PhotosActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-
-
         gridView = (GridView)findViewById(R.id.gv_folder);
         int_position = getIntent().getIntExtra("value", 0);
         adapter = new GridViewAdapter(this, GalleryFragment.al_images,int_position);

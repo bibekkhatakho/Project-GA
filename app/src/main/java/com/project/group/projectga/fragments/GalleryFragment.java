@@ -233,7 +233,7 @@ public class GalleryFragment extends Fragment {
 //            if (gridItems.get(position).isDirectory()) {
 //                Dialog dialog = new Dialog(getContext());
 //                dialog.setTitle("Test");
-//                dialog.setContentView(R.layout.activity_recognition);
+//                dialog.setContentView(R.layout.activity_important_people);
 //                dialog.show();
 //                return false;
 //            } else {

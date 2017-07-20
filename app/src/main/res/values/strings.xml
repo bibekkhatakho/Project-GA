@@ -64,17 +64,19 @@
 
     //Gallery Screen
     <string name="shortDesc">Short Description</string>
+    <string name="importantPeople">Important People</string>
     <string name="longDesc">Long Description</string>
     <string name="shortDescSpecial">Quick Description: (10 words)</string>
     <string name="longDescSpecial">Detailed Description: (50 words)</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    
+    <string name="photoGallery">Photo Gallery</string>
+
     //Recognition Screen
     <string name="None">None</string>
     <string name="personName">Person Name</string>
     <string name="personRelation">Person Relation</string>
-    
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     //Speech to text

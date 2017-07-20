@@ -6,7 +6,7 @@ import android.net.Uri;
  * Created by ramjiseetharaman on 7/13/17.
  */
 
-public class Recognition {
+public class ImportantPeople {
 
     private String name;
     private String relation;
@@ -15,10 +15,10 @@ public class Recognition {
     private String profile;
     private String key;
 
-    public Recognition() {
+    public ImportantPeople() {
     }
 
-    public Recognition(String name, String relation, String shortDescription, String longDescription, String profile, String key) {
+    public ImportantPeople(String name, String relation, String shortDescription, String longDescription, String profile, String key) {
         this.name = name;
         this.relation = relation;
         this.shortDescription = shortDescription;

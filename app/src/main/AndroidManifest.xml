@@ -29,7 +29,8 @@
         <activity android:name=".activities.MainMenuActivity" />
         <activity android:name=".activities.ResetPasswordActivity" />
         <activity android:name=".activities.PhotosActivity" />
-        <activity android:name=".activities.RecognitionActivity"></activity>
+        <activity android:name=".activities.ImportantPeoplesActivity" />
+        <activity android:name=".activities.RecognitionActivity" />
     </application>
 
 </manifest>

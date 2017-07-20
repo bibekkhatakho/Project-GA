@@ -55,7 +55,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
-    TextView emailText, birthdayText, guardianEmail, displayName;
+    TextView emailText, birthdayText, guardianEmail;
     TextInputEditText nameText, phoneText;
     CircularImageView circularProfilePhoto;
     FancyButton cameraButton, galleryButton, removeButton;
@@ -124,7 +124,6 @@ public class ProfileFragment extends Fragment {
         circularProfilePhoto = (CircularImageView) view.findViewById(R.id.circularPhoto);
         emailText = (TextView) view.findViewById(R.id.emailText);
         birthdayText = (TextView) view.findViewById(R.id.birthdayText);
-        displayName = (TextView) view.findViewById(R.id.displayName);
         phoneText = (TextInputEditText) view.findViewById(R.id.phoneText);
         nameText = (TextInputEditText) view.findViewById(R.id.nameText);
         galleryButton = (FancyButton) view.findViewById(R.id.galleryButton);
@@ -132,7 +131,6 @@ public class ProfileFragment extends Fragment {
         removeButton = (FancyButton) view.findViewById(R.id.removeButton);
 
 
-        displayName.setText(sharedPreferences.getString(Preferences.NAME, ""));
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {

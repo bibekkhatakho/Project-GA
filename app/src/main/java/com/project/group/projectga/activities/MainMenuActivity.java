@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -37,11 +36,12 @@ import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.project.group.projectga.R;
 import com.project.group.projectga.fragments.BackupFragment;
-import com.project.group.projectga.fragments.GalleryFragment;
+import com.project.group.projectga.fragments.GalleryHomeFragment;
 import com.project.group.projectga.fragments.GamesPuzzlesFragment;
 import com.project.group.projectga.fragments.HomeFragment;
 import com.project.group.projectga.fragments.MapsFragment;
 import com.project.group.projectga.fragments.ProfileFragment;
+import com.project.group.projectga.fragments.ImportantPeopleFragment;
 import com.project.group.projectga.fragments.RecognitionFragment;
 import com.project.group.projectga.fragments.TagLocateFragment;
 import com.project.group.projectga.models.Profile;
@@ -66,7 +66,7 @@ public class MainMenuActivity extends CoreActivity {
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
-    boolean profileFlag, homeFlag = true, recognitionFlag=false;
+    boolean profileFlag, homeFlag = true, importantPeopleFlag=false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +75,7 @@ public class MainMenuActivity extends CoreActivity {
         ButterKnife.bind(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
+
         setSupportActionBar(toolbar);
 
         gaFragmentStack = new Stack<>();
@@ -89,7 +90,7 @@ public class MainMenuActivity extends CoreActivity {
         if (extras != null) {
             profileFlag = extras.getBoolean("profileFlag");
             homeFlag = extras.getBoolean("homeFlag");
-            recognitionFlag = extras.getBoolean("recognitionFlag");
+            importantPeopleFlag = extras.getBoolean("importantPeopleFlag");
         }
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
@@ -213,9 +214,9 @@ public class MainMenuActivity extends CoreActivity {
             }
         });
 
-        if (recognitionFlag) {
-            recognitionFlag = false;
-            Fragment fragment = new RecognitionFragment();
+        if (importantPeopleFlag) {
+            importantPeopleFlag = false;
+            Fragment fragment = new ImportantPeopleFragment();
             startFragment(fragment);
             result.setSelection(recognition);
         }
@@ -240,7 +241,7 @@ public class MainMenuActivity extends CoreActivity {
                                 gaFragmentStack.add(profile);
                                 break;
                             case 3:
-                                fragment = new GalleryFragment();
+                                fragment = new GalleryHomeFragment();
                                 gaFragmentStack.add(gallery);
                                 break;
                             case 4:

@@ -10,11 +10,11 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="194dp"
-            android:background="@drawable/tile_red"
+            android:background="@drawable/tile_green"
             android:paddingTop="20dp">
 
             <TextView
-                android:id="@+id/recognition_key"
+                android:id="@+id/people_key"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/None"

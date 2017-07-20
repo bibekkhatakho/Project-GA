@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
             galleryCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment galleryFragment = new GalleryFragment();
+                    Fragment galleryFragment = new GalleryHomeFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.container_gaFragments, galleryFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);

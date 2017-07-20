@@ -1,379 +1,375 @@
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.project.group.projectga.fragments.ProfileFragment">
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/photoLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/profileBackground"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/profile_background"
-            tools:ignore="ContentDescription" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.project.group.projectga.fragments.ProfileFragment">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photoCircle">
-
-            <mehdi.sakout.fancybuttons.FancyButton
-
-                android:id="@+id/cameraButton"
-                style="@style/fancyButtonProfile"
-                app:fb_defaultColor="@color/colorPrimary"
-                app:fb_radius="30dp"
-                app:fb_text="Camera"
-                app:fb_textSize="15sp" />
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:id="@+id/galleryButton"
-                style="@style/fancyButtonProfile"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/cameraButton"
-                app:fb_defaultColor="@color/colorPrimary"
-                app:fb_radius="30dp"
-                app:fb_text="Gallery"
-                app:fb_textSize="15sp" />
-
-            <mehdi.sakout.fancybuttons.FancyButton
-                android:id="@+id/removeButton"
-                style="@style/fancyButtonProfile"
-                android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/galleryButton"
-                app:fb_borderColor="@color/colorPrimary"
-                app:fb_borderWidth="2dp"
-                app:fb_defaultColor="@android:color/transparent"
-                app:fb_radius="30dp"
-                app:fb_text="Remove"
-                app:fb_textColor="@color/colorPrimary" />
-
-        </RelativeLayout>
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/photoCircle"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/photoLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/circularPhoto"
-                android:layout_width="125dp"
-                android:layout_height="125dp"
-                android:layout_centerInParent="true"
-                android:cropToPadding="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_account_circle_white_24dp"
-                app:civ_shadow="true"
-                app:civ_shadow_radius="24"
+            <ImageView
+                android:id="@+id/profileBackground"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/profile_background"
+                tools:ignore="ContentDescription" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/photoCircle">
+
+                <mehdi.sakout.fancybuttons.FancyButton
+
+                    android:id="@+id/cameraButton"
+                    style="@style/fancyButtonProfile"
+                    app:fb_defaultColor="@color/colorPrimary"
+                    app:fb_radius="30dp"
+                    app:fb_text="Camera"
+                    app:fb_textSize="15sp" />
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/galleryButton"
+                    style="@style/fancyButtonProfile"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/cameraButton"
+                    app:fb_defaultColor="@color/colorPrimary"
+                    app:fb_radius="30dp"
+                    app:fb_text="Gallery"
+                    app:fb_textSize="15sp" />
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/removeButton"
+                    style="@style/fancyButtonProfile"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/galleryButton"
+                    app:fb_borderColor="@color/colorPrimary"
+                    app:fb_borderWidth="2dp"
+                    app:fb_defaultColor="@android:color/transparent"
+                    app:fb_radius="30dp"
+                    app:fb_text="Remove"
+                    app:fb_textColor="@color/colorPrimary" />
+
+            </RelativeLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/photoCircle"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_marginTop="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/circularPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:cropToPadding="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_account_circle_white_24dp"
+                    app:civ_shadow="true"
+                    app:civ_shadow_radius="24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/aboutDividerLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/photoLayout">
+
+            <ImageView
+                android:id="@+id/aboutDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/md_grey_300"
+                android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintVertical_bias="0.0"
-                tools:layout_editor_absoluteY="3dp" />
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/displayName"
+                android:id="@+id/aboutLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:text="@string/displayName"
-                android:textColor="@color/appNameColor"
+                android:layout_marginTop="8dp"
+                android:background="@color/md_light_background"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/aboutLabel"
+                android:textAlignment="center"
+                android:textColor="@color/accent"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
-
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/aboutDividerLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/photoLayout"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp">
-
-        <ImageView
-            android:id="@+id/aboutDivider"
-            android:layout_width="336dp"
-            android:layout_height="2dp"
-            android:background="@color/md_grey_300"
-            android:scaleType="fitXY"
-            tools:ignore="ContentDescription"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/divider_horizontal_bright"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <TextView
-            android:id="@+id/aboutLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/md_light_background"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/aboutLabel"
-            android:textAlignment="center"
-            android:textColor="@color/accent"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/aboutLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/aboutDividerLayout"
-        android:layout_marginTop="8dp">
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/nameText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:enabled="false"
-            android:text="@string/fullName"
-            android:textColor="@color/textInputEditTextColor"
-            app:layout_constraintBottom_toBottomOf="@+id/nameIcon"
-            app:layout_constraintLeft_toRightOf="@+id/nameIcon"
-            app:layout_constraintTop_toTopOf="@+id/nameIcon" />
-
-        <ImageView
-            android:id="@+id/nameIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="32dp"
-            android:scaleType="fitXY"
-            android:tint="@color/colorAccent"
-            tools:ignore="ContentDescription"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_person_outline_black_24dp" />
-
-        <TextView
-            android:id="@+id/emailText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:text="@string/emailAddress"
-            app:layout_constraintBottom_toBottomOf="@+id/emailIcon"
-            app:layout_constraintLeft_toRightOf="@+id/emailIcon"
-            app:layout_constraintTop_toTopOf="@+id/emailIcon" />
-
-        <ImageView
-            android:id="@+id/emailIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="fitXY"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameIcon"
-            app:srcCompat="@drawable/ic_email_black_24dp"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/birthdayText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:text="@string/dateOfBirth"
-            app:layout_constraintBottom_toBottomOf="@+id/birthdayIcon"
-            app:layout_constraintLeft_toRightOf="@+id/birthdayIcon"
-            app:layout_constraintTop_toTopOf="@+id/birthdayIcon" />
-
-        <ImageView
-            android:id="@+id/birthdayIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="fitXY"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emailIcon"
-            app:srcCompat="@drawable/ic_cake_black_24dp"
-            tools:ignore="ContentDescription" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/phoneText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:enabled="false"
-            android:text="@string/contactNumber"
-            android:maxLength="14"
-            android:textColor="@color/textInputEditTextColor"
-            app:layout_constraintBottom_toBottomOf="@+id/phoneIcon"
-            app:layout_constraintLeft_toRightOf="@+id/phoneIcon"
-            app:layout_constraintTop_toTopOf="@+id/phoneIcon" />
-
-        <ImageView
-            android:id="@+id/phoneIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="fitXY"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/birthdayIcon"
-            app:srcCompat="@drawable/ic_phone_black_24dp"
-            tools:ignore="ContentDescription" />
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/guardianDividerLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/aboutLayout"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp">
-
-        <ImageView
-            android:id="@+id/guardianDivider"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@color/md_grey_300"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/divider_horizontal_bright"
-            tools:ignore="ContentDescription" />
-
-        <TextView
-            android:id="@+id/guardianLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/md_light_background"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/guardianLabel"
-            android:textAlignment="center"
-            android:textColor="@color/accent"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/guardianLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guardianDividerLayout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/guardianName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="@string/fullName"
-            android:textColor="@color/textViewColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/guardianEmail"
-            app:layout_constraintLeft_toRightOf="@+id/guardianPhotoLayout"
-            app:layout_constraintTop_toTopOf="@+id/guardianPhotoLayout"
-            app:layout_constraintVertical_chainStyle="packed" />
-
-        <TextView
-            android:id="@+id/guardianEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/emailAddress"
-            android:textColor="@color/textViewColor"
-            app:layout_constraintBottom_toBottomOf="@+id/guardianPhotoLayout"
-            app:layout_constraintLeft_toRightOf="@+id/guardianPhotoLayout"
-            app:layout_constraintTop_toBottomOf="@+id/guardianName" />
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/guardianPhotoLayout"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="32dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/circularGuardianPhoto"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_account_circle_white_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </android.support.constraint.ConstraintLayout>
 
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/aboutLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/aboutDividerLayout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/nameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:enabled="false"
+                android:text="@string/fullName"
+                android:textColor="@color/textInputEditTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/nameIcon"
+                app:layout_constraintLeft_toRightOf="@+id/nameIcon"
+                app:layout_constraintTop_toTopOf="@+id/nameIcon" />
+
+            <ImageView
+                android:id="@+id/nameIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="32dp"
+                android:scaleType="fitXY"
+                android:tint="@color/colorAccent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_person_outline_black_24dp"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/emailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="@string/emailAddress"
+                app:layout_constraintBottom_toBottomOf="@+id/emailIcon"
+                app:layout_constraintLeft_toRightOf="@+id/emailIcon"
+                app:layout_constraintTop_toTopOf="@+id/emailIcon" />
+
+            <ImageView
+                android:id="@+id/emailIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="fitXY"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nameIcon"
+                app:srcCompat="@drawable/ic_email_black_24dp"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/birthdayText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:text="@string/dateOfBirth"
+                app:layout_constraintBottom_toBottomOf="@+id/birthdayIcon"
+                app:layout_constraintLeft_toRightOf="@+id/birthdayIcon"
+                app:layout_constraintTop_toTopOf="@+id/birthdayIcon" />
+
+            <ImageView
+                android:id="@+id/birthdayIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="fitXY"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/emailIcon"
+                app:srcCompat="@drawable/ic_cake_black_24dp"
+                tools:ignore="ContentDescription" />
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/phoneText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:enabled="false"
+                android:maxLength="14"
+                android:text="@string/contactNumber"
+                android:textColor="@color/textInputEditTextColor"
+                app:layout_constraintBottom_toBottomOf="@+id/phoneIcon"
+                app:layout_constraintLeft_toRightOf="@+id/phoneIcon"
+                app:layout_constraintTop_toTopOf="@+id/phoneIcon" />
+
+            <ImageView
+                android:id="@+id/phoneIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="fitXY"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/birthdayIcon"
+                app:srcCompat="@drawable/ic_phone_black_24dp"
+                tools:ignore="ContentDescription" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/guardianDividerLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/aboutLayout">
+
+            <ImageView
+                android:id="@+id/guardianDivider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/md_grey_300"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/guardianLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/md_light_background"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/guardianLabel"
+                android:textAlignment="center"
+                android:textColor="@color/accent"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/guardianLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/guardianDividerLayout"
+            app:layout_constraintVertical_bias="0.0">
+
+            <TextView
+                android:id="@+id/guardianName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="@string/fullName"
+                android:textColor="@color/textViewColor"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/guardianEmail"
+                app:layout_constraintLeft_toRightOf="@+id/guardianPhotoLayout"
+                app:layout_constraintTop_toTopOf="@+id/guardianPhotoLayout"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/guardianEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/emailAddress"
+                android:textColor="@color/textViewColor"
+                app:layout_constraintBottom_toBottomOf="@+id/guardianPhotoLayout"
+                app:layout_constraintLeft_toRightOf="@+id/guardianPhotoLayout"
+                app:layout_constraintTop_toBottomOf="@+id/guardianName" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/guardianPhotoLayout"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="32dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/circularGuardianPhoto"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_account_circle_white_24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
+
+        </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
-</android.support.constraint.ConstraintLayout>
+
+</ScrollView>

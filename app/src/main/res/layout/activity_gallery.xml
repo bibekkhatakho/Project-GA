@@ -34,7 +34,7 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/galleryLabel"
                 android:textAllCaps="false"
-                android:textColor="@color/md_grey_900"
+                android:textColor="@color/textInputEditTextColor"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="@+id/toolbarIcon"
