@@ -2,6 +2,9 @@ package com.project.group.projectga.fragments;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -12,10 +15,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +39,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.PhotosActivity;
 import com.project.group.projectga.adapters.Adapter_PhotosFolder;
@@ -40,13 +50,20 @@ import com.project.group.projectga.adapters.MyGridAdapter;
 import com.project.group.projectga.helpers.BitmapHelper;
 import com.project.group.projectga.models.GridViewItem;
 import com.project.group.projectga.models.Model_images;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class GalleryFragment extends Fragment {
 
@@ -56,7 +73,14 @@ public class GalleryFragment extends Fragment {
     boolean boolean_folder;
     Adapter_PhotosFolder obj_adapter;
     GridView gv_folder;
+    FloatingActionButton cameraButton;
     private static final int REQUEST_PERMISSIONS = 100;
+    static final int REQUEST_TAKE_PHOTO = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    String projectName = "ProjectGA";
+    File directory;
+    String mCurrentPhotoPath;
 
     List<GridViewItem> gridItems;
     GridView gridView;
@@ -67,8 +91,7 @@ public class GalleryFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        directory = new File(Environment.getExternalStorageDirectory() + projectName);
     }
 
     @Nullable
@@ -84,6 +107,14 @@ public class GalleryFragment extends Fragment {
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setBackground(getResources().getDrawable(R.drawable.tile_green));
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_green_24dp));
+        cameraButton = (FloatingActionButton) view.findViewById(R.id.cameraBtn);
+
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
 
         //gridView = (GridView) view.findViewById(R.id.gridView);
 
@@ -119,7 +150,83 @@ public class GalleryFragment extends Fragment {
 		
         return view;
     }
-	
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {photoFile = createImageFile();
+
+            } catch (IOException ex) {
+
+                Context context = getContext();
+                CharSequence text = "Photo cannot be stored.";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Context context = getContext();
+                Uri photoURI = FileProvider.getUriForFile(context,
+                        "com.example.projectga.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }else{
+                Context context = getContext();
+                CharSequence text = "Attention! Required to take picture!!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        }
+    }
+
+    public void createFolder(){
+        if (!directory.exists()){
+            directory.mkdirs();
+        }
+
+    }
+
+    private File createImageFile() throws IOException {
+        createFolder();
+        // Create an image file name
+        Context context = getContext();
+        String timeStamp = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
+        String imageFileName = projectName + "_" + timeStamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        addImageToGallery(image, context);
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.getPath();
+        return image;
+    }
+
+    public static void addImageToGallery(File image, final Context context) {
+        ContentValues values = new ContentValues();
+
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.MediaColumns.DATA, image.toString());
+
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+    }
+
 	 @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         search = menu.add("search").setIcon(R.drawable.ic_search_green_24dp).setShowAsActionFlags(1);
@@ -204,6 +311,7 @@ public class GalleryFragment extends Fragment {
             }
         }
     }
+
 //private void setGridAdapter(String path) {
 //    // Create a new grid adapter
 //
