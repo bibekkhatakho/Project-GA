@@ -18,6 +18,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -116,6 +117,8 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         personRelationTextInputEditText.setOnFocusChangeListener(this);
         shortDescrptionTextInputEditText.setOnFocusChangeListener(this);
         longDescriptionTextInputEditText.setOnFocusChangeListener(this);
+
+        personImage.setBackground(getResources().getDrawable(R.drawable.ic_account_circle_white_24dp));
 
         shortDescrptionTextInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -246,16 +249,20 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         String longDescription = longDescriptionTextInputEditText.getText().toString().trim();
 
         if (!validatePersonName(personName)) {
+            hideProgressDialog();
             return;
         }
 
         if (!validatePersonRelation(personRelation)) {
+            hideProgressDialog();
             return;
         }
         if (!validateShortDescription(shortDescription)) {
+            hideProgressDialog();
             return;
         }
         if (!validateLongDescription(longDescription)) {
+            hideProgressDialog();
             return;
         }
 
@@ -390,6 +397,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         }
         return true;
     }
+
 
     private void onAuthFailure() {
         // Write new user

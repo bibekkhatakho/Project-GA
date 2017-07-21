@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -57,7 +58,7 @@ public class ProfileFragment extends Fragment {
 
     TextView emailText, birthdayText, guardianEmail;
     TextInputEditText nameText, phoneText;
-    CircularImageView circularProfilePhoto;
+    CircularImageView circularProfilePhoto, circularGuardianPhoto;
     FancyButton cameraButton, galleryButton, removeButton;
 
     ConstraintLayout guardianDividerLayout, guardianLayout;
@@ -122,6 +123,7 @@ public class ProfileFragment extends Fragment {
          }
 
         circularProfilePhoto = (CircularImageView) view.findViewById(R.id.circularPhoto);
+        circularGuardianPhoto = (CircularImageView) view.findViewById(R.id.circularGuardianPhoto);
         emailText = (TextView) view.findViewById(R.id.emailText);
         birthdayText = (TextView) view.findViewById(R.id.birthdayText);
         phoneText = (TextInputEditText) view.findViewById(R.id.phoneText);
@@ -130,8 +132,8 @@ public class ProfileFragment extends Fragment {
         cameraButton = (FancyButton) view.findViewById(R.id.cameraButton);
         removeButton = (FancyButton) view.findViewById(R.id.removeButton);
 
-
-
+        circularProfilePhoto.setBackground(getResources().getDrawable(R.drawable.ic_account_circle_white_24dp));
+        circularGuardianPhoto.setBackground(getResources().getDrawable(R.drawable.ic_account_circle_white_24dp));
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -146,7 +148,6 @@ public class ProfileFragment extends Fragment {
                 phoneText.setText(profile.getPhoneNumber());
                 Picasso.with(getContext()).load(profile.getProfile()).error(R.drawable.ic_error_outline_black_24dp).into(circularProfilePhoto);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

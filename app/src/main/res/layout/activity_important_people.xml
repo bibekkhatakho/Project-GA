@@ -90,6 +90,11 @@
                 android:layout_height="150dp"
                 android:layout_centerInParent="true"
                 android:scaleType="centerCrop"
+                app:civ_border_color="@color/Gallery"
+                app:civ_border="true"
+                app:civ_shadow_radius="24"
+                app:civ_border_width="1dp"
+                app:civ_shadow="true"
                 android:src="@drawable/ic_account_circle_white_24dp" />
 
             </RelativeLayout>
@@ -210,7 +215,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/shortDesc"
                 style="@style/textfieldbox"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="30dp"
                 android:padding="15dp"
                 android:id="@+id/shortDescTextInputEditText"
                 android:layout_marginTop="20dp" />
@@ -260,7 +265,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/textfieldbox"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="30dp"
                 android:padding="15dp"
                 android:id="@+id/longDescTextInputEditText"
                 android:hint="@string/longDesc"

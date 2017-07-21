@@ -25,7 +25,11 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_account_circle_white_24dp" />
+                android:src="@drawable/ic_account_circle_white_24dp"
+                app:civ_border="true"
+                app:civ_shadow="true"
+                app:civ_border_color="@color/Gallery"
+                app:civ_shadow_radius="24"/>
 
             <TextView
                 android:id="@+id/personName"
