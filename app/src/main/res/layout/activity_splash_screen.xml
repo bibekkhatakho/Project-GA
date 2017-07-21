@@ -12,11 +12,15 @@
     tools:ignore="MissingPrefix">
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/logoLayout">
     <ImageView
         android:id="@+id/projectgalogo"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_margin="40dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_margin="10dp"
         android:src="@drawable/logoga"
         tools:ignore="ContentDescription" />
 
@@ -24,24 +28,27 @@
         android:id="@+id/projectgaText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/projectgalogo"
-        android:layout_alignEnd="@+id/projectgalogo"
-        android:layout_alignStart="@+id/projectgalogo"
-        android:layout_alignTop="@+id/projectgalogo"
         android:gravity="center"
         android:paddingEnd="10dp"
-        android:paddingStart="150dp"
-        android:paddingTop="150dp"
+        android:paddingStart="160dp"
+        android:paddingTop="220dp"
         android:text="@string/googleAlzheimer"
         android:textColor="@color/appNameColor"
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:weightSum="1"
+        android:layout_below="@+id/logoLayout">
 
     <mehdi.sakout.fancybuttons.FancyButton
         android:id="@+id/signInButton"
         style="@style/fancyButton"
-        android:layout_below="@+id/projectgaText"
         android:clickable="true"
         android:elevation="2dp"
         fancy:fb_defaultColor="@color/colorPrimaryDark"
@@ -50,17 +57,24 @@
         fancy:fb_fontIconSize="30dp"
         fancy:fb_iconPosition="left"
         fancy:fb_radius="30dp"
+        android:layout_weight="0.4"
         fancy:fb_text="Sign In"
         fancy:fb_textColor="@android:color/white"
         fancy:fb_textSize="18sp" />
 
+        <android.support.v4.widget.Space
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_weight="0.2"/>
+
     <mehdi.sakout.fancybuttons.FancyButton
         android:id="@+id/signUpButton"
         style="@style/fancyButton"
-        android:layout_below="@+id/projectgaText"
-        android:layout_toEndOf="@+id/signInButton"
         android:clickable="true"
         android:elevation="2dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_weight="0.4"
         fancy:fb_defaultColor="@color/colorPrimaryDark"
         fancy:fb_focusColor="@color/colorAccent"
         fancy:fb_fontIconResource="&#xf234;"
@@ -70,5 +84,7 @@
         fancy:fb_text="Sign Up"
         fancy:fb_textColor="@android:color/white"
         fancy:fb_textSize="18sp" />
+
+    </LinearLayout>
 
 </RelativeLayout>

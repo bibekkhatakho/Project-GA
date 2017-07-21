@@ -246,6 +246,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            mainMenuIntent.putExtra("firstTime", true);
             startActivity(mainMenuIntent);
             finish();
         }

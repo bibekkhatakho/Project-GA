@@ -35,7 +35,8 @@
         android:layout_marginEnd="6dp"
         android:src="@drawable/ic_photo_camera_black_24dp"
         android:translationZ="12dp"
-        app:fabSize="normal" />
+        app:fabSize="normal"
+        app:backgroundTint="@color/loginbackground"/>
 
 </RelativeLayout>
 

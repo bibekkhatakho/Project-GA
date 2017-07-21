@@ -9,6 +9,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/googleAlzheimer"
         android:src="@drawable/ic_folder_grey_24dp" >
     </ImageView>
 
@@ -24,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="start"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="#FFFFFF" />
 
     </RelativeLayout>

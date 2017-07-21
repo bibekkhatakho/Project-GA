@@ -13,9 +13,10 @@
 
     <ImageView
         android:id="@+id/projectgalogo"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_margin="40dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_margin="20dp"
+        android:paddingTop="30dp"
         android:src="@drawable/logoga"
         tools:ignore="ContentDescription" />
 
@@ -23,15 +24,10 @@
         android:id="@+id/projectgaText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/projectgalogo"
-        android:layout_alignEnd="@+id/projectgalogo"
-        android:layout_alignStart="@+id/projectgalogo"
-        android:layout_alignTop="@+id/projectgalogo"
         android:gravity="center"
-        android:paddingBottom="10dp"
         android:paddingEnd="10dp"
-        android:paddingStart="140dp"
-        android:paddingTop="150dp"
+        android:paddingStart="165dp"
+        android:paddingTop="240dp"
         android:text="@string/googleAlzheimer"
         android:textColor="@color/appNameColor"
         android:textSize="18sp"

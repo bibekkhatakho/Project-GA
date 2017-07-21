@@ -25,7 +25,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_account_circle_white_24dp" />
+                android:src="@drawable/ic_account_circle_white_24dp" />
 
             <TextView
                 android:id="@+id/personName"
@@ -36,7 +36,7 @@
                 android:layout_marginTop="31dp"
                 android:layout_toEndOf="@+id/profilePicture"
                 android:text="@string/personName"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/personRelation"
@@ -46,7 +46,7 @@
                 android:layout_below="@+id/personName"
                 android:layout_marginTop="15dp"
                 android:text="@string/personRelation"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/shortDescription"
@@ -56,7 +56,7 @@
                 android:layout_below="@+id/personRelation"
                 android:layout_marginTop="10dp"
                 android:text="@string/shortDesc"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/longDescription"
@@ -65,7 +65,7 @@
                 android:layout_alignStart="@+id/shortDescription"
                 android:layout_below="@+id/shortDescription"
                 android:layout_marginTop="5dp"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:text="@string/longDesc" />
 
             <ImageView
@@ -74,7 +74,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                app:srcCompat="@drawable/ic_volume_up_black_24dp" />
+                android:layout_alignEnd="@+id/profilePicture"
+                android:contentDescription="@string/recognitionLabel"
+                app:srcCompat="@drawable/ic_volume_up_black_48dp" />
 
 
         </RelativeLayout>

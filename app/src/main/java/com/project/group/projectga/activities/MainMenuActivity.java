@@ -1,5 +1,6 @@
 package com.project.group.projectga.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +37,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.project.group.projectga.R;
-import com.project.group.projectga.fragments.BackupFragment;
 import com.project.group.projectga.fragments.GalleryHomeFragment;
 import com.project.group.projectga.fragments.GamesPuzzlesFragment;
 import com.project.group.projectga.fragments.HomeFragment;
@@ -66,7 +67,7 @@ public class MainMenuActivity extends CoreActivity {
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
-    boolean profileFlag, homeFlag = true, importantPeopleFlag=false;
+    boolean profileFlag, homeFlag = true, importantPeopleFlag=false, firstTime = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,11 +92,11 @@ public class MainMenuActivity extends CoreActivity {
             profileFlag = extras.getBoolean("profileFlag");
             homeFlag = extras.getBoolean("homeFlag");
             importantPeopleFlag = extras.getBoolean("importantPeopleFlag");
+            firstTime = extras.getBoolean("firstTime");
         }
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
         final String userType = preferences.getString(Preferences.USER_TYPE, "");
-        Toast.makeText(this, userType, Toast.LENGTH_LONG).show();
 
         Log.d("userTypeMain", userType);
 
@@ -115,7 +116,6 @@ public class MainMenuActivity extends CoreActivity {
         final PrimaryDrawerItem maps = new PrimaryDrawerItem().withName("Maps").withIdentifier(5).withIcon(R.drawable.ic_place_black_24dp);
         final PrimaryDrawerItem tagAndLocate = new PrimaryDrawerItem().withName("Tag & Locate").withIdentifier(6).withIcon(R.drawable.ic_remove_red_eye_black_24dp);
         final PrimaryDrawerItem gamesAndPuzzle = new PrimaryDrawerItem().withName("Games & Puzzles").withIdentifier(7).withIcon(R.drawable.ic_casino_black_24dp);
-        final PrimaryDrawerItem backup = new PrimaryDrawerItem().withName("Backup").withIdentifier(8).withIcon(GoogleMaterial.Icon.gmd_save);
         final PrimaryDrawerItem logout = new PrimaryDrawerItem().withName("Logout").withIdentifier(9).withIcon(FontAwesome.Icon.faw_sign_out);
 
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
@@ -134,7 +134,28 @@ public class MainMenuActivity extends CoreActivity {
         String email = preferences.getString(Preferences.EMAIL, "");
         Log.d("NAMEMAIN", name);
         Log.d("emailmain", email);
-        final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.mipmap.ic_account_circle_white_24dp);
+
+        if(firstTime) {
+            if (userType.equalsIgnoreCase("Guardian")) {
+
+                AlertDialog.Builder alertDialogBuilder;
+                alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
+                alertDialogBuilder.setTitle("Welcome " + name + "!!");
+                alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
+                alertDialogBuilder.setMessage(R.string.addGuardianInfo);
+                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        hideProgressDialog();
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                alertDialog.setCancelable(false);
+            }
+        }
+
+        final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
 
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -172,7 +193,6 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(maps)
                     .addDrawerItems(tagAndLocate)
                     .addDrawerItems(gamesAndPuzzle)
-                    .addDrawerItems(backup)
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
@@ -189,7 +209,6 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(home)
                     .addDrawerItems(profile)
                     .addDrawerItems(maps)
-                    .addDrawerItems(backup)
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
@@ -203,7 +222,7 @@ public class MainMenuActivity extends CoreActivity {
                     userProfile.withIcon(profilePic);
                     headerResult.updateProfile(userProfile);
                 } else {
-                    userProfile.withIcon(R.mipmap.ic_account_circle_white_24dp);
+                    userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
                     headerResult.updateProfile(userProfile);
                 }
             }
@@ -260,10 +279,6 @@ public class MainMenuActivity extends CoreActivity {
                                 fragment = new GamesPuzzlesFragment();
                                 gaFragmentStack.add(gamesAndPuzzle);
                                 break;
-                            case 8:
-                                fragment = new BackupFragment();
-                                gaFragmentStack.add(backup);
-                                break;
                             default:
                                 fragment = new HomeFragment();
                                 break;
@@ -283,10 +298,6 @@ public class MainMenuActivity extends CoreActivity {
                             case 5:
                                 fragment = new MapsFragment();
                                 gaFragmentStack.add(maps);
-                                break;
-                            case 8:
-                                fragment = new BackupFragment();
-                                gaFragmentStack.add(backup);
                                 break;
                             default:
                                 fragment = new HomeFragment();

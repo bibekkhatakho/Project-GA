@@ -169,7 +169,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("click", "remove");
-                databaseReference.child("profile").setValue("https://firebasestorage.googleapis.com/v0/b/projectga-4c8e4.appspot.com/o/ic_account_circle_black_48dp.png?alt=media&token=20dba348-4406-4117-86ee-d2b0a06280d5");
+                databaseReference.child("profile").setValue("https://firebasestorage.googleapis.com/v0/b/projectga-4c8e4.appspot.com/o/ic_account_circle_white_48dp.png?alt=media&token=20dba348-4406-4117-86ee-d2b0a06280d5");
                 Toast.makeText(getContext(), "Profile Picture Removed", Toast.LENGTH_SHORT).show();
             }
         });

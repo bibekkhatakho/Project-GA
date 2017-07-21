@@ -73,7 +73,7 @@ public class ImportantPeopleFragment extends Fragment  {
 		toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_green_24dp));
         // change the icon on the toolbar
         ImageView icon = (ImageView) getActivity().findViewById(R.id.toolbarIcon);
-        icon.setImageResource(R.drawable.ic_perm_media_black_24dp);
+        icon.setImageResource(R.drawable.ic_group_add_black_24dp);
         icon.setColorFilter(getResources().getColor(R.color.Gallery));
         // change the title on the toolbar
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
