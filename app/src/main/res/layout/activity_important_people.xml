@@ -125,6 +125,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:hint="@string/personName"
+                        android:elevation="8dp"
                         android:background="@null"
                         android:inputType="textPersonName"
                         tools:ignore="MissingPrefix" />
@@ -159,6 +160,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
+                        android:elevation="8dp"
                         android:layout_marginStart="15dp"
                         android:hint="@string/personRelation"
                         android:inputType="text"
@@ -213,9 +215,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/shortDesc"
-                style="@style/textfieldbox"
                 android:layout_marginStart="30dp"
                 android:padding="15dp"
+                android:elevation="8dp"
                 android:id="@+id/shortDescTextInputEditText"
                 android:layout_marginTop="20dp" />
 

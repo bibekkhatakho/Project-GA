@@ -4,6 +4,7 @@ package com.project.group.projectga.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
@@ -29,6 +30,8 @@ public class GalleryHomeFragment extends Fragment {
     Toolbar toolbar;
     MenuItem search;
 
+    TextInputEditText gallery;
+    TextInputEditText importantPeople;
     public GalleryHomeFragment(){
 
     }
@@ -61,10 +64,10 @@ public class GalleryHomeFragment extends Fragment {
 
     public void initControls(View view) {
 
-        CardView galleryCardView = (CardView) view.findViewById(R.id.galleryCard);
-        CardView importantPeopleCardView = (CardView) view.findViewById(R.id.peopleCard);
+        gallery = (TextInputEditText) view.findViewById(R.id.galleryButn);
+        importantPeople = (TextInputEditText) view.findViewById(R.id.importantPeopleButton);
 
-        galleryCardView.setOnClickListener(new View.OnClickListener() {
+        gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment galleryFragment = new GalleryFragment();
@@ -76,7 +79,7 @@ public class GalleryHomeFragment extends Fragment {
             }
         });
 
-        importantPeopleCardView.setOnClickListener(new View.OnClickListener() {
+        importantPeople.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Fragment recognitionFragment = new ImportantPeopleFragment();

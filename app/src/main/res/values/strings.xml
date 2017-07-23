@@ -70,7 +70,8 @@
     <string name="longDescSpecial">Detailed Description: (50 words)</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
-    <string name="photoGallery">Photo Gallery</string>
+    <string name="photoGallery">Photos and Videos</string>
+    <string name="galleryHomeText">You can add people who are important in your life in the Important People category and have then always in your sight\. In photos and videos\, you can label all of your files with name\, date and description\, so you will never forget your memories\.  </string>
 
     //Recognition Screen
     <string name="None">None</string>
