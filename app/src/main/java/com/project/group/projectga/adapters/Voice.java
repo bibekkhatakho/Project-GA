@@ -33,6 +33,11 @@ public class Voice {
     public void stop() {
         tts.stop();
     }
+
+    public boolean isSpeaking() {
+        return tts.isSpeaking();
+    }
+
     @Override
     protected void finalize() throws Throwable {
         if(tts !=null){

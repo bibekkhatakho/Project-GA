@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -65,6 +66,7 @@ import java.util.Date;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static java.lang.Thread.sleep;
 
 public class GalleryFragment extends Fragment {
 
@@ -86,9 +88,11 @@ public class GalleryFragment extends Fragment {
     List<GridViewItem> gridItems;
     GridView gridView;
 
-    public GalleryFragment(){
-
+    public static GalleryFragment newInstance(){
+        GalleryFragment galleryFragment = new GalleryFragment();
+        return galleryFragment;
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +112,8 @@ public class GalleryFragment extends Fragment {
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setBackground(getResources().getDrawable(R.drawable.tile_green));
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_green_24dp));
-        cameraButton = (FloatingActionButton) view.findViewById(R.id.cameraBtn);
+        cameraButton = (FloatingActionButton) getActivity().findViewById(R.id.rightActionButton);
+        cameraButton.setVisibility(View.VISIBLE);
 
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +123,7 @@ public class GalleryFragment extends Fragment {
         });
 
         //gridView = (GridView) view.findViewById(R.id.gridView);
+
 
         gv_folder = (GridView)view.findViewById(R.id.gv_folder);
         gv_folder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -151,6 +157,13 @@ public class GalleryFragment extends Fragment {
 		
         return view;
     }
+
+    @Override
+    public void onDestroyView() {
+        cameraButton.setVisibility(View.INVISIBLE);
+        super.onDestroyView();
+    }
+
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -226,23 +239,25 @@ public class GalleryFragment extends Fragment {
         values.put(MediaStore.MediaColumns.DATA, image.toString());
 
         context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            Fragment galleryFragment = new GalleryFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.container_gaFragments, galleryFragment);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.addToBackStack(null);
-            ft.commit();
-        }
+       if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+
+           Fragment galleryFragment = new GalleryFragment();
+           FragmentManager fm = getFragmentManager();
+           fm.popBackStack();
+           FragmentTransaction ft = fm.beginTransaction();
+           ft.replace(R.id.container_gaFragments, galleryFragment);
+           ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+           ft.addToBackStack(null);
+           ft.commit();
+       }
     }
 
-	 @Override
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         search = menu.add("search").setIcon(R.drawable.ic_search_green_24dp).setShowAsActionFlags(1);
 
@@ -428,5 +443,9 @@ public class GalleryFragment extends Fragment {
 //            return false;
 //        }
 //    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
 }

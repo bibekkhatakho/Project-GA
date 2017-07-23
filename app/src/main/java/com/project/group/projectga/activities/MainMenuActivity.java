@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.project.group.projectga.R;
+import com.project.group.projectga.fragments.GalleryFragment;
 import com.project.group.projectga.fragments.GalleryHomeFragment;
 import com.project.group.projectga.fragments.GamesPuzzlesFragment;
 import com.project.group.projectga.fragments.HomeFragment;
@@ -261,7 +263,7 @@ public class MainMenuActivity extends CoreActivity {
                                 break;
                             case 3:
                                 fragment = new GalleryHomeFragment();
-                                gaFragmentStack.add(gallery);
+                                //gaFragmentStack.add(gallery);
                                 break;
                             case 4:
                                 fragment = new RecognitionFragment();
@@ -346,11 +348,13 @@ public class MainMenuActivity extends CoreActivity {
         if (result.isDrawerOpen()) {
             result.closeDrawer();
         }
-        else if (getFragmentManager().getBackStackEntryCount() > 0 ){
+      else if (getFragmentManager().getBackStackEntryCount() > 0 ) {
             getFragmentManager().popBackStack();
-        } else {
+        }
+        else {
             super.onBackPressed();
         }
+
 
     }
 
@@ -373,6 +377,5 @@ public class MainMenuActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
     }
-
 
 }

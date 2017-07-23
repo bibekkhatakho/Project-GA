@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
         icon.setColorFilter(null);
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(getString(R.string.mainMenu));
-        title.setTextColor(getResources().getColor(R.color.colorPrimary));
+        title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setBackground(null);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_red_24dp));
 
