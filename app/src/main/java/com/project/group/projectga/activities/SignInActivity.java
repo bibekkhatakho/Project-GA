@@ -2,8 +2,6 @@ package com.project.group.projectga.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -101,45 +99,6 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
                     databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(getUid());
-//                    databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(DataSnapshot dataSnapshot) {
-//                            Profile profile = dataSnapshot.getValue(Profile.class);
-//                            if (dataSnapshot.exists()) {
-//                                if (profile.getUserType() != null) {
-//                                    Log.e("key", dataSnapshot.getKey());
-//                                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
-//                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                                    if (profile != null) {
-//                                        editor.putString(Preferences.EMAIL, profile.getEmail());
-//                                        editor.putString(Preferences.NAME, profile.getFullName());
-//                                        editor.putString(Preferences.USER_TYPE, profile.getUserType());
-//                                    }
-//                                    editor.putString(Preferences.USERID, getUid());
-//                                    editor.apply();
-//
-//                                    Intent loginIntent = new Intent(SignInActivity.this, MainMenuActivity.class);
-//                                    try {
-//                                        sleep(1000);
-//                                    } catch (InterruptedException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                    startActivity(loginIntent);
-//                                    finish();
-//                                } else {
-//                                    startActivity(new Intent(SignInActivity.this, ContactDetailsActivity.class));
-//                                    finish();
-//                                }
-//                            } else {
-//                                Toast.makeText(SignInActivity.this, "Snapshot not yet saved", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(DatabaseError databaseError) {
-//
-//                        }
-//                    });
                 }
             }
         };
@@ -238,8 +197,8 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
                             databaseReference.child("fullName").setValue(user.getDisplayName());
                             databaseReference.child("email").setValue(user.getEmail());
-                            databaseReference.child("profile").setValue(user.getPhotoUrl().toString());
-                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            databaseReference.child("profile").setValue(user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
+                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     Profile profile = dataSnapshot.getValue(Profile.class);
@@ -265,22 +224,15 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                                             startActivity(loginIntent);
                                             finish();
                                         } else {
-                                            startActivity(new Intent(SignInActivity.this, ContactDetailsActivity.class));
+                                            Intent contactIntent = new Intent(SignInActivity.this, ContactDetailsActivity.class);
+                                            contactIntent.putExtra("userEmailAddress", profile.getEmail());
+                                            startActivity(contactIntent);
                                             finish();
                                         }
                                     } else {
                                         Toast.makeText(SignInActivity.this, "Snapshot not yet saved", Toast.LENGTH_SHORT).show();
                                     }
                                     Log.e("key", dataSnapshot.getKey());
-//                                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SignInActivity.this);
-//                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                                    if (profile != null) {
-//                                        editor.putString(Preferences.EMAIL, profile.getEmail());
-//                                        editor.putString(Preferences.NAME, profile.getFullName());
-//                                        editor.putString(Preferences.USER_TYPE, profile.getUserType());
-//                                    }
-//                                    editor.putString(Preferences.USERID, getUid());
-//                                    editor.apply();
                                 }
 
                                 @Override
@@ -297,7 +249,6 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                             //updateUI(null);
                         }
 
-                        // ...
                     }
                 });
     }

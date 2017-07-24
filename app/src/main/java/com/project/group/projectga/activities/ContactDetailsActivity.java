@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +62,6 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
     private FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
-    String userType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +80,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         final List<String> userTypeList = new ArrayList<>(Arrays.asList(userType));
 
         // Initializing an ArrayAdapter
-        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                 this,R.layout.spinner_item,userTypeList);
 
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
@@ -307,17 +306,6 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         }
     }
 
-    private void onAuthSuccess() {
-        if(userType.equalsIgnoreCase("Standard"))
-            startActivity(new Intent(ContactDetailsActivity.this, AddGuardianActivity.class));
-        else {
-            startActivity(new Intent(ContactDetailsActivity.this, MainMenuActivity.class));
-
-        }
-        finish();
-
-    }
-
     @Override
     public void onClick(View v) {
         if (v == dateofBirthTextInputEditText) {
@@ -333,7 +321,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
                                               int monthOfYear, int dayOfMonth) {
                             Calendar calendar = Calendar.getInstance();
                             calendar.set(year, monthOfYear, dayOfMonth);
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy");
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
                             String startDate = dateFormat.format(calendar.getTime());
                             dateofBirthTextInputEditText.setText(startDate);
                         }

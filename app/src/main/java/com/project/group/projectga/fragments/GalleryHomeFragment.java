@@ -8,7 +8,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 
 import android.view.LayoutInflater;
@@ -22,8 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.project.group.projectga.R;
-
-import mehdi.sakout.fancybuttons.FancyButton;
 
 public class GalleryHomeFragment extends Fragment {
 

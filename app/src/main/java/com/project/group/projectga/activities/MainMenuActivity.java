@@ -14,9 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +36,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.project.group.projectga.R;
-import com.project.group.projectga.fragments.GalleryFragment;
 import com.project.group.projectga.fragments.GalleryHomeFragment;
 import com.project.group.projectga.fragments.GamesPuzzlesFragment;
 import com.project.group.projectga.fragments.HomeFragment;

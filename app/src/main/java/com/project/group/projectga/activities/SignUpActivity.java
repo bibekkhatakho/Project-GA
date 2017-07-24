@@ -53,8 +53,6 @@ public class SignUpActivity extends CoreActivity implements View.OnFocusChangeLi
 
     private FirebaseAuth firebaseAuth;
 
-    String TAG = SignUpActivity.class.getSimpleName();
-
     DatabaseReference databaseReference;
 
     String fullName;

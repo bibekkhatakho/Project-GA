@@ -26,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -63,7 +62,6 @@ public class ProfileFragment extends Fragment {
 
     ConstraintLayout guardianDividerLayout, guardianLayout;
 
-    public static final int RC_SIGN_IN = 123;
     private static final int RC_PHOTO_PICKER = 3;
     public static final int RC_CAMERA_CODE = 123;
 

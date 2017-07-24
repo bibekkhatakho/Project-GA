@@ -1,21 +1,15 @@
 package com.project.group.projectga.fragments;
 
 import android.Manifest;
-import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -24,8 +18,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,36 +29,21 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.PhotosActivity;
 import com.project.group.projectga.adapters.Adapter_PhotosFolder;
-import com.project.group.projectga.adapters.MyGridAdapter;
-import com.project.group.projectga.helpers.BitmapHelper;
-import com.project.group.projectga.models.GridViewItem;
 import com.project.group.projectga.models.Model_images;
-import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
-import static java.lang.Thread.sleep;
 
 public class GalleryFragment extends Fragment {
 
@@ -79,18 +56,12 @@ public class GalleryFragment extends Fragment {
     FloatingActionButton cameraButton;
     private static final int REQUEST_PERMISSIONS = 100;
     static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     String projectName = "ProjectGA";
     File directory;
     String mCurrentPhotoPath;
 
-    List<GridViewItem> gridItems;
-    GridView gridView;
-
-    public static GalleryFragment newInstance(){
-        GalleryFragment galleryFragment = new GalleryFragment();
-        return galleryFragment;
+    public GalleryFragment(){
     }
 
     @Override
@@ -122,9 +93,6 @@ public class GalleryFragment extends Fragment {
             }
         });
 
-        //gridView = (GridView) view.findViewById(R.id.gridView);
-
-
         gv_folder = (GridView)view.findViewById(R.id.gv_folder);
         gv_folder.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -151,8 +119,7 @@ public class GalleryFragment extends Fragment {
             Log.e("Else","Else");
             fn_imagespath();
         }
-//
-		
+
 		setHasOptionsMenu(true);
 		
         return view;
@@ -342,107 +309,6 @@ public class GalleryFragment extends Fragment {
         }
     }
 
-//private void setGridAdapter(String path) {
-//    // Create a new grid adapter
-//
-//    gridItems = createGridItems(path);
-//
-//    MyGridAdapter adapter = new MyGridAdapter(getContext(), gridItems);
-//
-//    // Set the grid adapter
-//    gridView.setAdapter(adapter);
-//
-//    // Set the onClickListener
-//    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//        @Override
-//        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            if (gridItems.get(position).isDirectory()) {
-//                setGridAdapter(gridItems.get(position).getPath());
-//            }
-//            else {
-//                gridItems.get(position).getImage();
-//            }
-//        }
-//    });
-//
-//    gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//        @Override
-//        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//            if (gridItems.get(position).isDirectory()) {
-//                Dialog dialog = new Dialog(getContext());
-//                dialog.setTitle("Test");
-//                dialog.setContentView(R.layout.activity_important_people);
-//                dialog.show();
-//                return false;
-//            } else {
-//                Dialog dialog = new Dialog(getContext());
-//                dialog.setTitle("Test");
-//                dialog.setContentView(R.layout.activity_reset_password);
-//                dialog.show();
-//                return false;
-//            }
-//        }
-//    });
-//}
-
-//    private List<GridViewItem> createGridItems(String directoryPath) {
-//        List<GridViewItem> items = new ArrayList<>();
-//
-//        // List all the items within the folder.
-//        File[]  files = new File(directoryPath).listFiles(new ImageFileFilter());
-//        if(files != null && files.length !=0) {
-//            for (File file : files) {
-//
-//                // Add the directories containing images or sub-directories
-//                if (file.isDirectory()
-//                        && file.listFiles(new ImageFileFilter()).length > 0) {
-//
-//                    items.add(new GridViewItem(file.getAbsolutePath(), true, null));
-//                }
-//                // Add the images
-//                else {
-//                    Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(),
-//                            50,
-//                            50);
-//                    items.add(new GridViewItem(file.getAbsolutePath(), false, image));
-//                }
-//            }
-//        }else{
-//            Toast.makeText(getContext(), "There are no items in the specified path to be displayed.", Toast.LENGTH_LONG).show();
-//        }
-//        return items;
-//    }
-//
-//
-//
-//    /**
-//     * Checks the file to see if it has a compatible extension.
-//     */
-//    private boolean isImageFile(String filePath) {
-//        if (filePath.endsWith(".jpg") || filePath.endsWith(".png"))
-//        // Add other formats as desired
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    /**
-//     * This can be used to filter files.
-//     */
-//    private class ImageFileFilter implements FileFilter {
-//
-//        @Override
-//        public boolean accept(File file) {
-//            if (file.isDirectory()) {
-//                return true;
-//            }
-//            else if (isImageFile(file.getAbsolutePath())) {
-//                return true;
-//            }
-//            return false;
-//        }
-//    }
     @Override
     public void onDestroy() {
         super.onDestroy();

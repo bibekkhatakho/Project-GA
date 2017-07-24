@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/gridView"
-    android:numColumns="3"
-    android:gravity="center"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp">
 
-</GridView-->
-
-<android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/offWhite"
