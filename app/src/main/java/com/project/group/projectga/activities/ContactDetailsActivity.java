@@ -73,8 +73,8 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
         // Initializing a String Array
         final String[] userType = new String[]{
-                "Standard",
-                "Guardian"
+                "Standard User",
+                "Guardian User"
         };
 
         final List<String> userTypeList = new ArrayList<>(Arrays.asList(userType));
@@ -232,7 +232,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
 
         hideProgressDialog();
         Toast.makeText(this, "User Profile Created.. Redirecting", Toast.LENGTH_SHORT).show();
-        if(userType.equalsIgnoreCase("Standard")) {
+        if(userType.equalsIgnoreCase("Standard User")) {
             Intent addGuardianIntent = new Intent(ContactDetailsActivity.this, AddGuardianActivity.class);
             addGuardianIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(addGuardianIntent);

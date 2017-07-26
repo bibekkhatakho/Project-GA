@@ -108,11 +108,11 @@ public class ProfileFragment extends Fragment {
         guardianDividerLayout = (ConstraintLayout) view.findViewById(R.id.guardianDividerLayout);
         guardianLayout = (ConstraintLayout) view.findViewById(R.id.guardianLayout);
 
-         if(userType.equalsIgnoreCase("Standard")) {
+         if(userType.equalsIgnoreCase("Standard User")) {
              guardianLayout.setVisibility(View.VISIBLE);
              guardianDividerLayout.setVisibility(View.VISIBLE);
              guardianEmail = (TextView) view.findViewById(R.id.guardianEmail);
-         }else if(userType.equalsIgnoreCase("Guardian")){
+         }else if(userType.equalsIgnoreCase("Guardian User")){
              guardianLayout.setVisibility(View.GONE);
              guardianDividerLayout.setVisibility(View.GONE);
          }else{
@@ -139,7 +139,7 @@ public class ProfileFragment extends Fragment {
                 Profile profile = dataSnapshot.getValue(Profile.class);
                 nameText.setText(profile.getFullName());
                 emailText.setText(profile.getEmail());
-                if(userType.equalsIgnoreCase("Standard")) {
+                if(userType.equalsIgnoreCase("Standard User")) {
                     guardianEmail.setText(profile.getGuardianEmail());
                 }
                 birthdayText.setText(profile.getDateOfBirth());

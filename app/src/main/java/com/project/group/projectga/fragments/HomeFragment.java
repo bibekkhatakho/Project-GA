@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         String userType = sharedPreferences.getString(Preferences.USER_TYPE, "");
         View view;
-        if (userType.equalsIgnoreCase("Standard")) {
+        if (userType.equalsIgnoreCase("Standard User")) {
             view = inflater.inflate(R.layout.fragment_home, container, false);
         } else {
             view = inflater.inflate(R.layout.fragment_home_guardian, container, false);
@@ -50,7 +50,7 @@ public class HomeFragment extends Fragment {
         icon.setImageResource(R.drawable.logoga);
         icon.setColorFilter(null);
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
-        title.setText(getString(R.string.mainMenu));
+        title.setText(getString(R.string.googleAlzheimer));
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setBackground(null);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_red_24dp));
@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment {
 
     public void initControls(View view, String userType) {
 
-        if (userType.equalsIgnoreCase("Standard")) {
+        if (userType.equalsIgnoreCase("Standard User")) {
             CardView galleryCard = (CardView) view.findViewById(R.id.galleryCard);
             CardView mapsCard = (CardView) view.findViewById(R.id.mapCard);
             CardView recognitionCard = (CardView) view.findViewById(R.id.recognitionCard);
@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
                 }
             });
 
-        } else if (userType.equalsIgnoreCase("Guardian")) {
+        } else if (userType.equalsIgnoreCase("Guardian User")) {
 
             CardView mapsCard = (CardView) view.findViewById(R.id.mapCard);
 

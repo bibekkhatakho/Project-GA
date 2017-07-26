@@ -104,6 +104,7 @@ public class AddGuardianActivity extends CoreActivity{
                                     Log.d("Email", "Sent Success");
                                     hideProgressDialog();
                                     Intent intent = new Intent(AddGuardianActivity.this, MainMenuActivity.class);
+                                    intent.putExtra("firstTime", true);
                                     startActivity(intent);
                                     finish();
                                 }

@@ -135,7 +135,7 @@ public class MainMenuActivity extends CoreActivity {
         Log.d("emailmain", email);
 
         if(firstTime) {
-            if (userType.equalsIgnoreCase("Guardian")) {
+            if (userType.equalsIgnoreCase("Guardian User")) {
 
                 AlertDialog.Builder alertDialogBuilder;
                 alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
@@ -175,7 +175,7 @@ public class MainMenuActivity extends CoreActivity {
                 .build();
 
 
-        if(userType.equalsIgnoreCase("Standard")) {
+        if(userType.equalsIgnoreCase("Standard User")) {
             result = new DrawerBuilder()
                     .withActivity(this)
                     .withAccountHeader(headerResult)
@@ -195,7 +195,7 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
-        }else if(userType.equalsIgnoreCase("Guardian")){
+        }else if(userType.equalsIgnoreCase("Guardian User")){
             result = new DrawerBuilder()
                     .withActivity(this)
                     .withAccountHeader(headerResult)
@@ -246,7 +246,7 @@ public class MainMenuActivity extends CoreActivity {
                     int drawItemId = (int) drawerItem.getIdentifier();
                     Intent intent;
                     Fragment fragment;
-                    if(userType.equalsIgnoreCase("Standard")) {
+                    if(userType.equalsIgnoreCase("Standard User")) {
                         switch (drawItemId) {
 
                             case 1:
