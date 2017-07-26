@@ -5,9 +5,10 @@ public class Memory {
     public Memory() {}
 
     String name;
-    String location;
     String date;
     String description;
+    String path;
+    String key;
 
     public String getName() {
         return name;
@@ -15,14 +16,6 @@ public class Memory {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public String getDate() {
@@ -39,5 +32,21 @@ public class Memory {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
