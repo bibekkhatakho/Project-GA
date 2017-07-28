@@ -484,8 +484,10 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     public void onClick(View v){
         if (v.getId() == R.id.playShortDescription){
 
-
-                String shortStr = shortDescrptionTextInputEditText.getText().toString().trim();
+                String personName = personNameTextInputEditText.getText().toString().trim();
+                String personRelation = personRelationTextInputEditText.getText().toString().trim();
+                String shortDescription = shortDescrptionTextInputEditText.getText().toString().trim();
+                String shortStr = personName + personRelation + shortDescription;
                 voice.say(shortStr);
 
 

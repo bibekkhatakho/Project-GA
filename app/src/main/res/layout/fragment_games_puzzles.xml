@@ -1,13 +1,192 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.project.group.projectga.fragments.GamesPuzzlesFragment">
+    tools:layout_editor_absoluteX="8dp"
+    tools:layout_editor_absoluteY="8dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.constraint.ConstraintLayout
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/gamesLabel" />
+        android:layout_height="wrap_content"
+        tools:context="com.project.group.projectga.fragments.ProfileFragment">
 
-</FrameLayout>
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/aboutPuzzlesLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/photoLayout">
+
+            <ImageView
+                android:id="@+id/puzzlesDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/md_grey_300"
+                android:scaleType="fitXY"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/puzzlesLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/md_light_background"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/puzzles"
+                android:textAlignment="center"
+                android:textColor="@color/accent"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/puzzlesLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/aboutPuzzlesLayout">
+
+            <TextView
+                android:id="@+id/sudokuText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="2.5dp"
+                android:enabled="false"
+                android:text="@string/sudoku"
+                android:textColor="@color/textInputEditTextColor"
+                app:layout_constraintTop_toBottomOf="@+id/sudokuIcon"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <ImageView
+                android:id="@+id/sudokuIcon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="32dp"
+                android:scaleType="fitXY"
+                android:clickable="true"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/sudoku"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/wordSearchText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="75dp"
+                android:layout_marginTop="2.5dp"
+                android:enabled="false"
+                android:text="@string/wordSearch"
+                android:textColor="@color/textInputEditTextColor"
+                app:layout_constraintTop_toBottomOf="@+id/wordSearchIcon"
+                app:layout_constraintLeft_toRightOf="@+id/sudokuText"/>
+
+            <ImageView
+                android:id="@+id/wordSearchIcon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginLeft="67dp"
+                android:scaleType="fitXY"
+                android:clickable="true"
+                app:layout_constraintLeft_toRightOf="@id/sudokuIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/word_search"/>
+
+            <TextView
+                android:id="@+id/flowfreeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="66dp"
+                android:layout_marginTop="2.5dp"
+                android:enabled="false"
+                android:text="@string/flowfree"
+                android:textColor="@color/textInputEditTextColor"
+                app:layout_constraintTop_toBottomOf="@+id/flowfreeIcon"
+                app:layout_constraintLeft_toRightOf="@+id/wordSearchText"/>
+
+            <ImageView
+                android:id="@+id/flowfreeIcon"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:layout_marginLeft="62dp"
+                android:scaleType="fitXY"
+                android:clickable="true"
+                app:layout_constraintLeft_toRightOf="@id/wordSearchIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/flowfree"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/guardianDividerLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="18dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/puzzlesLayout">
+
+            <ImageView
+                android:id="@+id/triviaDivider"
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@color/md_grey_300"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/triviaLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/md_light_background"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/trivia"
+                android:textAlignment="center"
+                android:textColor="@color/accent"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

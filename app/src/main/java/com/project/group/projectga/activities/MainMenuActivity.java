@@ -1,5 +1,6 @@
 package com.project.group.projectga.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,8 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -38,6 +41,7 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.project.group.projectga.R;
 import com.project.group.projectga.fragments.GalleryHomeFragment;
 import com.project.group.projectga.fragments.GamesPuzzlesFragment;
+import com.project.group.projectga.fragments.GuardianMapsFragment;
 import com.project.group.projectga.fragments.HomeFragment;
 import com.project.group.projectga.fragments.MapsFragment;
 import com.project.group.projectga.fragments.ProfileFragment;
@@ -66,7 +70,10 @@ public class MainMenuActivity extends CoreActivity {
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
-    boolean profileFlag, homeFlag = true, importantPeopleFlag=false, firstTime = false;
+    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+
+
+    boolean profileFlag, homeFlag = true, importantPeopleFlag=false, firstTime = false, mapMarkerFlag = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +98,7 @@ public class MainMenuActivity extends CoreActivity {
             profileFlag = extras.getBoolean("profileFlag");
             homeFlag = extras.getBoolean("homeFlag");
             importantPeopleFlag = extras.getBoolean("importantPeopleFlag");
+            mapMarkerFlag = extras.getBoolean("mapMarkerFlag");
             firstTime = extras.getBoolean("firstTime");
         }
 
@@ -239,88 +247,100 @@ public class MainMenuActivity extends CoreActivity {
             result.setSelection(recognition);
         }
 
+        if (mapMarkerFlag) {
+            mapMarkerFlag = false;
+            Fragment fragment = new MapsFragment();
+            startFragment(fragment);
+            result.setSelection(maps);
+        }
         result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                @Override
-                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
-                    int drawItemId = (int) drawerItem.getIdentifier();
-                    Intent intent;
-                    Fragment fragment;
-                    if(userType.equalsIgnoreCase("Standard User")) {
-                        switch (drawItemId) {
+                int drawItemId = (int) drawerItem.getIdentifier();
+                Intent intent;
+                Fragment fragment;
+                if(userType.equalsIgnoreCase("Standard User")) {
+                    switch (drawItemId) {
 
-                            case 1:
-                                fragment = new HomeFragment();
-                                gaFragmentStack.add(home);
-                                break;
+                        case 1:
+                            fragment = new HomeFragment();
+                            gaFragmentStack.add(home);
+                            break;
 
-                            case 2:
-                                fragment = new ProfileFragment();
-                                gaFragmentStack.add(profile);
-                                break;
-                            case 3:
-                                fragment = new GalleryHomeFragment();
-                                //gaFragmentStack.add(gallery);
-                                break;
-                            case 4:
-                                fragment = new RecognitionFragment();
-                                gaFragmentStack.add(recognition);
-                                break;
-                            case 5:
-                                fragment = new MapsFragment();
-                                gaFragmentStack.add(maps);
-                                break;
-                            case 6:
-                                fragment = new TagLocateFragment();
-                                gaFragmentStack.add(tagAndLocate);
-                                break;
-                            case 7:
-                                fragment = new GamesPuzzlesFragment();
-                                gaFragmentStack.add(gamesAndPuzzle);
-                                break;
-                            default:
-                                fragment = new HomeFragment();
-                                break;
-                        }
-                    }else {
-                        switch (drawItemId) {
-
-                            case 1:
-                                fragment = new HomeFragment();
-                                gaFragmentStack.add(home);
-                                break;
-
-                            case 2:
-                                fragment = new ProfileFragment();
-                                gaFragmentStack.add(profile);
-                                break;
-                            case 5:
-                                fragment = new MapsFragment();
-                                gaFragmentStack.add(maps);
-                                break;
-                            default:
-                                fragment = new HomeFragment();
-                                break;
-                        }
+                        case 2:
+                            fragment = new ProfileFragment();
+                            gaFragmentStack.add(profile);
+                            break;
+                        case 3:
+                            fragment = new GalleryHomeFragment();
+                            //gaFragmentStack.add(gallery);
+                            break;
+                        case 4:
+                            fragment = new RecognitionFragment();
+                            gaFragmentStack.add(recognition);
+                            break;
+                        case 5:
+                            fragment = new MapsFragment();
+                            gaFragmentStack.add(maps);
+                            break;
+                        case 6:
+                            fragment = new TagLocateFragment();
+                            gaFragmentStack.add(tagAndLocate);
+                            break;
+                        case 7:
+                            fragment = new GamesPuzzlesFragment();
+                            gaFragmentStack.add(gamesAndPuzzle);
+                            break;
+                        default:
+                            fragment = new HomeFragment();
+                            break;
                     }
-                    if (drawItemId == 9) {
-                        FirebaseAuth.getInstance().signOut();
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.clear();
-                        editor.apply();
-                        intent = new Intent(MainMenuActivity.this, SplashActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
-                    }
+                }else {
+                    switch (drawItemId) {
 
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.container_gaFragments, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                    return false;
+                        case 1:
+                            fragment = new HomeFragment();
+                            gaFragmentStack.add(home);
+                            break;
+
+                        case 2:
+                            fragment = new ProfileFragment();
+                            gaFragmentStack.add(profile);
+                            break;
+                        case 5:
+                            fragment = new GuardianMapsFragment();
+                            gaFragmentStack.add(maps);
+                            break;
+                        default:
+                            fragment = new HomeFragment();
+                            break;
+                    }
                 }
-            });
+                if (drawItemId == 9) {
+                    FirebaseAuth.getInstance().signOut();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.apply();
+                    intent = new Intent(MainMenuActivity.this, SplashActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.container_gaFragments, fragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                return false;
+            }
+        });
+    }
+
+    public static Intent makeNotificationIntent(Context context, String msg) {
+        Intent intent = new Intent( context, MainMenuActivity.class );
+        intent.putExtra( NOTIFICATION_MSG, msg );
+        return intent;
     }
 
     private void startFragment(Fragment fragment) {
@@ -345,7 +365,7 @@ public class MainMenuActivity extends CoreActivity {
         if (result.isDrawerOpen()) {
             result.closeDrawer();
         }
-      else if (getFragmentManager().getBackStackEntryCount() > 0 ) {
+        else if (getFragmentManager().getBackStackEntryCount() > 0 ) {
             getFragmentManager().popBackStack();
         }
         else {
@@ -373,6 +393,16 @@ public class MainMenuActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // add blank icon to the toolbar for integrity of constraints
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate( R.menu.main_menu, menu );
+        return true;
+        //menu.add(null).setIcon(R.drawable.ic_android_trans_24dp).setShowAsActionFlags(1);
+
     }
 
 }

@@ -99,6 +99,7 @@ public class ImportantPeopleAdapter extends RecyclerView.Adapter<ImportantPeople
             importantPeoplesKey = (TextView) v.findViewById(R.id.people_key);
             play = (ImageView)v.findViewById(R.id.playInfoView);
 
+            profilePicture.setBackground(v.getResources().getDrawable(R.drawable.ic_account_circle_white_24dp));
         }
 
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

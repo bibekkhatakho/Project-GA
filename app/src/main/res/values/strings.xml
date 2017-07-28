@@ -71,6 +71,9 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="photoGallery">Photos and Videos</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="description">Description:</string>
     <string name="galleryHomeText">You can add people who are important in your life in the Important People category and have then always in your sight\. In photos and videos\, you can label all of your files with name\, date and description\, so you will never forget your memories\.  </string>
 
     //Recognition Screen
@@ -83,6 +86,61 @@
     //Speech to text
     <string name="speech_prompt">Say something&#8230;</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+
+
+    //Geofencing
+    <string name="add_geofences"> Add Geofence</string>
+    <string name="remove_geofences"> Remove Geofence</string>
+
+    <string name="geofences_added">Geofences added</string>
+    <string name="geofences_removed">Geofences removed</string>
+
+    <!-- Error strings -->
+    <string name="geofence_not_available">Geofence service is not available now</string>
+    <string name="geofence_too_many_geofences">Your app has registered too many geofences</string>
+    <string name="geofence_too_many_pending_intents">
+        You have provided too many PendingIntents to the addGeofences() call
+    </string>
+    <string name="unknown_geofence_error">
+        Unknown error: the Geofence service is not available now
+    </string>
+    <string name="geofence_transition_invalid_type">
+        Geofence transition error: invalid transition type %1$d
+    </string>
+
+    <!-- Transition type strings -->
+    <string name="geofence_transition_entered">Entered</string>
+    <string name="geofence_transition_exited">Exited</string>
+    <string name="unknown_geofence_transition">Unknown Transition</string>
+
+    <string name="geofence_transition_notification_text">
+        Click notification to return to app
+    </string>
+
+    <string name="insufficient_permissions">Insufficient permissions.</string>
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+        functionality.</string>
+    <string name="settings">Settings</string>
+
+    //Games and Puzzles
+    <string name="puzzles">Puzzles</string>
+    <string name="sudoku">Sudoku</string>
+    <string name="wordSearch">Word Search</string>
+
+    <string name="flowfree">Flow Free</string>
+    <string name="trivia">Trivia</string>
+
+    //Maps
+    <string name="mapMarker">Map Marker</string>
+    <string name="address">Address</string>
+    <string name="addressDesc">Description</string>
+    <string name="addressDescSpecial">Description (10 Words Max)</string>
+    <string name="chooseIcon">Choose Icon</string>
+    <string-array name="icons_array">
+        <item>@drawable/ic_terrain_black_24dp</item>
+        <item>@drawable/ic_cake_black_24dp</item>
+    </string-array>
 
 
 </resources>

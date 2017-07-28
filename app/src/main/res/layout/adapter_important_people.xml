@@ -25,11 +25,12 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:scaleType="centerCrop"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_account_circle_white_24dp"
-                app:civ_border="true"
-                app:civ_shadow="true"
-                app:civ_border_color="@color/Gallery"
-                app:civ_shadow_radius="24"/>
+                android:backgroundTint="@color/Gallery"
+                />
 
             <TextView
                 android:id="@+id/personName"
@@ -80,7 +81,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignEnd="@+id/profilePicture"
                 android:contentDescription="@string/recognitionLabel"
-                app:srcCompat="@drawable/ic_volume_up_black_48dp" />
+                app:srcCompat="@drawable/ic_volume_up_black_48dp"
+                android:tint="@color/Gallery"/>
 
 
         </RelativeLayout>

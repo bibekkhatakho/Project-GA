@@ -132,7 +132,7 @@ public class HomeFragment extends Fragment {
             mapsCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Fragment mapsFragment = new MapsFragment();
+                    Fragment mapsFragment = new GuardianMapsFragment();
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.container_gaFragments, mapsFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
