@@ -1,51 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.project.group.projectga.fragments.MapsFragment"    />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/lat"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/lon"/>
-
-    <Button
-        android:id="@+id/add_geofences_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="addGeofencesButtonHandler"
-        style="?android:attr/buttonBarButtonStyle"
-        android:textColor="@color/Map"
-        android:text="@string/add_geofences" />
-
-    <Button
-        android:id="@+id/remove_geofences_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="removeGeofencesButtonHandler"
-        style="?android:attr/buttonBarButtonStyle"
-        android:textColor="@color/Map"
-        android:text="@string/remove_geofences" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.project.group.projectga.fragments.GuardianMapsFragment"/>

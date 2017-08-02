@@ -1,27 +1,34 @@
-package com.project.group.projectga.activities;
+package com.project.group.projectga.adapters;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.speech.RecognizerIntent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,24 +36,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
-import com.project.group.projectga.adapters.GridViewAdapter;
-import com.project.group.projectga.adapters.Voice;
+import com.project.group.projectga.activities.CoreActivity;
+import com.project.group.projectga.activities.FullScreenActivity;
+import com.project.group.projectga.activities.MainMenuActivity;
 import com.project.group.projectga.fragments.GalleryFragment;
 import com.project.group.projectga.models.Memory;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
+/**
+ * Created by ramjiseetharaman on 7/31/17.
+ */
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class FullScreenActivity extends CoreActivity {
+public class FullScreenImageAdapter extends PagerAdapter {
 
-    int int_position;
-    @BindView(R.id.toolbar)
-    protected Toolbar toolbar;
+    private Activity _activity;
+    private ArrayList<String> _imagePaths;
+    private LayoutInflater inflater;
+
+    String userId;
+    FirebaseAuth firebaseAuth;
+    DatabaseReference databaseReference;
+
+    ArrayList<Memory> memoryList;
+
+    private ProgressDialog mProgressDialog;
 
     protected ImageView playName;
     protected ImageView recordName;
@@ -59,37 +72,42 @@ public class FullScreenActivity extends CoreActivity {
     protected TextView title;
     protected Dialog dialog;
 
-    GridViewAdapter adapter;
-
-    Button cancelButton;
-    Button okButton;
-
-    Memory memory;
-    ArrayList<Memory> memoryList;
-
-    Voice voice;
-    boolean isPlaying;
+    FloatingActionButton cancelButton;
+    FloatingActionButton okButton;
 
     String memoryKey = null;
-    String userId;
-    int position;
+    Memory memory;
+
+    Voice voice;
 
     private final int REQ_CODE_SPEECH_INPUT_SHORT = 100;
     private final int REQ_CODE_SPEECH_INPUT_LONG = 200;
 
-    FirebaseAuth firebaseAuth;
-    DatabaseReference databaseReference;
+    // constructor
+    public FullScreenImageAdapter(Activity activity,
+                                  ArrayList<String> imagePaths) {
+        this._activity = activity;
+        this._imagePaths = imagePaths;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_full_screen);
-        ButterKnife.bind(this);
+    public int getCount() {
+        return this._imagePaths.size();
+    }
 
-        voice = new Voice(getApplicationContext());
-        setSupportActionBar(toolbar);
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == ((RelativeLayout) object);
+    }
 
-        if (getUid() != null) {
+    @Override
+    public Object instantiateItem(ViewGroup container, final int position) {
+        ImageView imgDisplay;
+        Button btnClose;
+
+        voice = new Voice(_activity);
+
+        if(getUid() != null) {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Memories");
@@ -117,24 +135,23 @@ public class FullScreenActivity extends CoreActivity {
             }
         });
 
-        ImageView fullScreenImageView = (ImageView) findViewById(R.id.fullScreenImageView);
+        inflater = (LayoutInflater) _activity
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View viewLayout = inflater.inflate(R.layout.layout_fullscreen_image, container,
+                false);
 
-        Intent callingActivityIntent = getIntent();
-        if (callingActivityIntent != null) {
-            String imageUri = callingActivityIntent.getStringExtra("imagePath");
-            position = callingActivityIntent.getIntExtra("position", 0);
-            if (imageUri != null && fullScreenImageView != null) {
-                Glide.with(this).load("file://" + imageUri)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .into(fullScreenImageView);
-            }
-        }
+        imgDisplay = (ImageView) viewLayout.findViewById(R.id.imgDisplay);
+        btnClose = (Button) viewLayout.findViewById(R.id.btnClose);
 
-        fullScreenImageView.setOnClickListener(new View.OnClickListener() {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = BitmapFactory.decodeFile(_imagePaths.get(position), options);
+        imgDisplay.setImageBitmap(bitmap);
+
+        imgDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(FullScreenActivity.this);
+                dialog = new Dialog(_activity);
                 dialog.setContentView(R.layout.dialog_gallery_info);
                 dialog.show();
 
@@ -154,7 +171,7 @@ public class FullScreenActivity extends CoreActivity {
                         int mMonth = c.get(Calendar.MONTH);
                         int mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(FullScreenActivity.this,
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(_activity,
                                 new DatePickerDialog.OnDateSetListener() {
                                     @Override
                                     public void onDateSet(DatePicker view, int year,
@@ -173,9 +190,9 @@ public class FullScreenActivity extends CoreActivity {
                 playName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(FullScreenActivity.this, "asd", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(_activity, "asd", Toast.LENGTH_SHORT).show();
                         String event = eventName.getText().toString().trim();
-                        Toast.makeText(FullScreenActivity.this, event, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(_activity, event, Toast.LENGTH_SHORT).show();
                         voice.say(event);
                     }
                 });
@@ -188,10 +205,10 @@ public class FullScreenActivity extends CoreActivity {
                     }
                 });
 
-                title = (TextView) dialog.findViewById(R.id.title);
-                title.setText("");
+                //title = (TextView) dialog.findViewById(R.id.title);
+                //title.setText("");
 
-                String path = GalleryFragment.al_images.get(int_position).getAl_imagepath().get(position);
+                String path = _imagePaths.get(position);
                 memory = getMemoryByPath(path);
 
                 if (memory == null) {
@@ -203,11 +220,11 @@ public class FullScreenActivity extends CoreActivity {
                     eventName.setText(memory.getName());
                     eventDate.setText(memory.getDate());
                     longDescription.setText(memory.getDescription());
-                    title.setText(memory.getName());
+                    //title.setText(memory.getName());
                 }
 
-                cancelButton = (Button) dialog.findViewById(R.id.cancelButton);
-                okButton = (Button) dialog.findViewById(R.id.doneButton);
+                cancelButton = (FloatingActionButton) dialog.findViewById(R.id.cancelButton);
+                okButton = (FloatingActionButton) dialog.findViewById(R.id.okButton);
 
 
                 cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -228,6 +245,24 @@ public class FullScreenActivity extends CoreActivity {
                 });
             }
         });
+
+        // close button click event
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _activity.finish();
+            }
+        });
+
+        ((ViewPager) container).addView(viewLayout);
+
+        return viewLayout;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        ((ViewPager) container).removeView((RelativeLayout) object);
+
     }
 
     private void writeMemory() {
@@ -240,20 +275,20 @@ public class FullScreenActivity extends CoreActivity {
         if (memoryKey.equals("")) {
             databaseReference.push().setValue(memory);
             hideProgressDialog();
-            Toast.makeText(this, "Memory information Saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(_activity, "Memory information Saved!", Toast.LENGTH_SHORT).show();
         } else {
             databaseReference.child(memoryKey).setValue(memory);
             hideProgressDialog();
-            Toast.makeText(this, "Memory Information Updated!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(_activity, "Memory Information Updated!", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void onAuthFailure() {
         // Write new user
-        Intent intent = new Intent(this, MainMenuActivity.class);
+        Intent intent = new Intent(_activity, MainMenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        _activity.startActivity(intent);
+        _activity.finish();
     }
 
     Memory getMemoryByPath(String path) {
@@ -270,25 +305,45 @@ public class FullScreenActivity extends CoreActivity {
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                getString(R.string.speech_prompt));
+                _activity.getString(R.string.speech_prompt));
 
 
         if (v.getId() == R.id.recordName) {
             try {
-                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
+                _activity.startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
             } catch (ActivityNotFoundException a) {
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.speech_not_supported),
+                Toast.makeText(_activity,
+                        _activity.getString(R.string.speech_not_supported),
                         Toast.LENGTH_SHORT).show();
             }
         } else if (v.getId() == R.id.recordLong) {
             try {
-                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
+                _activity.startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
             } catch (ActivityNotFoundException a) {
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.speech_not_supported),
+                Toast.makeText(_activity,
+                        _activity.getString(R.string.speech_not_supported),
                         Toast.LENGTH_SHORT).show();
             }
         }
     }
+
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+    public void showProgressDialog(String message) {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(_activity);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setMessage(message);
+        }
+
+        mProgressDialog.show();
+    }
+
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
 }

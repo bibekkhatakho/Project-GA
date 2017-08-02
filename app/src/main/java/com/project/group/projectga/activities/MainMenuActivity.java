@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,6 +68,7 @@ public class MainMenuActivity extends CoreActivity {
     AccountHeader headerResult;
 
     FirebaseAuth firebaseAuth;
+    FirebaseAuth.AuthStateListener mAuthStateListener;
     DatabaseReference databaseReference;
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
@@ -86,6 +89,15 @@ public class MainMenuActivity extends CoreActivity {
         setSupportActionBar(toolbar);
 
         gaFragmentStack = new Stack<>();
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(firebaseAuth.getCurrentUser() == null) {
+                    startActivity(new Intent(MainMenuActivity.this, SplashScreen.class));
+                }
+            }
+        };
 
         Fragment home_fragment = new HomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -128,7 +140,7 @@ public class MainMenuActivity extends CoreActivity {
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                Picasso.with(imageView.getContext()).load(uri).placeholder(placeholder).fit().centerCrop().into(imageView);
+                Picasso.with(imageView.getContext()).load(uri).placeholder(placeholder).rotate(270).fit().centerCrop().into(imageView);
             }
 
             @Override
@@ -150,6 +162,21 @@ public class MainMenuActivity extends CoreActivity {
                 alertDialogBuilder.setTitle("Welcome " + name + "!!");
                 alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
                 alertDialogBuilder.setMessage(R.string.addGuardianInfo);
+                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        hideProgressDialog();
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                alertDialog.setCancelable(false);
+            }else{
+                AlertDialog.Builder alertDialogBuilder;
+                alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
+                alertDialogBuilder.setTitle("Welcome " + name + "!!");
+                alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
+                alertDialogBuilder.setMessage(R.string.addStandardInfo);
                 alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -379,10 +406,8 @@ public class MainMenuActivity extends CoreActivity {
     public void onStart() {
         super.onStart();
 
-        // Check auth on Activity start
-        if (firebaseAuth.getCurrentUser() == null) {
-            onAuthFailure();
-        }
+        firebaseAuth.addAuthStateListener(mAuthStateListener);
+
     }
 
     @Override
@@ -393,16 +418,6 @@ public class MainMenuActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // add blank icon to the toolbar for integrity of constraints
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate( R.menu.main_menu, menu );
-        return true;
-        //menu.add(null).setIcon(R.drawable.ic_android_trans_24dp).setShowAsActionFlags(1);
-
     }
 
 }

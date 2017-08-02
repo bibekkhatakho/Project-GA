@@ -113,6 +113,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
+                .requestProfile()
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
@@ -130,6 +131,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
 
         emailLoginTextInputEditText.setOnFocusChangeListener(this);
         passwordLoginEditText.setOnFocusChangeListener(this);
+
         emailLoginTextInputEditText.addTextChangedListener(new MyTextWatcher(emailLoginTextInputEditText));
         passwordLoginEditText.addTextChangedListener(new MyTextWatcher(passwordLoginEditText));
 
@@ -175,6 +177,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+
             } else {
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(SignInActivity.this, "Authentication Failed. Please try again.", Toast.LENGTH_SHORT).show();
@@ -198,7 +201,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                             databaseReference.child("fullName").setValue(user.getDisplayName());
                             databaseReference.child("email").setValue(user.getEmail());
                             databaseReference.child("profile").setValue(user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
-                                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     Profile profile = dataSnapshot.getValue(Profile.class);

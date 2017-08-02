@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by ramjiseetharaman on 7/12/17.
  */
 
-public class Model_images {
+public class Model_images{
     String str_folder;
     ArrayList<String> al_imagepath;
 

@@ -82,6 +82,9 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     private StorageReference storageReference;
+    private final int REQ_CODE_SPEECH_INPUT_SHORT = 100;
+    private final int REQ_CODE_SPEECH_INPUT_LONG = 200;
+
 
     MapMarkers mapMarkers;
     ValueEventListener valueEventListener;
@@ -118,10 +121,9 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
 
         customIcons=new ArrayList<>();
 
-        customIcons.add(new CustomIcons(R.drawable.ic_place_black_24dp));
-        customIcons.add(new CustomIcons(R.drawable.ic_perm_media_black_24dp));
-        customIcons.add(new CustomIcons(R.drawable.ic_casino_black_24dp));
-        customIcons.add(new CustomIcons(R.drawable.ic_remove_red_eye_black_24dp));
+        customIcons.add(new CustomIcons(R.drawable.sudoku));
+        customIcons.add(new CustomIcons(R.drawable.word_search));
+        customIcons.add(new CustomIcons(R.drawable.flowfree));
 
         MapsCustomIconSpinnerAdapter customIconsAdapter = new MapsCustomIconSpinnerAdapter(this,R.layout.maps_icons_spinneritem,customIcons);
         markerIconSpinner.setAdapter(customIconsAdapter);
@@ -242,6 +244,7 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
         Intent intent = new Intent(MapMarkerActivity.this,MainMenuActivity.class);
         intent.putExtra("mapMarkerFlag", true);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -336,6 +339,36 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
         if (mEditText != null) {
             mEditText.setFilters(new InputFilter[0]);
             mInputFilter = null;
+        }
+    }
+
+    public void onClick(View v){
+        if (v.getId() == R.id.playDescription){
+
+            String addressDescription = addressDescriptionTextInputEditText.getText().toString().trim();
+            voice.say(addressDescription);
+
+
+        }
+    }
+
+    public void recordDescription (View v){
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+
+
+        if(v.getId() == R.id.recordShortDescription){
+            try {
+                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
+            } catch (ActivityNotFoundException a) {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.speech_not_supported),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

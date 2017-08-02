@@ -55,7 +55,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
-    TextView emailText, birthdayText, guardianEmail;
+    TextView emailText, birthdayText, guardianEmail, guardianLabel, guardianName;
     TextInputEditText nameText, phoneText;
     CircularImageView circularProfilePhoto, circularGuardianPhoto;
     FancyButton cameraButton, galleryButton, removeButton;
@@ -107,14 +107,15 @@ public class ProfileFragment extends Fragment {
 
         guardianDividerLayout = (ConstraintLayout) view.findViewById(R.id.guardianDividerLayout);
         guardianLayout = (ConstraintLayout) view.findViewById(R.id.guardianLayout);
+        guardianLabel = (TextView) view.findViewById(R.id.guardianLabel);
+        guardianName = (TextView) view.findViewById(R.id.guardianName);
+        guardianEmail = (TextView) view.findViewById(R.id.guardianEmail);
 
          if(userType.equalsIgnoreCase("Standard User")) {
-             guardianLayout.setVisibility(View.VISIBLE);
-             guardianDividerLayout.setVisibility(View.VISIBLE);
-             guardianEmail = (TextView) view.findViewById(R.id.guardianEmail);
+             guardianLabel.setText(getResources().getString(R.string.guardianLabel));
          }else if(userType.equalsIgnoreCase("Guardian User")){
-             guardianLayout.setVisibility(View.GONE);
-             guardianDividerLayout.setVisibility(View.GONE);
+             guardianLabel.setText(getResources().getString(R.string.standardLabel));
+
          }else{
              guardianLayout.setVisibility(View.VISIBLE);
              guardianDividerLayout.setVisibility(View.VISIBLE);
@@ -141,6 +142,9 @@ public class ProfileFragment extends Fragment {
                 emailText.setText(profile.getEmail());
                 if(userType.equalsIgnoreCase("Standard User")) {
                     guardianEmail.setText(profile.getGuardianEmail());
+                }else if(userType.equalsIgnoreCase("Guardian User")){
+                    guardianEmail.setText(profile.getEmail());
+
                 }
                 birthdayText.setText(profile.getDateOfBirth());
                 phoneText.setText(profile.getPhoneNumber());
@@ -205,7 +209,6 @@ public class ProfileFragment extends Fragment {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             circularProfilePhoto.setImageBitmap(imageBitmap);
-
             circularProfilePhoto.setDrawingCacheEnabled(true);
             circularProfilePhoto.buildDrawingCache();
             Bitmap bitmap = circularProfilePhoto.getDrawingCache();

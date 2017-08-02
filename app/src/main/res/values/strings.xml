@@ -36,6 +36,7 @@
     <string name="homeScreen">GA Home</string>
 
     <string name="addGuardianInfo"> Our users who suffer from Alzheimer\’s can now nominate a Guardian\. A Guardian is someone close to our user\, who cares about his/her health\, whereabouts and wish to protect his/her physical integrity\. </string>
+    <string name="addStandardInfo"> Welcome to Google Alzheimer. We are here to help you with everything possible, with your destinations, keeping your memory of important people.  </string>
     <string name="mapLabel">Maps</string>
     <string name="galleryLabel">Gallery</string>
     <string name="recognitionLabel">Recognition</string>
@@ -57,6 +58,7 @@
     <string name="displayName">Display Name</string>
     <string name="aboutLabel">About You</string>
     <string name="guardianLabel">Your Guardian</string>
+    <string name="standardLabel">Your Patient</string>
     <string name="tempName">User Name</string>
     <string name="tempEmail">User@Email.com</string>
     <string name="tempDate">12/31/1999</string>
@@ -75,6 +77,7 @@
     <string name="date">Date</string>
     <string name="description">Description:</string>
     <string name="galleryHomeText">You can add people who are important in your life in the Important People category and have then always in your sight\. In photos and videos\, you can label all of your files with name\, date and description\, so you will never forget your memories\.  </string>
+    <string name="imageName">Image Name</string>
 
     //Recognition Screen
     <string name="None">None</string>
@@ -112,6 +115,8 @@
     <string name="geofence_transition_entered">Entered</string>
     <string name="geofence_transition_exited">Exited</string>
     <string name="unknown_geofence_transition">Unknown Transition</string>
+    <string name="createGeoFence">Create Geofence</string>
+    <string name="clearGeoFence">Clear Geofence</string>
 
     <string name="geofence_transition_notification_text">
         Click notification to return to app

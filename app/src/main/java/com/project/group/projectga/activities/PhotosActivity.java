@@ -73,9 +73,10 @@ public class PhotosActivity extends CoreActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(PhotosActivity.this, FullScreenActivity.class);
-                intent.putExtra("imagePath", GalleryFragment.al_images.get(int_position).getAl_imagepath().get(position));
-                intent.putExtra("position", int_position);
+                //Intent intent = new Intent(PhotosActivity.this, FullScreenActivity.class);
+                Intent intent = new Intent(PhotosActivity.this, FullScreenViewActivity.class);
+                //intent.putExtra("imagePath", GalleryFragment.al_images.get(int_position).getAl_imagepath().get(position));
+                intent.putExtra("position", position);
                 startActivity(intent);
             }
         });

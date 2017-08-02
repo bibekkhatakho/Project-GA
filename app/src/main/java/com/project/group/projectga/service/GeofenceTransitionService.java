@@ -1,20 +1,30 @@
 package com.project.group.projectga.service;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
+
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
+import com.project.group.projectga.Manifest;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.MainMenuActivity;
 import com.project.group.projectga.fragments.GuardianMapsFragment;
@@ -28,6 +38,7 @@ public class GeofenceTransitionService extends IntentService {
     private static final String TAG = GeofenceTransitionService.class.getSimpleName();
 
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
+    private static final int PERMISSION_SEND_SMS = 1;
 
     public GeofenceTransitionService() {
         super(TAG);
@@ -66,8 +77,10 @@ public class GeofenceTransitionService extends IntentService {
         }
 
         String status = null;
-        if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER )
+        if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ) {
             status = "Entering ";
+
+        }
         else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
             status = "Exiting ";
         return status + TextUtils.join( ", ", triggeringGeofencesList);
@@ -75,6 +88,12 @@ public class GeofenceTransitionService extends IntentService {
 
     private void sendNotification( String msg ) {
         Log.i(TAG, "sendNotification: " + msg );
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED ) {
+            sendSMS("14692589637", "Hi You got a message!");
+            Toast.makeText(this,"hehe",Toast.LENGTH_SHORT).show();
+        }
+
+        Toast.makeText(this,"hoho",Toast.LENGTH_SHORT).show();
 
         // Intent to start the main Activity
         Intent notificationIntent = MainMenuActivity.makeNotificationIntent(
@@ -122,5 +141,10 @@ public class GeofenceTransitionService extends IntentService {
             default:
                 return "Unknown error.";
         }
+    }
+
+    private void sendSMS(String phoneNumber, String message) {
+        SmsManager sms = SmsManager.getDefault();
+        sms.sendTextMessage(phoneNumber, null, message, null, null);
     }
 }
