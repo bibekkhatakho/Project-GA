@@ -35,7 +35,6 @@ public class GridViewAdapter extends ArrayAdapter<Model_images> {
         this.context = context;
         this.int_position = int_position;
 
-
     }
 
     @Override

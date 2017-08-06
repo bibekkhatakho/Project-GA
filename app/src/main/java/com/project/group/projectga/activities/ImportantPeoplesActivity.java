@@ -3,7 +3,6 @@ package com.project.group.projectga.activities;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
@@ -22,7 +21,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +36,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.Voice;
 import com.project.group.projectga.models.ImportantPeople;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -65,11 +64,15 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     protected TextInputEditText personRelationTextInputEditText;
     @BindView(R.id.shortDescTextView)
     protected TextView shortDescTextView;
-    @BindView(R.id.shortDescTextInputEditText)
+    @BindView(R.id.shortDescriptionTextInputLayout)
+    protected TextInputLayout shortDescriptionTextInputLayout;
+    @BindView(R.id.shortDescriptionTextInputEditText)
     protected TextInputEditText shortDescrptionTextInputEditText;
     @BindView(R.id.longDescTextView)
     protected TextView longDescTextView;
-    @BindView(R.id.longDescTextInputEditText)
+    @BindView(R.id.longDescriptionTextInputLayout)
+    protected TextInputLayout longDescriptionTextInputLayout;
+    @BindView(R.id.longDescriptionTextInputEditText)
     protected TextInputEditText longDescriptionTextInputEditText;
     @BindView(R.id.personImage)
     protected CircularImageView personImage;
@@ -118,8 +121,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         shortDescrptionTextInputEditText.setOnFocusChangeListener(this);
         longDescriptionTextInputEditText.setOnFocusChangeListener(this);
 
-        personImage.setBackground(getResources().getDrawable(R.drawable.ic_account_circle_white_24dp));
-
         shortDescrptionTextInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -128,10 +129,10 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 // totalWordCount = 0 means a new word is going to start
                 if (count == 0 && totalWordCount >= MAX_WORD_LIMIT_SHORT) {
                     forceFilter(shortDescrptionTextInputEditText, shortDescrptionTextInputEditText.getText().length());
-                    shortDescTextView.setHint("Exceeded the word limit of 10 words");
+                    shortDescTextView.setText(getString(R.string.shortDescSpecialError));
                 } else {
                     removeFilter(shortDescrptionTextInputEditText);
-                    shortDescTextView.setHint(getString(R.string.shortDescSpecial));
+                    shortDescTextView.setText(getString(R.string.shortDescSpecial));
                 }
             }
 
@@ -154,10 +155,10 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 // totalWordCount = 0 means a new word is going to start
                 if (count == 0 && totalWordCount >= MAX_WORD_LIMIT_LONG) {
                     forceFilter(longDescriptionTextInputEditText, longDescriptionTextInputEditText.getText().length());
-                    longDescTextView.setHint("Exceeded the word limit of 50 words");
+                    longDescTextView.setText(getString(R.string.longDescSpecialError));
                 } else {
                     removeFilter(shortDescrptionTextInputEditText);
-                    longDescTextView.setHint(getString(R.string.longDescSpecial));
+                    longDescTextView.setText(getString(R.string.longDescSpecial));
                 }
             }
 
@@ -218,7 +219,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                         personRelationTextInputEditText.setText(importantPeople.getRelation());
                         shortDescrptionTextInputEditText.setText(importantPeople.getShortDescription());
                         longDescriptionTextInputEditText.setText(importantPeople.getLongDescription());
-                        Glide.with(ImportantPeoplesActivity.this).load(importantPeople.getProfile()).into(personImage);
+                        Picasso.with(getApplicationContext()).load(importantPeople.getProfile()).placeholder(R.drawable.ic_account_circle_white_24dp).rotate(270.0f).error(R.drawable.ic_error_outline_black_24dp).into(personImage);
                         imgURL = importantPeople.getProfile();
                     }
                 }
@@ -379,20 +380,20 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
     private boolean validateShortDescription(String shortDescription) {
         if (shortDescription.isEmpty()) {
-            shortDescrptionTextInputEditText.setError("Quick Description cannot be empty. Please enter a valid Quick Descriprtion");
+            shortDescriptionTextInputLayout.setError("Quick Description cannot be empty. Please enter a valid Quick Descriprtion");
             return false;
         } else {
-            shortDescrptionTextInputEditText.setError(null);
+            shortDescriptionTextInputLayout.setError(null);
         }
         return true;
     }
 
     private boolean validateLongDescription(String longDescription) {
         if (longDescription.isEmpty()) {
-            longDescriptionTextInputEditText.setError("Detailed Description cannot be empty. Please enter a valid Detailed Description");
+            longDescriptionTextInputLayout.setError("Detailed Description cannot be empty. Please enter a valid Detailed Description");
             return false;
         } else {
-            longDescriptionTextInputEditText.setError(null);
+            longDescriptionTextInputLayout.setError(null);
         }
         return true;
     }
@@ -440,20 +441,20 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
                 break;
 
-            case R.id.shortDescTextInputEditText:
+            case R.id.shortDescriptionTextInputEditText:
                 if (!hasFocus) {
                     validateShortDescription(shortDescrptionTextInputEditText.getText().toString().trim());
                 } else {
-                    shortDescrptionTextInputEditText.setError(null);
+                    shortDescriptionTextInputLayout.setError(null);
                 }
 
                 break;
 
-            case R.id.longDescTextInputEditText:
+            case R.id.longDescriptionTextInputEditText:
                 if (!hasFocus) {
                     validateLongDescription(longDescriptionTextInputEditText.getText().toString().trim());
                 } else {
-                    longDescriptionTextInputEditText.setError(null);
+                    longDescriptionTextInputLayout.setError(null);
                 }
 
                 break;

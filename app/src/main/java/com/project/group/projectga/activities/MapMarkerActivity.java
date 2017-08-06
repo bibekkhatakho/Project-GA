@@ -2,10 +2,8 @@ package com.project.group.projectga.activities;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -13,19 +11,13 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,19 +26,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.Voice;
 import com.project.group.projectga.helpers.MapsCustomIconSpinnerAdapter;
 import com.project.group.projectga.models.CustomIcons;
 import com.project.group.projectga.models.MapMarkers;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,9 +109,18 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
 
         customIcons=new ArrayList<>();
 
-        customIcons.add(new CustomIcons(R.drawable.sudoku));
-        customIcons.add(new CustomIcons(R.drawable.word_search));
-        customIcons.add(new CustomIcons(R.drawable.flowfree));
+        customIcons.add(new CustomIcons(R.drawable.home));
+        customIcons.add(new CustomIcons(R.drawable.neighborhood));
+        customIcons.add(new CustomIcons(R.drawable.work));
+        customIcons.add(new CustomIcons(R.drawable.firestation));
+        customIcons.add(new CustomIcons(R.drawable.hospital));
+        customIcons.add(new CustomIcons(R.drawable.police));
+        customIcons.add(new CustomIcons(R.drawable.pharmacy));
+        customIcons.add(new CustomIcons(R.drawable.airport));
+        customIcons.add(new CustomIcons(R.drawable.gas));
+        customIcons.add(new CustomIcons(R.drawable.location));
+        customIcons.add(new CustomIcons(R.drawable.bank));
+
 
         MapsCustomIconSpinnerAdapter customIconsAdapter = new MapsCustomIconSpinnerAdapter(this,R.layout.maps_icons_spinneritem,customIcons);
         markerIconSpinner.setAdapter(customIconsAdapter);
@@ -310,7 +307,7 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
 
                 break;
 
-            case R.id.shortDescTextInputEditText:
+            case R.id.addressDescTextInputEditText:
                 if (!hasFocus) {
                     validateAddressDescription(addressDescriptionTextInputEditText.getText().toString().trim());
                 } else {

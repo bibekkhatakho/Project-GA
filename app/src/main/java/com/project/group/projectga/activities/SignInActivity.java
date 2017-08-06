@@ -198,9 +198,13 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = firebaseAuth.getCurrentUser();
                             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-                            databaseReference.child("fullName").setValue(user.getDisplayName());
+                            if (databaseReference.child("fullName") == null) {
+                                databaseReference.child("fullName").setValue(user.getDisplayName());
+                            }
                             databaseReference.child("email").setValue(user.getEmail());
-                            databaseReference.child("profile").setValue(user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
+                            if (databaseReference.child("profile") == null) {
+                                databaseReference.child("profile").setValue(user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null);
+                            }
                             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {

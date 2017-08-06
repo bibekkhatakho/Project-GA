@@ -19,6 +19,12 @@
         <item name ="android:layout_gravity">center_horizontal</item>
     </style>
 
+    <!-- style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" / -->
+
+    <!-- style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" / -->
+
+
+
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -55,6 +61,11 @@
         <item name="android:background">@drawable/textbox</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
         <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="textfieldboxPeople">
+        <item name="android:background">@drawable/textbox</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="text_fab">

@@ -68,7 +68,6 @@ public class MainMenuActivity extends CoreActivity {
     AccountHeader headerResult;
 
     FirebaseAuth firebaseAuth;
-    FirebaseAuth.AuthStateListener mAuthStateListener;
     DatabaseReference databaseReference;
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
@@ -84,20 +83,9 @@ public class MainMenuActivity extends CoreActivity {
         setContentView(R.layout.activity_main_menu);
         ButterKnife.bind(this);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-
         setSupportActionBar(toolbar);
 
         gaFragmentStack = new Stack<>();
-
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser() == null) {
-                    startActivity(new Intent(MainMenuActivity.this, SplashScreen.class));
-                }
-            }
-        };
 
         Fragment home_fragment = new HomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -140,7 +128,7 @@ public class MainMenuActivity extends CoreActivity {
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable placeholder) {
-                Picasso.with(imageView.getContext()).load(uri).placeholder(placeholder).rotate(270).fit().centerCrop().into(imageView);
+                Picasso.with(imageView.getContext()).load(uri).placeholder(placeholder).fit().centerCrop().into(imageView);
             }
 
             @Override
@@ -406,7 +394,10 @@ public class MainMenuActivity extends CoreActivity {
     public void onStart() {
         super.onStart();
 
-        firebaseAuth.addAuthStateListener(mAuthStateListener);
+        // Check auth on Activity start
+        if (firebaseAuth.getCurrentUser() == null) {
+            onAuthFailure();
+        }
 
     }
 

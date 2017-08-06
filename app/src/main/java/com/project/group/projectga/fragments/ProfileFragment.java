@@ -131,9 +131,6 @@ public class ProfileFragment extends Fragment {
         cameraButton = (FancyButton) view.findViewById(R.id.cameraButton);
         removeButton = (FancyButton) view.findViewById(R.id.removeButton);
 
-        circularProfilePhoto.setBackground(getResources().getDrawable(R.drawable.ic_account_circle_white_24dp));
-        circularGuardianPhoto.setBackground(getResources().getDrawable(R.drawable.ic_account_circle_white_24dp));
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -148,7 +145,7 @@ public class ProfileFragment extends Fragment {
                 }
                 birthdayText.setText(profile.getDateOfBirth());
                 phoneText.setText(profile.getPhoneNumber());
-                Picasso.with(getContext()).load(profile.getProfile()).error(R.drawable.ic_error_outline_black_24dp).into(circularProfilePhoto);
+                Picasso.with(getContext()).load(profile.getProfile()).rotate(270.0f).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularProfilePhoto);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

@@ -6,9 +6,29 @@ public class Memory {
 
     String name;
     String date;
-    String description;
+    String shortDescription;
+    String longDescription;
     String path;
     String key;
+    String title;
+
+    public Memory(String name, String date, String shortDescription, String longDescription, String path, String key, String title) {
+        this.name = name;
+        this.date = date;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
+        this.path = path;
+        this.key = key;
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getName() {
         return name;
@@ -26,12 +46,20 @@ public class Memory {
         this.date = date;
     }
 
-    public String getDescription() {
-        return description;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
     }
 
     public String getPath() {

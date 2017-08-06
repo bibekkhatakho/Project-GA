@@ -69,10 +69,16 @@
     <string name="importantPeople">Important People</string>
     <string name="longDesc">Long Description</string>
     <string name="shortDescSpecial">Quick Description: (10 words)</string>
+    <string name="shortDescSpecialError">Exceeded the word limit of 10 words</string>
     <string name="longDescSpecial">Detailed Description: (50 words)</string>
+    <string name="longDescSpecialError">Exceeded the word limit of 50 words</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="photoGallery">Photos and Videos</string>
+    <string name="eventName">Event Name</string>
+    <string name="eventDate">Event date</string>
+    <string name="photo">Photo Name</string>
+    <string name="memory">Memory</string>
     <string name="name">Name</string>
     <string name="date">Date</string>
     <string name="description">Description:</string>
@@ -146,6 +152,20 @@
         <item>@drawable/ic_terrain_black_24dp</item>
         <item>@drawable/ic_cake_black_24dp</item>
     </string-array>
+
+
+    //Initial Dialog Screen
+    <string name="standardScreen1"> Your destinations\. </string>
+    <string name="standardScreen2"> Your memories regarding important people and events\. </string>
+    <string name="standardScreen3"> Locating important day to day objects\. </string>
+    <string name="standardScreen4"> Reminders about important daily routines\. </string>
+    <string name="standardScreen5"> Elect a Guardian\, a person who will be your personal caregiver and bodyguard\.  </string>
+    <string name="skipButtonText">SKIP</string>
+    <string name="nextButtonText">NEXT</string>
+    <string name="guardianUserScreenText">\u2022Track down Standard Users\n\u2022Define safety zones for the movement of Standard Users\n\u2022Interact with Standard Users on the spot in case of emergencies\n\u2022Be alerted in case of non-ordinary routines being followed by Standard Users\.</string>
+
+
+
 
 
 </resources>

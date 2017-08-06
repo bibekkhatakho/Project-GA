@@ -22,4 +22,32 @@
     <color name="TagLocate">#4890cb</color>
     <color name="GamesPuzzles">#914099</color>
     <color name="Backup">#607d8b</color>
+
+    <color name="dot_screen_1">#FFC107</color>
+    <color name="dot_screen_2">#2E7D32</color>
+    <color name="dot_screen_3">#0277BD</color>
+    <color name="dot_screen_4">#C62828</color>
+    <color name="dot_screen_5">#4527A0</color>
+
+    <color name="dot_light_screen_1">#E6EE9C</color>
+    <color name="dot_light_screen_2">#A5D6A7</color>
+    <color name="dot_light_screen_3">#81D4FA</color>
+    <color name="dot_light_screen_4">#FFAB91</color>
+    <color name="dot_light_screen_5">#B39DDB</color>
+    
+    <array name="dot_active">
+        <item>@color/dot_light_screen_1</item>
+        <item>@color/dot_light_screen_2</item>
+        <item>@color/dot_light_screen_3</item>
+        <item>@color/dot_light_screen_4</item>
+        <item>@color/dot_light_screen_5</item>
+    </array>
+
+    <array name="dot_inactive">
+        <item>@color/dot_screen_1</item>
+        <item>@color/dot_screen_2</item>
+        <item>@color/dot_screen_3</item>
+        <item>@color/dot_screen_4</item>
+        <item>@color/dot_screen_5</item>
+    </array>
 </resources>

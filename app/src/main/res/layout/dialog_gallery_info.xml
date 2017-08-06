@@ -1,439 +1,246 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:background="@drawable/tile_green"
-        android:elevation="6dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextColor="@color/textInputEditTextColor">
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/toolbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/imageName"
-                android:textAllCaps="false"
-                android:textColor="@color/textInputEditTextColor"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="@+id/toolbarIcon"
-                app:layout_constraintRight_toRightOf="@+id/toolbarIcon"
-                app:layout_constraintTop_toBottomOf="@+id/toolbarIcon"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <ImageView
-                android:id="@+id/toolbarIcon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginTop="8dp"
-                android:tint="@color/Gallery"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_perm_media_black_24dp"
-                android:contentDescription="@string/galleryLabel" />
-
-        </android.support.constraint.ConstraintLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <android.support.constraint.ConstraintLayout
+    <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:text="@string/photo"
+        android:textColor="@color/Gallery"
+        android:drawableStart="@drawable/ic_perm_media_green_24dp"
+        android:textSize="24sp"
+        android:drawablePadding="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="24dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/eventNameTextInputLayout"
+        style="@style/textfieldbox"
+        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:layout_marginTop="15dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/eventNameTextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawablePadding="15dp"
+            android:textColor="@color/textInputEditTextColor"
+            android:drawableStart="@drawable/ic_event_black_24dp"
+            android:hint="@string/eventName"
+            android:alpha="0.5"
+            android:inputType="textEmailAddress"
+            tools:ignore="MissingPrefix,UnusedAttribute" />
+
+    </android.support.design.widget.TextInputLayout>
+
         <ImageView
-            android:id="@+id/background"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:scaleType="fitXY"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/tile_green"
-            android:contentDescription="@string/galleryLabel" />
-
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/okButton"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/recordEventName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="25dp"
-            android:src="@drawable/ic_done_green_24dp"
-            app:backgroundTint="@color/loginbackground"
-            android:translationZ="12dp"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/longLayout"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="8dp"/>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/cancelButton"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="25dp"
-            android:src="@drawable/ic_close_black_24dp"
+            android:src="@drawable/ic_mic_black_24dp"
+            android:contentDescription="@string/galleryLabel"
             android:tint="@color/Gallery"
-            app:backgroundTint="@color/loginbackground"
-            android:translationZ="12dp"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@id/okButton"
-            app:layout_constraintTop_toBottomOf="@+id/longLayout"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="10dp"
+            android:layout_weight="0.1"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:onClick="recordDescription"/>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/longLayout"
-            android:layout_width="0dp"
-            android:layout_height="240dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/longerLayout"
-            app:layout_constraintTop_toBottomOf="@+id/shortLayout">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/shortDescription"
-                style="@style/textfieldbox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="15dp"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                android:maxLines="2"
-                android:hint="@string/shortDesc"
-                android:padding="15dp"
-                android:textAlignment="center"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/shortDescriptionLabel"
-                app:layout_constraintVertical_bias="0.478"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/playLong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:tint="@color/Gallery"
-                android:contentDescription="@string/galleryLabel"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_volume_up_black_24dp"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/recordLong"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:onClick="recordDescription"
-                android:contentDescription="@string/galleryLabel"
-                android:tint="@color/Gallery"
-                app:layout_constraintRight_toLeftOf="@+id/playLong"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_mic_black_24dp"
-                android:layout_marginEnd="16dp" />
-
-            <ImageView
-                android:id="@+id/detailIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:tint="@color/Gallery"
-                android:contentDescription="@string/galleryLabel"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_attach_file_black_24dp"
-                android:layout_marginStart="8dp" />
-
-            <TextView
-                android:id="@+id/shortDescriptionLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:text="@string/shortDescSpecial"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@+id/detailIcon"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toRightOf="@+id/detailIcon"
-                app:layout_constraintRight_toLeftOf="@+id/recordLong"
-                app:layout_constraintTop_toBottomOf="@+id/detailIcon"
-                app:layout_constraintVertical_bias="0.56"
-                android:layout_marginEnd="16dp" />
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/longerLayout"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/okButton"
-            app:layout_constraintTop_toBottomOf="@+id/longLayout">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/longDescription"
-                style="@style/textfieldbox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="0dp"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                android:maxLines="2"
-                android:hint="@string/longDesc"
-                android:padding="15dp"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/longDescriptionLabel"
-                app:layout_constraintVertical_bias="0.478"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/playLonger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:tint="@color/Gallery"
-                android:contentDescription="@string/galleryLabel"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_volume_up_black_24dp"
-                android:layout_marginEnd="8dp" />
-
-            <ImageView
-                android:id="@+id/recordLonger"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:onClick="recordDescription"
-                android:tint="@color/Gallery"
-                android:contentDescription="@string/galleryLabel"
-                app:layout_constraintRight_toLeftOf="@+id/playLonger"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_mic_black_24dp"
-                android:layout_marginEnd="16dp" />
-
-            <ImageView
-                android:id="@+id/detailLongIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/galleryLabel"
-                android:tint="@color/Gallery"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_attach_file_black_24dp"
-                android:layout_marginStart="8dp" />
-
-            <TextView
-                android:id="@+id/longDescriptionLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:text="@string/longDescSpecial"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@+id/detailLongIcon"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toRightOf="@+id/detailLongIcon"
-                app:layout_constraintRight_toLeftOf="@+id/recordLonger"
-                app:layout_constraintTop_toBottomOf="@+id/detailLongIcon"
-                app:layout_constraintVertical_bias="0.56"
-                android:layout_marginEnd="16dp" />
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/shortLayout"
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/playEventName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/background"
-            app:layout_constraintBottom_toTopOf="@+id/longLayout"
-            android:layout_marginBottom="8dp">
+            android:contentDescription="@string/galleryLabel"
+            android:layout_weight="0.1"
+            android:tint="@color/Gallery"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_volume_up_black_48dp"
+            android:onClick="onClick"/>
+        </LinearLayout>
 
-            <ImageView
-                android:id="@+id/playShortDescription"
-                android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/eventDateTextInputLayout"
+        style="@style/textfieldbox"
+        app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/eventDateTextEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawablePadding="15dp"
+            android:focusable="false"
+            android:textColor="@color/textInputEditTextColor"
+            android:drawableStart="@drawable/ic_date_range_black_24dp"
+            android:hint="@string/eventDate"
+            android:alpha="0.5"
+            android:inputType="textEmailAddress"
+            tools:ignore="MissingPrefix,UnusedAttribute" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/shortDescriptionDialogTextInputLayout"
+            style="@style/textfieldbox"
+            app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:layout_marginTop="15dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/shortDescriptionDialogTextInputEditText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="@string/galleryLabel"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:tint="@color/Gallery"
-                app:layout_constraintBottom_toBottomOf="@+id/eventNameTextInputLayout"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/eventNameTextInputLayout"
-                app:srcCompat="@drawable/ic_volume_up_black_24dp" />
-
-            <ImageView
-                android:id="@+id/recordName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
-                android:tint="@color/Gallery"
-                android:onClick="recordDescription"
-                android:contentDescription="@string/galleryLabel"
-                app:layout_constraintBottom_toBottomOf="@+id/eventNameTextInputLayout"
-                app:layout_constraintRight_toLeftOf="@+id/playShortDescription"
-                app:layout_constraintTop_toTopOf="@+id/eventNameTextInputLayout"
-                app:srcCompat="@drawable/ic_mic_black_24dp" />
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/eventDateTextInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="54dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="0.3"
-                style="@style/textfieldbox"
-                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/dateIcon"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/eventNameTextInputLayout"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="15dp"
-                app:layout_constraintHorizontal_bias="0.0">
-
-                <EditText
-                    android:id="@+id/eventDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="@string/date"
-                    android:inputType="date"
-                    android:background="@null"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toRightOf="@+id/nameIcon"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="MissingPrefix" />
-            </android.support.design.widget.TextInputLayout>
-
-
-
-            <ImageView
-                android:id="@+id/dateIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:tint="@color/Gallery"
+                android:background="@null"
+                android:drawablePadding="15dp"
+                android:textColor="@color/textInputEditTextColor"
+                android:drawableStart="@drawable/ic_attach_file_green_24dp"
+                android:hint="@string/shortDesc"
                 android:alpha="0.5"
-                android:contentDescription="@string/galleryLabel"
-                app:layout_constraintBottom_toBottomOf="@+id/eventDateTextInputLayout"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/eventDateTextInputLayout"
-                app:srcCompat="@drawable/ic_date_range_black_24dp" />
+                android:inputType="textEmailAddress"
+                tools:ignore="MissingPrefix,UnusedAttribute" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/eventNameTextInputLayout"
-                android:layout_width="0dp"
-                android:layout_height="54dp"
-                android:layout_marginLeft="8dp"
-                android:layout_weight="0.3"
-                style="@style/textfieldbox"
-                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-                app:layout_constraintLeft_toRightOf="@+id/eventIcon"
-                app:layout_constraintRight_toLeftOf="@+id/recordName"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="-7dp"
-                app:layout_constraintHorizontal_bias="0.0">
+        </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/eventName"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="@string/name"
-                    android:inputType="textPersonName"
-                    android:background="@null"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintLeft_toRightOf="@+id/nameIcon"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="MissingPrefix" />
-            </android.support.design.widget.TextInputLayout>
+        <ImageView
+            android:id="@+id/recordShortDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mic_black_24dp"
+            android:contentDescription="@string/galleryLabel"
+            android:tint="@color/Gallery"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="0.1"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:onClick="recordDescription"/>
 
-            <ImageView
-                android:id="@+id/eventIcon"
-                android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/playShortDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/galleryLabel"
+            android:layout_weight="0.1"
+            android:tint="@color/Gallery"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_volume_up_black_48dp"
+            android:onClick="onClick"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1.0">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/longDescriptionDialogTextInputLayout"
+            style="@style/textfieldbox"
+            app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:layout_marginTop="15dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/longDescriptionDialogTextInputEditText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:tint="@color/Gallery"
+                android:background="@null"
+                android:drawablePadding="15dp"
+                android:textColor="@color/textInputEditTextColor"
+                android:drawableStart="@drawable/ic_attach_file_green_24dp"
+                android:hint="@string/longDesc"
                 android:alpha="0.5"
-                android:contentDescription="@string/galleryLabel"
-                app:layout_constraintBottom_toBottomOf="@+id/eventNameTextInputLayout"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/eventNameTextInputLayout"
-                app:srcCompat="@drawable/ic_event_black_24dp" />
-        </android.support.constraint.ConstraintLayout>
+                android:inputType="textEmailAddress"
+                tools:ignore="MissingPrefix,UnusedAttribute" />
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.constraint.ConstraintLayout>
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/recordLongDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mic_black_24dp"
+            android:contentDescription="@string/galleryLabel"
+            android:tint="@color/Gallery"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="0.1"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="30dp"
+            android:onClick="recordDescription"/>
+
+        <ImageView
+            android:id="@+id/playLongDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/galleryLabel"
+            android:layout_weight="0.1"
+            android:tint="@color/Gallery"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_volume_up_black_48dp"
+            android:onClick="onClick"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/okButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="50dp"
+        android:src="@drawable/ic_done_green_24dp"
+        app:backgroundTint="@color/loginbackground"
+        android:translationZ="4dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
+        app:fabSize="normal" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:src="@drawable/ic_close_black_24dp"
+        android:tint="@color/Gallery"
+        android:layout_marginStart="80dp"
+        app:backgroundTint="@color/loginbackground"
+        android:translationZ="4dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="15dp"
+        app:fabSize="normal" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

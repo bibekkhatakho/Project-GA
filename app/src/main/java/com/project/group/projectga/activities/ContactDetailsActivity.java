@@ -239,14 +239,8 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
             startActivity(addGuardianIntent);
             finish();
         }else{
-            Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, MainMenuActivity.class);
+            Intent mainMenuIntent = new Intent(ContactDetailsActivity.this, IntroDialogGuardianActivity.class);
             mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            mainMenuIntent.putExtra("firstTime", true);
             startActivity(mainMenuIntent);
             finish();
         }

@@ -40,7 +40,7 @@ public class Adapter_PhotosFolder extends ArrayAdapter<Model_images> {
     @Override
     public int getCount() {
 
-        Log.e("ADAPTER LIST SIZE", al_menu.size() + "");
+        Log.e("ADAPTER LIST SIZE ADAP", al_menu.size() + "");
         return al_menu.size();
     }
 

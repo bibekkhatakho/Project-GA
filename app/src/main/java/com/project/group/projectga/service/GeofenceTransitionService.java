@@ -1,17 +1,18 @@
 package com.project.group.projectga.service;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.Application;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,14 +21,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
-import com.project.group.projectga.Manifest;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.MainMenuActivity;
 import com.project.group.projectga.fragments.GuardianMapsFragment;
+import com.project.group.projectga.fragments.MapsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,23 +38,41 @@ public class GeofenceTransitionService extends IntentService {
     private static final String TAG = GeofenceTransitionService.class.getSimpleName();
 
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
-    private static final int PERMISSION_SEND_SMS = 1;
 
+    int counter = 0;
+    String geoFencingRegion;
     public GeofenceTransitionService() {
         super(TAG);
+
     }
+    String str;
 
     @Override
     protected void onHandleIntent(Intent intent) {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
-        // Handling errors
+
+        // Handling
+
+        str = intent.getStringExtra("region");
         if ( geofencingEvent.hasError() ) {
             String errorMsg = getErrorString(geofencingEvent.getErrorCode() );
             Log.e( TAG, errorMsg );
             return;
         }
+        if(str.matches("a")) {
+            counter = 1;
+            geoFencingRegion = " zone 1";
+        }
+        else if(str.matches("b")) {
+            counter = 2;
+            geoFencingRegion = " zone 2";
+        }
 
-        int geoFenceTransition = geofencingEvent.getGeofenceTransition();
+        else if (str.matches("c")) {
+            counter = 3;
+            geoFencingRegion = " zone 3";
+        }
+            int geoFenceTransition = geofencingEvent.getGeofenceTransition();
         // Check if the transition type is of interest
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
@@ -78,22 +96,31 @@ public class GeofenceTransitionService extends IntentService {
 
         String status = null;
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ) {
-            status = "Entering ";
+            status = "Entering " + geoFencingRegion;
+
+
+
 
         }
         else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
-            status = "Exiting ";
+            status = "Exiting " + geoFencingRegion;
+
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage("14692589637", null, "The standard user  is " + status, null, null);
+            Toast.makeText(getApplicationContext(), "SMS Sent!",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(),
+                    "SMS faild, please try again later!",
+                    Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
         return status + TextUtils.join( ", ", triggeringGeofencesList);
     }
 
     private void sendNotification( String msg ) {
         Log.i(TAG, "sendNotification: " + msg );
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED ) {
-            sendSMS("14692589637", "Hi You got a message!");
-            Toast.makeText(this,"hehe",Toast.LENGTH_SHORT).show();
-        }
-
-        Toast.makeText(this,"hoho",Toast.LENGTH_SHORT).show();
 
         // Intent to start the main Activity
         Intent notificationIntent = MainMenuActivity.makeNotificationIntent(
@@ -103,14 +130,15 @@ public class GeofenceTransitionService extends IntentService {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainMenuActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
-        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(counter, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
 
         // Creating and sending Notification
         NotificationManager notificatioMng =
                 (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
         notificatioMng.notify(
-                GEOFENCE_NOTIFICATION_ID,
+                counter,
                 createNotification(msg, notificationPendingIntent));
 
     }
@@ -141,10 +169,5 @@ public class GeofenceTransitionService extends IntentService {
             default:
                 return "Unknown error.";
         }
-    }
-
-    private void sendSMS(String phoneNumber, String message) {
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNumber, null, message, null, null);
     }
 }
