@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -154,7 +155,9 @@ public class PhotosActivity extends CoreActivity{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            dialogAddMemory = new Dialog(PhotosActivity.this);
+                            dialogAddMemory = new Dialog(PhotosActivity.this, R.style.custom_theme_dialog);
+                            dialogAddMemory.setTitle(getString(R.string.memoryInfo));
+                            dialogAddMemory.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
                             dialogAddMemory.setContentView(R.layout.dialog_gallery_info);
                             dialogAddMemory.show();
 

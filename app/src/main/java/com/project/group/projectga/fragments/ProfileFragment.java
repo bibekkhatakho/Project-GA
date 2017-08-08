@@ -111,15 +111,15 @@ public class ProfileFragment extends Fragment {
         guardianName = (TextView) view.findViewById(R.id.guardianName);
         guardianEmail = (TextView) view.findViewById(R.id.guardianEmail);
 
-         if(userType.equalsIgnoreCase("Standard User")) {
-             guardianLabel.setText(getResources().getString(R.string.guardianLabel));
-         }else if(userType.equalsIgnoreCase("Guardian User")){
-             guardianLabel.setText(getResources().getString(R.string.standardLabel));
+        if(userType.equalsIgnoreCase("Standard User")) {
+            guardianLabel.setText(getResources().getString(R.string.guardianLabel));
+        }else if(userType.equalsIgnoreCase("Guardian User")){
+            guardianLabel.setText(getResources().getString(R.string.standardLabel));
 
-         }else{
-             guardianLayout.setVisibility(View.VISIBLE);
-             guardianDividerLayout.setVisibility(View.VISIBLE);
-         }
+        }else{
+            guardianLayout.setVisibility(View.VISIBLE);
+            guardianDividerLayout.setVisibility(View.VISIBLE);
+        }
 
         circularProfilePhoto = (CircularImageView) view.findViewById(R.id.circularPhoto);
         circularGuardianPhoto = (CircularImageView) view.findViewById(R.id.circularGuardianPhoto);

@@ -75,6 +75,7 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="photoGallery">Photos and Videos</string>
+    <string name="memoryInfo">Memory Information</string>
     <string name="eventName">Event Name</string>
     <string name="eventDate">Event date</string>
     <string name="photo">Photo Name</string>

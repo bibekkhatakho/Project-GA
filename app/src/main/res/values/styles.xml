@@ -91,4 +91,10 @@
         <item name="android:paddingRight">@dimen/input_label_horizontal_spacing</item>
     </style>
 
+    <style name="custom_theme_dialog" parent="android:Theme.DeviceDefault.Light">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowBackground">@color/offWhite</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
 </resources>
