@@ -163,7 +163,7 @@
     <string name="standardScreen5"> Elect a Guardian\, a person who will be your personal caregiver and bodyguard\.  </string>
     <string name="skipButtonText">SKIP</string>
     <string name="nextButtonText">NEXT</string>
-    <string name="guardianUserScreenText">\u2022Track down Standard Users\n\u2022Define safety zones for the movement of Standard Users\n\u2022Interact with Standard Users on the spot in case of emergencies\n\u2022Be alerted in case of non-ordinary routines being followed by Standard Users\.</string>
+    <string name="guardianUserScreenText">\u2022Track down Standard Users\n\n\u2022Define safety zones for the movement of Standard Users\n\n\u2022Interact with Standard Users on the spot in case of emergencies\n\n\u2022Be alerted in case of non-ordinary routines being followed by Standard Users\.</string>
 
 
 

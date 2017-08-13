@@ -1,15 +1,21 @@
 package com.project.group.projectga.activities;
 
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -17,6 +23,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +46,11 @@ import com.project.group.projectga.models.ImportantPeople;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -105,6 +116,10 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
 
     private InputFilter mInputFilter;
+
+    //Code test for imageCropping
+    private Uri mImageCaptureUri;
+    public static final int CROP_FROM_CAMERA = 126;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -179,7 +194,39 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, RC_CAMERA_CODE);
+                File image = null;
+                String timeStamp = new SimpleDateFormat("dd-MMM-yyyy", Locale.US).format(new Date());
+                String imageFileName = "ProjectGA" + "_" + timeStamp + "_";
+                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/Important People");
+                try {
+                    image = File.createTempFile(
+                                imageFileName,  /* prefix */
+                                ".jpg",         /* suffix */
+                                storageDir      /* directory */
+                        );
+                    ContentValues values = new ContentValues();
+
+                    values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    values.put(MediaStore.MediaColumns.DATA, image.toString());
+
+                    getApplicationContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //Adding code for cropping the image taken from Camera intent - Start
+                    mImageCaptureUri = FileProvider.getUriForFile(getApplicationContext(),
+                            "com.example.projectga.fileprovider",
+                            image);
+                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+                try {
+                    intent.putExtra("return-data", true);
+                    startActivityForResult(intent, RC_CAMERA_CODE);
+                } catch (ActivityNotFoundException e) {
+                    //Do nothing for now
+                }
+                //Adding code for cropping the image taken from Camera intent - End
+                //startActivityForResult(intent, RC_CAMERA_CODE);
             }
         });
 
@@ -296,33 +343,108 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            personImage.setImageBitmap(imageBitmap);
-            personImage.setDrawingCacheEnabled(true);
-            personImage.buildDrawingCache();
-            Bitmap bitmap = personImage.getDrawingCache();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] d = baos.toByteArray();
+//        if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            personImage.setImageBitmap(imageBitmap);
+//            personImage.setDrawingCacheEnabled(true);
+//            personImage.buildDrawingCache();
+//            Bitmap bitmap = personImage.getDrawingCache();
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//            byte[] d = baos.toByteArray();
+//
+//            final UploadTask uploadTask = storageReference.child(userId).putBytes(d);
+//            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    Toast.makeText(ImportantPeoplesActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ImportantPeoplesActivity.this, "Person image set", Toast.LENGTH_SHORT).show();
+//                    imgURL = taskSnapshot.getDownloadUrl().toString();
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Log.d("fail", "fail");
+//                }
+//            });
+//
+//        }
 
-            final UploadTask uploadTask = storageReference.child(userId).putBytes(d);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(ImportantPeoplesActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(ImportantPeoplesActivity.this, "Person image set", Toast.LENGTH_SHORT).show();
-                    imgURL = taskSnapshot.getDownloadUrl().toString();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("fail", "fail");
-                }
-            });
+        //Adding code for Testing Image Cropping - Start
 
+        if (resultCode != RESULT_OK) {
+            return;
         }
+
+        switch (requestCode) {
+
+            case CROP_FROM_CAMERA: {
+                //Wysie_Soh: After a picture is taken, it will go to PICK_FROM_CAMERA, which will then come here
+                //after the image is cropped.
+
+                final Bundle extras = data.getExtras();
+
+                if (extras != null) {
+                    Bitmap photo = extras.getParcelable("data");
+                    personImage.setImageBitmap(photo);
+                }
+                personImage.setDrawingCacheEnabled(true);
+                personImage.buildDrawingCache();
+                Bitmap bitmap = personImage.getDrawingCache();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] d = baos.toByteArray();
+
+                final UploadTask uploadTask = storageReference.child(userId).putBytes(d);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(ImportantPeoplesActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ImportantPeoplesActivity.this, "Person image set", Toast.LENGTH_SHORT).show();
+                        imgURL = taskSnapshot.getDownloadUrl().toString();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("fail", "fail");
+                    }
+                });
+
+                //Wysie_Soh: Delete the temporary file
+                File f = new File(mImageCaptureUri.getPath());
+                if (f.exists()) {
+                    f.delete();
+                }
+
+                InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.showSoftInput(personImage, InputMethodManager.SHOW_IMPLICIT);
+
+                break;
+            }
+
+            case RC_CAMERA_CODE: {
+                //Wysie_Soh: After an image is taken and saved to the location of mImageCaptureUri, come here
+                //and load the crop editor, with the necessary parameters (96x96, 1:1 ratio)
+
+                Intent intent = new Intent("com.android.camera.action.CROP");
+                intent.setClassName("com.project.group.projectga", "com.android.camera.CropImage");
+
+                intent.setData(mImageCaptureUri);
+                intent.putExtra("outputX", 96);
+                intent.putExtra("outputY", 96);
+                intent.putExtra("aspectX", 1);
+                intent.putExtra("aspectY", 1);
+                intent.putExtra("scale", true);
+                intent.putExtra("return-data", true);
+                startActivityForResult(intent, CROP_FROM_CAMERA);
+
+                break;
+
+            }
+        }
+
+        //Adding code for Testing Image Cropping - End
 
         if(requestCode == REQ_CODE_SPEECH_INPUT_SHORT && data!=null ){
             ArrayList<String> result = data
@@ -485,11 +607,11 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     public void onClick(View v){
         if (v.getId() == R.id.playShortDescription){
 
-                String personName = personNameTextInputEditText.getText().toString().trim();
-                String personRelation = personRelationTextInputEditText.getText().toString().trim();
-                String shortDescription = shortDescrptionTextInputEditText.getText().toString().trim();
-                String shortStr = personName + personRelation + shortDescription;
-                voice.say(shortStr);
+            String personName = personNameTextInputEditText.getText().toString().trim();
+            String personRelation = personRelationTextInputEditText.getText().toString().trim();
+            String shortDescription = shortDescrptionTextInputEditText.getText().toString().trim();
+            String shortStr = personName + personRelation + shortDescription;
+            voice.say(shortStr);
 
 
         }
@@ -529,7 +651,4 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             }
         }
     }
-
-
-
 }

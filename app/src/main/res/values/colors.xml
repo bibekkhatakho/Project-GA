@@ -23,11 +23,11 @@
     <color name="GamesPuzzles">#914099</color>
     <color name="Backup">#607d8b</color>
 
-    <color name="dot_screen_1">#FFC107</color>
-    <color name="dot_screen_2">#2E7D32</color>
-    <color name="dot_screen_3">#0277BD</color>
-    <color name="dot_screen_4">#C62828</color>
-    <color name="dot_screen_5">#4527A0</color>
+    <color name="dot_screen_1">#FDC012</color>
+    <color name="dot_screen_2">#4CAF4E</color>
+    <color name="dot_screen_3">#488FCC</color>
+    <color name="dot_screen_4">#EF4538</color>
+    <color name="dot_screen_5">#903E97</color>
 
     <color name="dot_light_screen_1">#E6EE9C</color>
     <color name="dot_light_screen_2">#A5D6A7</color>

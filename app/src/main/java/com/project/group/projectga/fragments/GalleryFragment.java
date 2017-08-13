@@ -184,7 +184,7 @@ public class GalleryFragment extends Fragment {
         Context context = getContext();
         String timeStamp = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
         String imageFileName = projectName + "_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/ProjectGA Gallery");
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */

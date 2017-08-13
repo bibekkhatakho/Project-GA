@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="com.project.group.projectga.permission.MAPS_RECEIVE" />
 
+
     <permission
         android:name="com.project.group.projectga.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -42,6 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Declare the bundled CropImage Activity -->
+        <activity android:name="com.android.camera.CropImage"/>
+
         <activity android:name=".activities.SplashScreen" />
         <activity android:name=".activities.SignInActivity" />
         <activity android:name=".activities.SignUpActivity" />
@@ -69,6 +74,7 @@
         <activity android:name=".activities.FullScreenViewActivity" />
         <activity android:name=".activities.IntroDialogActivity" />
         <activity android:name=".activities.IntroDialogGuardianActivity" />
+
     </application>
 
 </manifest>

@@ -72,8 +72,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="0.1"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
-            android:onClick="recordDescription"/>
+            android:layout_marginTop="30dp" />
 
         <ImageView
             android:id="@+id/playEventName"
@@ -151,8 +150,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="0.1"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
-            android:onClick="recordDescription"/>
+            android:layout_marginTop="30dp" />
 
         <ImageView
             android:id="@+id/playShortDescription"
@@ -206,8 +204,7 @@
             android:layout_marginEnd="10dp"
             android:layout_weight="0.1"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="30dp"
-            android:onClick="recordDescription"/>
+            android:layout_marginTop="30dp" />
 
         <ImageView
             android:id="@+id/playLongDescription"

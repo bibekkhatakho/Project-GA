@@ -78,6 +78,7 @@ public class AddGuardianActivity extends CoreActivity{
 
         String guardianUserEmail = addGuardianEmailTextInputEditText.getText().toString().trim();
 
+
         if (!validateForm(guardianUserEmail, userEmailAddress)) {
             hideProgressDialog();
             return;

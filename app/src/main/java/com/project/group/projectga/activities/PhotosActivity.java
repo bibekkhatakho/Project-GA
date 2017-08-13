@@ -6,15 +6,18 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -26,12 +29,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.UploadTask;
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.GridViewAdapter;
 import com.project.group.projectga.adapters.Voice;
@@ -41,6 +47,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.project.group.projectga.models.Memory;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -92,6 +99,7 @@ public class PhotosActivity extends CoreActivity{
 
     Voice voice;
 
+    private final int REQ_CODE_SPEECH_INPUT_NAME = 50;
     private final int REQ_CODE_SPEECH_INPUT_SHORT = 100;
     private final int REQ_CODE_SPEECH_INPUT_LONG = 200;
 
@@ -142,13 +150,13 @@ public class PhotosActivity extends CoreActivity{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                CharSequence options[];
+                CharSequence options[] = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?", "Fullscreen Slideshow"};
 
-                if(position == 0) {
-                    options = new CharSequence[]{"Add a Memory", "Fullscreen Slideshow"};
-                }else{
-                    options = new CharSequence[]{"Add a Memory"};
-                }
+//                if(position == 0) {
+                    //options = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?", "Fullscreen Slideshow"};
+//                }else{
+//                    options = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?"};
+//                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(PhotosActivity.this);
                 builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -233,21 +241,58 @@ public class PhotosActivity extends CoreActivity{
                             recordName.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    recordDescription(v);
+                                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                                            getString(R.string.speech_prompt));
+
+                                    try {
+                                        startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_NAME);
+                                    } catch (ActivityNotFoundException a) {
+                                        Toast.makeText(PhotosActivity.this,
+                                                getString(R.string.speech_not_supported),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
 
                             recordLong.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    recordDescription(v);
+                                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                                            getString(R.string.speech_prompt));
+                                    try {
+                                        startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
+                                    } catch (ActivityNotFoundException a) {
+                                        Toast.makeText(PhotosActivity.this,
+                                                getString(R.string.speech_not_supported),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
 
                             recordLonger.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    recordDescription(v);
+                                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                                            getString(R.string.speech_prompt));
+                                    try {
+                                        startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
+                                    } catch (ActivityNotFoundException a) {
+                                        Toast.makeText(PhotosActivity.this,
+                                                getString(R.string.speech_not_supported),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
 
@@ -289,12 +334,26 @@ public class PhotosActivity extends CoreActivity{
                             });
 
                         }else if (which == 1) {
+                            String path = GalleryFragment.al_images.get(int_position).getAl_imagepath().get(position);
+                            memory = getMemoryByPath(path);
+                            if(memory != null) {
+                                memoryKey = memory.getKey();
+                                String shortDes = memory.getShortDescription();
+                                voice.say(shortDes);
+                            }
+                        }
+                        else if(which == 2){
+                            String path = GalleryFragment.al_images.get(int_position).getAl_imagepath().get(position);
+                            memory = getMemoryByPath(path);
+                            if(memory != null) {
+                                memoryKey = memory.getKey();
+                                String longDes = memory.getLongDescription();
+                                voice.say(longDes);
+                            }
+                        }else if(which == 3){
                             Intent intent = new Intent(PhotosActivity.this, FullScreenViewActivity.class);
                             intent.putExtra("position", int_position);
                             startActivity(intent);
-
-                        }else{
-
                         }
                     }
                 });
@@ -338,39 +397,26 @@ public class PhotosActivity extends CoreActivity{
         return null;
     }
 
-    public void recordDescription(View v) {
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                getString(R.string.speech_prompt));
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == REQ_CODE_SPEECH_INPUT_NAME && data!=null ){
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            eventName.setText(result.get(0));
+        }
 
-        if (v.getId() == R.id.recordEventName) {
-            try {
-                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
-            } catch (ActivityNotFoundException a) {
-                Toast.makeText(PhotosActivity.this,
-                        getString(R.string.speech_not_supported),
-                        Toast.LENGTH_SHORT).show();
-            }
-        } else if (v.getId() == R.id.recordShortDescription) {
-            try {
-                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
-            } catch (ActivityNotFoundException a) {
-                Toast.makeText(PhotosActivity.this,
-                        getString(R.string.speech_not_supported),
-                        Toast.LENGTH_SHORT).show();
-            }
-        } else if (v.getId() == R.id.recordLongDescription) {
-            try {
-                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
-            } catch (ActivityNotFoundException a) {
-                Toast.makeText(PhotosActivity.this,
-                        getString(R.string.speech_not_supported),
-                        Toast.LENGTH_SHORT).show();
-            }
+        if(requestCode == REQ_CODE_SPEECH_INPUT_SHORT && data!=null ){
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            shortDescription.setText(result.get(0));
+        }
+
+        if(requestCode == REQ_CODE_SPEECH_INPUT_LONG && data!=null ){
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            longDescription.setText(result.get(0));
         }
     }
 }
