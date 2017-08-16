@@ -5,10 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.bluvision.cms.sdk.CmsEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.project.group.projectga.R;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity{
 
     FirebaseAuth firebaseAuth;
 

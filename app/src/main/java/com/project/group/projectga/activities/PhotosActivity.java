@@ -148,10 +148,9 @@ public class PhotosActivity extends CoreActivity{
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
 
                 CharSequence options[] = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?", "Fullscreen Slideshow"};
-
 //                if(position == 0) {
                     //options = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?", "Fullscreen Slideshow"};
 //                }else{
@@ -353,6 +352,7 @@ public class PhotosActivity extends CoreActivity{
                         }else if(which == 3){
                             Intent intent = new Intent(PhotosActivity.this, FullScreenViewActivity.class);
                             intent.putExtra("position", int_position);
+                            intent.putExtra("positionPicture", position);
                             startActivity(intent);
                         }
                     }

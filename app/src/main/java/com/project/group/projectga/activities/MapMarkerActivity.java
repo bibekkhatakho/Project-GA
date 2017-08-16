@@ -109,17 +109,14 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
 
         customIcons=new ArrayList<>();
 
+        customIcons.add(new CustomIcons(R.drawable.general));
         customIcons.add(new CustomIcons(R.drawable.home));
-        customIcons.add(new CustomIcons(R.drawable.neighborhood));
         customIcons.add(new CustomIcons(R.drawable.work));
-        customIcons.add(new CustomIcons(R.drawable.firestation));
         customIcons.add(new CustomIcons(R.drawable.hospital));
-        customIcons.add(new CustomIcons(R.drawable.police));
-        customIcons.add(new CustomIcons(R.drawable.pharmacy));
         customIcons.add(new CustomIcons(R.drawable.airport));
-        customIcons.add(new CustomIcons(R.drawable.gas));
-        customIcons.add(new CustomIcons(R.drawable.location));
-        customIcons.add(new CustomIcons(R.drawable.bank));
+        customIcons.add(new CustomIcons(R.drawable.firestation));
+        customIcons.add(new CustomIcons(R.drawable.police));
+        customIcons.add(new CustomIcons(R.drawable.gasstation));
 
 
         MapsCustomIconSpinnerAdapter customIconsAdapter = new MapsCustomIconSpinnerAdapter(this,R.layout.maps_icons_spinneritem,customIcons);

@@ -1,34 +1,114 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteX="8dp"
-    tools:layout_editor_absoluteY="8dp">
+    android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
-
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="com.project.group.projectga.fragments.ProfileFragment">
+        android:orientation="horizontal"
+        android:layout_below="@+id/toolbar">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/aboutPuzzlesLayout"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/appsLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/photoLayout">
+            app:layout_constraintRight_toRightOf="parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/luminosityLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/luminosityImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/lumosity"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playLuminosity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    app:srcCompat="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/luminosityText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/luminosityText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/luminosity"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/luminosityImage"
+                    app:layout_constraintTop_toTopOf="@+id/luminosityImage" />
+
+                <TextView
+                    android:id="@+id/luminosityCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/luminosityComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/luminosityImage"
+                    app:layout_constraintTop_toBottomOf="@+id/luminosityText" />
+
+                <LinearLayout
+                    android:id="@+id/luminosityDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="40dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/luminosityCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/luminosityText">
+
+                    <TextView
+                        android:id="@+id/luminosityDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12dp"
+                        android:text="@string/luminosityDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
             <ImageView
-                android:id="@+id/puzzlesDivider"
+                android:id="@+id/oneDivider"
                 android:layout_width="336dp"
                 android:layout_height="2dp"
-                android:background="@color/md_grey_300"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
                 android:scaleType="fitXY"
-                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -36,127 +116,92 @@
                 app:srcCompat="@android:drawable/divider_horizontal_bright"
                 tools:ignore="ContentDescription" />
 
-            <TextView
-                android:id="@+id/puzzlesLabel"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/sudokuLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/md_light_background"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="@string/puzzles"
-                android:textAlignment="center"
-                android:textColor="@color/accent"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
 
-        </android.support.constraint.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/sudokuImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/sudoku"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/puzzlesLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/aboutPuzzlesLayout">
+                <ImageView
+                    android:id="@+id/playSudoku"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/sudokuText"
+                    app:layout_constraintRight_toRightOf="parent"/>
 
-            <TextView
-                android:id="@+id/sudokuText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="44dp"
-                android:layout_marginTop="2.5dp"
-                android:enabled="false"
-                android:text="@string/sudoku"
-                android:textColor="@color/textInputEditTextColor"
-                app:layout_constraintTop_toBottomOf="@+id/sudokuIcon"
-                app:layout_constraintLeft_toLeftOf="parent"/>
+                <TextView
+                    android:id="@+id/sudokuText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sudoku"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/sudokuImage"
+                    app:layout_constraintTop_toTopOf="@+id/sudokuImage" />
+
+                <TextView
+                    android:id="@+id/sudokuCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sudokuComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/sudokuImage"
+                    app:layout_constraintTop_toBottomOf="@+id/sudokuText" />
+
+                <LinearLayout
+                    android:id="@+id/sudokuDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sudokuCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/sudokuText">
+
+                    <TextView
+                        android:id="@+id/sudokuDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/sudokuDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
             <ImageView
-                android:id="@+id/sudokuIcon"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_marginStart="32dp"
-                android:scaleType="fitXY"
-                android:clickable="true"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/sudoku"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/wordSearchText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="75dp"
-                android:layout_marginTop="2.5dp"
-                android:enabled="false"
-                android:text="@string/wordSearch"
-                android:textColor="@color/textInputEditTextColor"
-                app:layout_constraintTop_toBottomOf="@+id/wordSearchIcon"
-                app:layout_constraintLeft_toRightOf="@+id/sudokuText"/>
-
-            <ImageView
-                android:id="@+id/wordSearchIcon"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_marginLeft="67dp"
-                android:scaleType="fitXY"
-                android:clickable="true"
-                app:layout_constraintLeft_toRightOf="@id/sudokuIcon"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/word_search"/>
-
-            <TextView
-                android:id="@+id/flowfreeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="66dp"
-                android:layout_marginTop="2.5dp"
-                android:enabled="false"
-                android:text="@string/flowfree"
-                android:textColor="@color/textInputEditTextColor"
-                app:layout_constraintTop_toBottomOf="@+id/flowfreeIcon"
-                app:layout_constraintLeft_toRightOf="@+id/wordSearchText"/>
-
-            <ImageView
-                android:id="@+id/flowfreeIcon"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_marginLeft="62dp"
-                android:scaleType="fitXY"
-                android:clickable="true"
-                app:layout_constraintLeft_toRightOf="@id/wordSearchIcon"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/flowfree"/>
-
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/guardianDividerLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="18dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/puzzlesLayout">
-
-            <ImageView
-                android:id="@+id/triviaDivider"
-                android:layout_width="0dp"
+                android:id="@+id/sevenDivider"
+                android:layout_width="336dp"
                 android:layout_height="2dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:background="@color/md_grey_300"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
                 android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -165,28 +210,745 @@
                 app:srcCompat="@android:drawable/divider_horizontal_bright"
                 tools:ignore="ContentDescription" />
 
-            <TextView
-                android:id="@+id/triviaLabel"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/wordSearchLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/md_light_background"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:text="@string/trivia"
-                android:textAlignment="center"
-                android:textColor="@color/accent"
-                android:textSize="18sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/wordSearchImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/word_search"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playWordSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/wordSearchText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/wordSearchText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wordSearch"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/wordSearchImage"
+                    app:layout_constraintTop_toTopOf="@+id/wordSearchImage" />
+
+                <TextView
+                    android:id="@+id/wordSearchCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/wordSearchComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/wordSearchImage"
+                    app:layout_constraintTop_toBottomOf="@+id/wordSearchText" />
+
+                <LinearLayout
+                    android:id="@+id/wordSearchDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/wordSearchCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/wordSearchText">
+
+                    <TextView
+                        android:id="@+id/wordSearchDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/wordSearchDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/nineDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
+                android:scaleType="fitXY"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
 
-        </android.support.constraint.ConstraintLayout>
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/labyrinthLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
 
-    </android.support.constraint.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/labyrinthImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/labyrinth"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
 
-</ScrollView>
+                <ImageView
+                    android:id="@+id/playLabyrinth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/labyrinthText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/labyrinthText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/labyrinth"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/labyrinthImage"
+                    app:layout_constraintTop_toTopOf="@+id/labyrinthImage" />
+
+                <TextView
+                    android:id="@+id/labyrinthCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/labyrinthComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/labyrinthImage"
+                    app:layout_constraintTop_toBottomOf="@+id/labyrinthText" />
+
+                <LinearLayout
+                    android:id="@+id/labyrinthDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/labyrinthCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/labyrinthText">
+
+                    <TextView
+                        android:id="@+id/labyrinthDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/labyrinthDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/eightDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/quizLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/quizImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/logo_game"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playQuiz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/quizText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/quizText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quiz"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/quizImage"
+                    app:layout_constraintTop_toTopOf="@+id/quizImage" />
+
+                <TextView
+                    android:id="@+id/quizCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/quizComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/quizImage"
+                    app:layout_constraintTop_toBottomOf="@+id/quizText" />
+
+                <LinearLayout
+                    android:id="@+id/quizDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/quizCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/quizText">
+
+                    <TextView
+                        android:id="@+id/quizDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/quizDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/twoDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/pondLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/pondImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/pond"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playPond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/pondText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/pondText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pond"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/pondImage"
+                    app:layout_constraintTop_toTopOf="@+id/pondImage" />
+
+                <TextView
+                    android:id="@+id/pondCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pondComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/pondImage"
+                    app:layout_constraintTop_toBottomOf="@+id/pondText" />
+
+                <LinearLayout
+                    android:id="@+id/pondDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pondCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/pondText">
+
+                    <TextView
+                        android:id="@+id/pondDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/pondDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/threeDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/gardenLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/gardenImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/garden"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playGarden"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/gardenText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/gardenText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/garden"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/gardenImage"
+                    app:layout_constraintTop_toTopOf="@+id/gardenImage" />
+
+                <TextView
+                    android:id="@+id/gardenCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gardenComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/gardenImage"
+                    app:layout_constraintTop_toBottomOf="@+id/gardenText" />
+
+                <LinearLayout
+                    android:id="@+id/gardenDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/gardenCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/gardenText">
+
+                    <TextView
+                        android:id="@+id/gardenDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/gardenDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/fourDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/pianoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/pianoImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/piano"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playPiano"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/pianoText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/pianoText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/piano"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/pianoImage"
+                    app:layout_constraintTop_toTopOf="@+id/pianoImage" />
+
+                <TextView
+                    android:id="@+id/pianoCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pianoComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/pianoImage"
+                    app:layout_constraintTop_toBottomOf="@+id/pianoText" />
+
+                <LinearLayout
+                    android:id="@+id/pianoDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/pianoCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/pianoText">
+
+                    <TextView
+                        android:id="@+id/pianoDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/pianoDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/fiveDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/paintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/paintImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/sketch"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playPaint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/paintText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/paintText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/paint"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/paintImage"
+                    app:layout_constraintTop_toTopOf="@+id/paintImage" />
+
+                <TextView
+                    android:id="@+id/paintCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/paintComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/paintImage"
+                    app:layout_constraintTop_toBottomOf="@+id/paintText" />
+
+                <LinearLayout
+                    android:id="@+id/paintDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/paintCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/paintText">
+
+                    <TextView
+                        android:id="@+id/paintDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/paintDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/sixDivider"
+                android:layout_width="336dp"
+                android:layout_height="2dp"
+                android:background="@color/textViewColor"
+                android:alpha=".4"
+                android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/divider_horizontal_bright"
+                tools:ignore="ContentDescription" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/radioLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+                <ImageView
+                    android:id="@+id/radioImage"
+                    android:layout_height="90dp"
+                    android:layout_width="90dp"
+                    android:clickable="true"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:srcCompat="@drawable/radio"
+                    tools:layout_editor_absoluteY="25dp">
+                </ImageView>
+
+                <ImageView
+                    android:id="@+id/playRadio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/galleryLabel"
+                    android:tint="@color/GamesPuzzles"
+                    android:alpha=".75"
+                    android:src="@drawable/ic_volume_up_black_48dp"
+                    android:onClick="onClick"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintTop_toTopOf="@+id/radioText"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+                <TextView
+                    android:id="@+id/radioText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="160dp"
+                    android:text="@string/radio"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/radioImage"
+                    app:layout_constraintTop_toTopOf="@+id/radioImage"/>
+
+                <TextView
+                    android:id="@+id/radioCompText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/radioComp"
+                    android:textColor="@color/GamesPuzzles"
+                    android:layout_marginTop="2dp"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintLeft_toRightOf="@+id/radioImage"
+                    app:layout_constraintTop_toBottomOf="@+id/radioText" />
+
+                <LinearLayout
+                    android:id="@+id/radioDescLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/radioCompText"
+                    app:layout_constraintLeft_toLeftOf="@+id/radioText">
+
+                    <TextView
+                        android:id="@+id/radioDescText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="13dp"
+                        android:text="@string/radioDesc"
+                        android:layout_marginTop="6dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

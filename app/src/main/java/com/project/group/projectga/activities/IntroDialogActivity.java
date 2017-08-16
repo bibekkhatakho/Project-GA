@@ -38,7 +38,7 @@ public class IntroDialogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro_dialog);
 
-        layouts = new int[]{R.layout.activity_initial_dialog_1, R.layout.activity_initial_dialog_2, R.layout.activity_initial_dialog_3, R.layout.activity_initial_dialog_4, R.layout.activity_initial_dialog_5};
+        layouts = new int[]{R.layout.activity_intro_standard, R.layout.activity_intro_standard_info,R.layout.activity_initial_dialog_1, R.layout.activity_initial_dialog_2, R.layout.activity_initial_dialog_3, R.layout.activity_initial_dialog_4, R.layout.activity_initial_dialog_5, R.layout.activity_intro_final};
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         skipButton = (Button) findViewById(R.id.btn_skip);

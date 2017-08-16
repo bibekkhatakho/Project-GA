@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -27,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -44,10 +47,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.project.group.projectga.R;
+import com.project.group.projectga.models.LocationModel;
+import com.project.group.projectga.models.Profile;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -73,13 +83,23 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
 
     String userId;
 
+    FloatingActionsMenu floatingActionsMenu;
+    FloatingActionButton addGeoFence;
+    FloatingActionButton removeGeoFence;
+    TextView clickMap;
+    SupportMapFragment mapFragment;
+	
+	String guardianEmail;
+    String currentLat;
+    String currentLong;
+	Marker patientMarker;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceGuardian;
+    DatabaseReference databaseReferenceEmail;
 
-    public static GuardianMapsFragment newInstance() {
-        GuardianMapsFragment guardianMapsFragment = new GuardianMapsFragment();
-        return guardianMapsFragment;
+    public GuardianMapsFragment() {
     }
 
     @Override
@@ -91,14 +111,15 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_maps, null, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
+        View view = inflater.inflate(R.layout.fragment_guardian_maps, null, false);
+        mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         if (getUid() != null) {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Geofence Location");
-
+            databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
+            databaseReferenceEmail = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
         }
 
         // set the background and recolor the menu icon for the toolbar
@@ -114,6 +135,11 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         title.setText(R.string.mapLabel);
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
 
+        floatingActionsMenu = (FloatingActionsMenu) view.findViewById(R.id.fab_menu);
+        addGeoFence = (FloatingActionButton) view.findViewById(R.id.fab_add_geofence);
+        removeGeoFence = (FloatingActionButton) view.findViewById(R.id.fab_remove_geofence);
+        clickMap = (TextView) view.findViewById(R.id.clickMap);
+
         arrayPoints = new ArrayList<LatLng>();
 
         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
@@ -124,6 +150,22 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
 
         // enable the option menu
 
+        addGeoFence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                floatingActionsMenu.collapse();
+                mapFragment.getView().setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                //mapFragment.getView().setAlpha(0.5f);
+                clickMap.setVisibility(View.VISIBLE);
+            }
+        });
+
+        removeGeoFence.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeGeoFences();
+            }
+        });
 
         return view;
     }
@@ -135,14 +177,9 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
 
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
         }
         mMap.setMyLocationEnabled(true);
 
@@ -150,8 +187,12 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
             @Override
             public void onMapLongClick(LatLng latLng) {
 
+                //mapFragment.getView().setAlpha(1.0f);
+                mapFragment.getView().setBackgroundColor(getResources().getColor(R.color.loginbackground));
+                clickMap.setVisibility(View.GONE);
                 databaseReference.child("latitude").setValue(latLng.latitude);
                 databaseReference.child("longitude").setValue(latLng.longitude);
+
 
                 if (!geoSetAlready) {
 
@@ -161,11 +202,54 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
             }
         });
 
+        databaseReferenceEmail.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Profile profile = dataSnapshot.getValue(Profile.class);
+                if(profile !=null) {
+                    guardianEmail = profile.getEmail();
+                }
+                guardianEmail = guardianEmail.replace(".", ",");
+                databaseReferenceGuardian = databaseReferenceGuardian.child(guardianEmail).child("Current Location");
 
+                databaseReferenceGuardian.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                        if (patientMarker != null)
+                        {
+                            patientMarker.remove();
+                        }
+                        if(locationModel!=null) {
+                            currentLat = locationModel.getCurrentLat();
+                            currentLong = locationModel.getCurrentLong();
+                        }
+                        Double currentLatDouble = Double.parseDouble(currentLat);
+                        Double currentLongDouble = Double.parseDouble(currentLong);
+                        LatLng newLocation = new LatLng(currentLatDouble, currentLongDouble);
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(newLocation)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                .title("Patient");
+                        patientMarker = mMap.addMarker(markerOptions);
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 15);
+                        mMap.animateCamera(cameraUpdate);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
@@ -216,6 +300,16 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 1000, null);
         geoSetAlready = true;
     }
+
+    public void removeGeoFences(){
+        if(mCircle !=null){
+            mCircle.remove();
+            mMap.animateCamera(CameraUpdateFactory.zoomOut());
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 1000, null);
+            geoSetAlready = false;
+        }
+    }
+
 
 
     @Override

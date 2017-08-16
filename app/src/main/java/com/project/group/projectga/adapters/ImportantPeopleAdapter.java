@@ -95,6 +95,7 @@ public class ImportantPeopleAdapter extends RecyclerView.Adapter<ImportantPeople
                 builder.show();
             }
         });
+
         Picasso.with(mContext).load(importantPeople.getProfile()).rotate(180.0f).error(R.drawable.ic_error_outline_black_24dp).placeholder(R.drawable.ic_account_circle_white_24dp).into(holder.profilePicture);
 
     }

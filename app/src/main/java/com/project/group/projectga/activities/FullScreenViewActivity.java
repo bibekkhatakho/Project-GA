@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.FullScreenImageAdapter;
@@ -19,7 +21,9 @@ public class FullScreenViewActivity extends AppCompatActivity {
     private FullScreenImageAdapter adapter;
     private ViewPager viewPager;
     private TextView countLabel;
+    ArrayList<String> images;
     private int selectedPostion = 0;
+    private int picturePosition = 0;
 
 
     @Override
@@ -31,17 +35,19 @@ public class FullScreenViewActivity extends AppCompatActivity {
         countLabel = (TextView) findViewById(R.id.countLabel);
 
 
-        Intent i = getIntent();
-        selectedPostion = i.getIntExtra("position", 0);
+        images = new ArrayList<>();
+        Intent intent = getIntent();
+        selectedPostion = intent.getIntExtra("position", 0);
+        picturePosition = intent.getIntExtra("positionPicture", 0);
 
-        adapter = new FullScreenImageAdapter(this, GalleryFragment.al_images.get(selectedPostion).getAl_imagepath());
+        adapter = new FullScreenImageAdapter(this,GalleryFragment.al_images.get(selectedPostion).getAl_imagepath() );
 
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(pageChangeListener);
 
         // displaying selected image first
         //viewPager.
-            setCurrentItem(selectedPostion);
+            setCurrentItem(picturePosition);
     }
 
     private void setCurrentItem(int position) {

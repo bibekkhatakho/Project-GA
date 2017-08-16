@@ -9,6 +9,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/bluvisionsdk_baseline_2_0_8" />
+            <option value="$PROJECT_DIR$/cmssdk-release_2_0_8" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

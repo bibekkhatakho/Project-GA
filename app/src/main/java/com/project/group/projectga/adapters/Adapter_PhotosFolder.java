@@ -33,8 +33,6 @@ public class Adapter_PhotosFolder extends ArrayAdapter<Model_images> {
         super(context, R.layout.adapter_photosfolder, al_menu);
         this.al_menu = al_menu;
         this.context = context;
-
-
     }
 
     @Override
@@ -90,7 +88,6 @@ public class Adapter_PhotosFolder extends ArrayAdapter<Model_images> {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(viewHolder.iv_image);
-
 
         return convertView;
 

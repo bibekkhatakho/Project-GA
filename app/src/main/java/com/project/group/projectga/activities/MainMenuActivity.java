@@ -1,9 +1,14 @@
 package com.project.group.projectga.activities;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -12,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,7 +25,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -52,9 +60,12 @@ import com.project.group.projectga.fragments.RecognitionFragment;
 import com.project.group.projectga.fragments.TagLocateFragment;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
+import com.project.group.projectga.service.CurrentLocation;
 import com.squareup.picasso.Picasso;
 
 import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,11 +80,18 @@ public class MainMenuActivity extends CoreActivity {
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceGuardian;
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
+    boolean proactiveFunctionlaity = false;
+
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
 
+    String guardianEmail;
+	String myEmail;
+	String myName;
+	String guardianName;
 
     boolean profileFlag, homeFlag = true, importantPeopleFlag=false, firstTime = false, mapMarkerFlag = false;
 
@@ -85,6 +103,39 @@ public class MainMenuActivity extends CoreActivity {
 
         setSupportActionBar(toolbar);
 
+        if(!proactiveFunctionlaity) {
+
+            Timer timer = new Timer ();
+            TimerTask hourlyTask = new TimerTask () {
+                @Override
+                public void run () {
+                    //if (getActivity() != null) {
+                    Intent notificationIntent = new Intent( getApplicationContext(), MapsFragment.class );
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                    stackBuilder.addParentStack(MainMenuActivity.class);
+                    stackBuilder.addNextIntent(notificationIntent);
+                    PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+
+                    // Creating and sending Notification
+                    NotificationManager notificatioMng =
+                            (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
+                    notificatioMng.notify(
+                            1,
+                            createNotification("aaa", notificationPendingIntent));
+                    // }
+                    // your code here...
+                }
+            };
+
+// schedule the task to run starting now and then every hour...
+            timer.schedule (hourlyTask, 0l, 5000);
+
+
+            proactiveFunctionlaity = true;
+        }
+
         gaFragmentStack = new Stack<>();
 
         Fragment home_fragment = new HomeFragment();
@@ -92,6 +143,28 @@ public class MainMenuActivity extends CoreActivity {
         transaction.replace(R.id.container_gaFragments, home_fragment);
         transaction.addToBackStack("home");
         transaction.commit();
+
+
+        String type = getIntent().getStringExtra("Maps");
+        Toast.makeText(this,"outside if",Toast.LENGTH_SHORT).show();
+
+
+        if(type != null){
+            Toast.makeText(this,"inside if",Toast.LENGTH_SHORT).show();
+            switch (type){
+                case "mapsFragment":
+                    Toast.makeText(this,"inside case",Toast.LENGTH_SHORT).show();
+                    Fragment mapsFragment = new MapsFragment();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.container_gaFragments, mapsFragment).commit();
+                    break;
+                // fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                //        fragmentTransaction.addToBackStack(mapsFragment.toString());
+                //          fragmentTransaction.commit();
+                //      Toast.makeText(this,"last case",Toast.LENGTH_SHORT).show();
+
+            }
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -111,7 +184,7 @@ public class MainMenuActivity extends CoreActivity {
             String userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-
+            databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
         } else {
             onAuthFailure();
         }
@@ -123,6 +196,8 @@ public class MainMenuActivity extends CoreActivity {
         final PrimaryDrawerItem maps = new PrimaryDrawerItem().withName("Maps").withIdentifier(5).withIcon(R.drawable.ic_place_black_24dp);
         final PrimaryDrawerItem tagAndLocate = new PrimaryDrawerItem().withName("Tag & Locate").withIdentifier(6).withIcon(R.drawable.ic_remove_red_eye_black_24dp);
         final PrimaryDrawerItem gamesAndPuzzle = new PrimaryDrawerItem().withName("Games & Puzzles").withIdentifier(7).withIcon(R.drawable.ic_casino_black_24dp);
+        final PrimaryDrawerItem prefSettings = new PrimaryDrawerItem().withName("Preferences").withIdentifier(7).withIcon(GoogleMaterial.Icon.gmd_settings);
+
         final PrimaryDrawerItem logout = new PrimaryDrawerItem().withName("Logout").withIdentifier(9).withIcon(FontAwesome.Icon.faw_sign_out);
 
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
@@ -141,41 +216,6 @@ public class MainMenuActivity extends CoreActivity {
         String email = preferences.getString(Preferences.EMAIL, "");
         Log.d("NAMEMAIN", name);
         Log.d("emailmain", email);
-
-        if(firstTime) {
-            if (userType.equalsIgnoreCase("Guardian User")) {
-
-                AlertDialog.Builder alertDialogBuilder;
-                alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
-                alertDialogBuilder.setTitle("Welcome " + name + "!!");
-                alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
-                alertDialogBuilder.setMessage(R.string.addGuardianInfo);
-                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        hideProgressDialog();
-                    }
-                });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-                alertDialog.setCancelable(false);
-            }else{
-                AlertDialog.Builder alertDialogBuilder;
-                alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
-                alertDialogBuilder.setTitle("Welcome " + name + "!!");
-                alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
-                alertDialogBuilder.setMessage(R.string.addStandardInfo);
-                alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        hideProgressDialog();
-                    }
-                });
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-                alertDialog.setCancelable(false);
-            }
-        }
 
         final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
 
@@ -215,6 +255,7 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(maps)
                     .addDrawerItems(tagAndLocate)
                     .addDrawerItems(gamesAndPuzzle)
+                    .addDrawerItems(prefSettings)
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
@@ -231,21 +272,45 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(home)
                     .addDrawerItems(profile)
                     .addDrawerItems(maps)
+                    .addDrawerItems(prefSettings)
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
         }
+
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Profile profile = dataSnapshot.getValue(Profile.class);
-                String profilePic = profile.getProfile();
-                if (profilePic != null && !profilePic.equals("")) {
-                    userProfile.withIcon(profilePic);
-                    headerResult.updateProfile(userProfile);
-                } else {
-                    userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
-                    headerResult.updateProfile(userProfile);
+                if(profile !=null) {
+                    String profilePic = profile.getProfile();
+
+                    if (userType.equalsIgnoreCase("Standard User")) {
+                        guardianEmail = profile.getGuardianEmail();
+                        guardianEmail = guardianEmail.replace(".", ",");
+                        myEmail = profile.getEmail();
+                        myName = profile.getFullName();
+                        databaseReferenceGuardian.child(guardianEmail).child("patientEmail").setValue(myEmail);
+                        databaseReferenceGuardian.child(guardianEmail).child("patientName").setValue(myName);
+                    }
+                    if (userType.equalsIgnoreCase("Guardian User")) {
+                        guardianEmail = profile.getEmail();
+                        guardianEmail = guardianEmail.replace(".", ",");
+                        guardianName = profile.getFullName();
+                        databaseReferenceGuardian.child(guardianEmail).child("guardianName").setValue(guardianName);
+                    }
+                    if (profilePic != null && !profilePic.equals("")) {
+                        userProfile.withIcon(profilePic);
+                        headerResult.updateProfile(userProfile);
+                    } else {
+                        userProfile.withIcon(R.drawable.ic_account_circle_white_24dp);
+                        headerResult.updateProfile(userProfile);
+                    }
+                    if (userType.equalsIgnoreCase("Standard User")) {
+                        Intent intent = new Intent(MainMenuActivity.this, CurrentLocation.class);
+                        intent.putExtra("guardianEmail", guardianEmail);
+                        startService(intent);
+                    }
                 }
             }
 
@@ -350,6 +415,8 @@ public class MainMenuActivity extends CoreActivity {
                 return false;
             }
         });
+
+
     }
 
     public static Intent makeNotificationIntent(Context context, String msg) {
@@ -409,6 +476,26 @@ public class MainMenuActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
+        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+        intent.putExtra("Maps", "mapsFragment");
+
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+        notificationBuilder
+                .setSmallIcon(R.drawable.ic_place_black_24dp)
+                .setColor(Color.RED)
+                .setContentTitle("Are you lost?")
+                .setContentText("are you lost?")
+                .setContentIntent(notificationPendingIntent)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .addAction(R.drawable.ic_close_black_24dp,"Dismiss",pIntent)
+                .addAction(R.drawable.ic_place_black_24dp,"Go to Maps",pIntent)
+                .setAutoCancel(true);
+        return notificationBuilder.build();
+
     }
 
 }

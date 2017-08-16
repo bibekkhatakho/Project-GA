@@ -2,10 +2,14 @@ package com.project.group.projectga.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -38,11 +42,13 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
+import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import mehdi.sakout.fancybuttons.FancyButton;
@@ -66,12 +72,18 @@ public class ProfileFragment extends Fragment {
     public static final int RC_CAMERA_CODE = 123;
 
     String userId;
+	String guardianEmailText;
     Toolbar toolbar;
     MenuItem edit, save;
 
+    Uri uri;
+    String photoPath;
+
     DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceGuardian;
     private StorageReference storageReference;
 
+    public static Uri mediaFile;
     public ProfileFragment() {
 
     }
@@ -90,6 +102,7 @@ public class ProfileFragment extends Fragment {
         userId = sharedPreferences.getString(Preferences.USERID, null);
         if (userId != null) {
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+            databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
             storageReference = FirebaseStorage.getInstance().getReference();
         }
 
@@ -137,15 +150,50 @@ public class ProfileFragment extends Fragment {
                 Profile profile = dataSnapshot.getValue(Profile.class);
                 nameText.setText(profile.getFullName());
                 emailText.setText(profile.getEmail());
+                if(userType.equalsIgnoreCase("Guardian User")) {
+                    guardianEmailText = profile.getEmail();
+                    guardianEmailText = guardianEmailText.replace(".", ",");
+                    databaseReferenceGuardian = databaseReferenceGuardian.child(guardianEmailText);
+
+                    databaseReferenceGuardian.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                            guardianEmail.setText(locationModel.getPatientEmail());
+                            guardianName.setText(locationModel.getPatientName());
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                if(userType.equalsIgnoreCase("Standard User")) {
+                    guardianEmailText = profile.getGuardianEmail();
+                    guardianEmailText = guardianEmailText.replace(".", ",");
+                    databaseReferenceGuardian = databaseReferenceGuardian.child(guardianEmailText);
+
+                    databaseReferenceGuardian.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                            guardianName.setText(locationModel.getGuardianName());
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
                 if(userType.equalsIgnoreCase("Standard User")) {
                     guardianEmail.setText(profile.getGuardianEmail());
-                }else if(userType.equalsIgnoreCase("Guardian User")){
-                    guardianEmail.setText(profile.getEmail());
-
                 }
                 birthdayText.setText(profile.getDateOfBirth());
                 phoneText.setText(profile.getPhoneNumber());
-                Picasso.with(getContext()).load(profile.getProfile()).rotate(270.0f).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularProfilePhoto);
+                Picasso.with(getContext()).load(profile.getProfile()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularProfilePhoto);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -181,7 +229,6 @@ public class ProfileFragment extends Fragment {
                 startActivityForResult(intent, RC_CAMERA_CODE);
             }
         });
-
         return view;
     }
 
@@ -205,6 +252,20 @@ public class ProfileFragment extends Fragment {
         } else if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    new String[]{MediaStore.Images.Media.DATA,
+                            MediaStore.Images.Media.DATE_ADDED,
+                            MediaStore.Images.ImageColumns.ORIENTATION},
+                            MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+            if(cursor != null && cursor.moveToFirst())
+            {
+                do {
+                    uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+                    photoPath = uri.toString();
+                }while(cursor.moveToNext());
+                cursor.close();
+            }
+            imageBitmap = rotateImage(imageBitmap);
             circularProfilePhoto.setImageBitmap(imageBitmap);
             circularProfilePhoto.setDrawingCacheEnabled(true);
             circularProfilePhoto.buildDrawingCache();
@@ -228,6 +289,32 @@ public class ProfileFragment extends Fragment {
             });
 
         }
+    }
+
+    private Bitmap rotateImage(Bitmap bitmap) {
+        Bitmap rotatedBitmap = bitmap;
+        ExifInterface exifInterface = null;
+        try {
+            exifInterface = new ExifInterface(photoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(270);
+                break;
+            default:
+        }
+        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
     }
 
     @Override

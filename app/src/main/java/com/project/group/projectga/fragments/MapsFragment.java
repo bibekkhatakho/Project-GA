@@ -71,30 +71,27 @@ public class MapsFragment extends Fragment  implements GoogleApiClient.Connectio
     Toolbar toolbar;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
- 	private Context context;
+    private Context context;
     private Marker geoFenceMarker;
     ArrayList<MapMarkers> mapMarkerList;
     private Marker locationMarker;
     private String[] markerIcons = {
+            "general",
             "home",
-            "neighborhood",
             "work",
-            "firestation",
             "hospital",
-            "police",
-            "pharmacy",
             "airport",
-            "gas",
-            "location",
-            "bank"
+            "firestation",
+            "police",
+            "gasstation",
     };
     private final int REQ_PERMISSION = 999;
     private LocationRequest mLocationRequest;
     private Location mLastLocation;
     private TextView textLat, textLong;
-	
-	String inString[] = new String[]{"a","b","c"};
-	int count = 0;
+
+    String inString[] = new String[]{"a","b","c"};
+    int count = 0;
 
     private final int UPDATE_INTERVAL =  3 * 60 * 1000; // 3 minutes
     private final int FASTEST_INTERVAL = 30 * 1000;  // 30 secs
@@ -102,11 +99,11 @@ public class MapsFragment extends Fragment  implements GoogleApiClient.Connectio
     private static final LatLng testLatlang = new LatLng(32.7314336,-97.1113121);
 
 
-     private static final long GEO_DURATION = Geofence.NEVER_EXPIRE;
+    private static final long GEO_DURATION = Geofence.NEVER_EXPIRE;
     private static final String GEOFENCE_REQ_ID = "My Geofence";
     double geoRadius[] = new double[]{5,10,15};
     private final int GEOFENCE_REQ_CODE = 0;
-	private List<Geofence> mGeoList;
+    private List<Geofence> mGeoList;
 
     private double currentLatitude;
     private double currentLongitude;
@@ -119,7 +116,7 @@ public class MapsFragment extends Fragment  implements GoogleApiClient.Connectio
     private final String KEY_GEOFENCE_LAT = "GEOFENCE LATITUDE";
     private final String KEY_GEOFENCE_LON = "GEOFENCE LONGITUDE";
 
-	public static final int SEND_SMS = 101;
+    public static final int SEND_SMS = 101;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
@@ -145,12 +142,12 @@ public class MapsFragment extends Fragment  implements GoogleApiClient.Connectio
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, null, false);
-		initGMaps();
+        initGMaps();
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         createGoogleApi();
-		if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.SEND_SMS},SEND_SMS);
 //
 //            Toast.makeText(getContext(), "SMS not Sent!",
@@ -178,7 +175,7 @@ public class MapsFragment extends Fragment  implements GoogleApiClient.Connectio
         if (getUid() != null) {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
-			databaseReferenceGeo = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Geofence Location");
+            databaseReferenceGeo = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Geofence Location");
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Map Markers");
         } else {
         }
@@ -433,8 +430,8 @@ public class MapsFragment extends Fragment  implements GoogleApiClient.Connectio
         if (mMap != null) {
             // Remove last geoFenceMarker
             if (geoFenceMarker != null)
-               // geoFenceMarker.remove();
-            geoFenceMarker = mMap.addMarker(markerOptions);
+                // geoFenceMarker.remove();
+                geoFenceMarker = mMap.addMarker(markerOptions);
         }
         startGeofence();
     }
@@ -486,7 +483,7 @@ public class MapsFragment extends Fragment  implements GoogleApiClient.Connectio
                     getContext(), 3, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         }
-return null;
+        return null;
     }
 
     // Add the created GeofenceRequest to the device's monitoring list
@@ -581,9 +578,9 @@ return null;
             double lat = Double.longBitsToDouble( sharedPref.getLong( KEY_GEOFENCE_LAT, -1 ));
             double lon = Double.longBitsToDouble( sharedPref.getLong( KEY_GEOFENCE_LON, -1 ));
             LatLng latLng = new LatLng( lat, lon );
-          //  markerForGeofence(testLL);
-          //  drawGeofence();
-           // markerForGeofence(testLL2);
+            //  markerForGeofence(testLL);
+            //  drawGeofence();
+            // markerForGeofence(testLL2);
 
         }
     }
@@ -634,9 +631,9 @@ return null;
     @Override
     public void onStop() {
         super.onStop();
-    
-            mGoogleApiClient.disconnect();
-        
+
+        mGoogleApiClient.disconnect();
+
     }
 
     private String getAddressFromLatLng(LatLng latLng) {
@@ -669,11 +666,11 @@ return null;
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-       //Log.i(TAG, "onConnected()");
+        //Log.i(TAG, "onConnected()");
         getLastKnownLocation();
         markerForGeofence(testLatlang);
-        drawGeofence();
-        recoverGeofenceMarker();
+        //drawGeofence();
+        //recoverGeofenceMarker();
 
     }
 
@@ -692,8 +689,8 @@ return null;
         inflater.inflate( R.menu.main_menu, menu );
 
     }
-	
-	public String getUid() {
+
+    public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 

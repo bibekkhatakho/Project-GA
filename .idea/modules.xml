@@ -5,6 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/ProjectGA.iml" filepath="$PROJECT_DIR$/ProjectGA.iml" />
       <module fileurl="file://$PROJECT_DIR$/ProjectGA-master.iml" filepath="$PROJECT_DIR$/ProjectGA-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bluvisionsdk_baseline_2_0_8/bluvisionsdk_baseline_2_0_8.iml" filepath="$PROJECT_DIR$/bluvisionsdk_baseline_2_0_8/bluvisionsdk_baseline_2_0_8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cmssdk-release_2_0_8/cmssdk-release_2_0_8.iml" filepath="$PROJECT_DIR$/cmssdk-release_2_0_8/cmssdk-release_2_0_8.iml" />
     </modules>
   </component>
 </project>

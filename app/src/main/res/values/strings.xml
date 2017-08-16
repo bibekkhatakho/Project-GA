@@ -136,12 +136,38 @@
     <string name="settings">Settings</string>
 
     //Games and Puzzles
-    <string name="puzzles">Puzzles</string>
-    <string name="sudoku">Sudoku</string>
+    <string name="games">Games &amp; Puzzles</string>
+    <string name="hobbies">Hobbies</string>
+    <string name="radio">Old Time Radio and Shows</string>
+    <string name="sudoku">Minimal Sudoku</string>
     <string name="wordSearch">Word Search</string>
-
-    <string name="flowfree">Flow Free</string>
-    <string name="trivia">Trivia</string>
+    <string name="luminosity">Luminosity</string>
+    <string name="quiz">Quiz Logo Game</string>
+    <string name="garden">Flower Garden</string>
+    <string name="pond">Pocket Pond 2</string>
+    <string name="labyrinth">Labyrinth Lite</string>
+    <string name="paint">Sketch</string>
+    <string name="piano">Magic Piano</string>
+    <string name="luminosityDesc">A comprehensive brain training program with 30+ brain games.</string>
+    <string name="sudokuDesc">A fun and simple number puzzle game done with a minimalistic style.</string>
+    <string name="wordSearchDesc">The same word search puzzles that everyone knows and loves.</string>
+    <string name="radioDesc">Easily listen to the best of old time radio and shows.</string>
+    <string name="quizDesc">Try to guess each logo from various times and places around the world.</string>
+    <string name="gardenDesc">Grow flowers and send them to others.</string>
+    <string name="pianoDesc">Play a piano on your phone to various songs.</string>
+    <string name="labyrinthDesc">Guide a ball through various mazes to the goal.</string>
+    <string name="paintDesc">Simply tap the screen to draw whatever you like.</string>
+    <string name="pondDesc">An interactive koi pond where you can feed and take care of fish.</string>
+    <string name="luminosityComp">By Lumos Labs, Inc.</string>
+    <string name="quizComp">By Lemmings At Work</string>
+    <string name="labyrinthComp">By Illusion Labs</string>
+    <string name="wordSearchComp">By Wordloco</string>
+    <string name="sudokuComp">By Zero Logic Games</string>
+    <string name="gardenComp">By Fairy Engine LLC</string>
+    <string name="pondComp">By TriggerWave</string>
+    <string name="pianoComp">By Smule</string>
+    <string name="paintComp">By Sony Mobile Comm.</string>
+    <string name="radioComp">By AMSApps</string>
 
     //Maps
     <string name="mapMarker">Map Marker</string>
@@ -149,24 +175,28 @@
     <string name="addressDesc">Description</string>
     <string name="addressDescSpecial">Description (10 Words Max)</string>
     <string name="chooseIcon">Choose Icon</string>
-    <string-array name="icons_array">
-        <item>@drawable/ic_terrain_black_24dp</item>
-        <item>@drawable/ic_cake_black_24dp</item>
-    </string-array>
+    <string name="clickMap">Long press anywhere on the map to add Geofence</string>
 
 
     //Initial Dialog Screen
-    <string name="standardScreen1"> Your destinations\. </string>
-    <string name="standardScreen2"> Your memories regarding important people and events\. </string>
-    <string name="standardScreen3"> Locating important day to day objects\. </string>
-    <string name="standardScreen4"> Reminders about important daily routines\. </string>
-    <string name="standardScreen5"> Elect a Guardian\, a person who will be your personal caregiver and bodyguard\.  </string>
+    <string name="allsetText"> Looks like you are all set \.</string>
+    <string name="standardUserTextIntro"> You are a Standard User</string>
+    <string name="standardUserTextIntro2"> As a Standard User \, you are able to\:</string>
+    <string name="standardUserTextIntro2Info"> \u2022 Save individual profiles for people who are important to you\.\n\n \u2022 Store your personal memories for important people\, locations and events\.\n\n \u2022 Pinpoint important locations in Google Maps for easy and quick navigation\. \n\n \u2022 Tag physical objects for easy location via bluetooth\. \n\n \u2022 Define a Guardian User, who will be your guardian angel 24 hours a day\. </string>
+    <string name="guardianUserTextIntro2"> As a Guardian User \, you are able to\:</string>
+    <string name="guardianUserTextIntro2Info"> \u2022 Track Standard Users\’ whereabouts\.\n\n \u2022 Set safety zones for Standard Users\’ freedom of movement\.\n\n \u2022 Exchange emergency messages with Standard Users\. </string>
+    <string name="standardUserTextIntroInfo"> You will benefit the most of our app\, as it was designed around your needs\.</string>
+    <string name="guardianUserTextIntro"> You are a Guardian User</string>
+    <string name="guardianUserTextIntroInfo"> A person who suffers from Alzheimer\’s disease and who also is a Standard User in our app nominated you as a his\/her guardian\.</string>
+    <string name="standardScreen1"> \u2022Our app is fully integrated to Google Maps.\n\n \u2022Easily pinpoint and store locations of interest\, such as police stations\, hospitals\, pharmacies and others with easy to distinguish icons\.\n\n \u2022 Navigate to any of these locations at your own convenience\. </string>
+    <string name="standardScreen2"> \u2022Our visual gallery will allow you to store pictures and videos for important people to you\, as well key events and places you care.\n\n \u2022 Add your own personal text or voice memories to pictures and videos for later playback\.\n\n \u2022 Never forget a face\, place or event again\. </string>
+    <string name="standardScreen3"> \u2022You can now use a Bluetooth tracker powered by X device to tag important objects\, such as your keys\, wallet\, remote control and other easy to lose objects.\n\n \u2022 Use our app to track down these objects whenever you can\’t find them\. The days of losing things are over\. </string>
+    <string name="standardScreen4"> \u2022Having trouble in remembering who a person standing in front of you is\? With our facial recognition feature\, you are better equipped to deal with such situations\. Just create a Gallery profile with a picture for each person you care to remember about\. \n\n \u2022Next time you meet someone you are not sure who is\, just take a picture on the spot of this person\, and our app will tell you who she\/he is by matching this photo against the profile pictures you have previously stored\. \n\n \u2022You can also store memories for each profile and our app will playback these memories at your convenience\. </string>
+    <string name="standardScreen5">\u2022 We compiled a list of suggested games and puzzles that are recognized to provide the much needed training your brain needs\. \n\n \u2022 Our list is constantly updated with new games\, so stay tuned for news\. We want to help you in keeping your brain as sharp as possible\!</string>
+    <string name="standardScreen6"> Elect a Guardian\, a person who will be your personal caregiver and bodyguard\.  </string>
     <string name="skipButtonText">SKIP</string>
     <string name="nextButtonText">NEXT</string>
     <string name="guardianUserScreenText">\u2022Track down Standard Users\n\n\u2022Define safety zones for the movement of Standard Users\n\n\u2022Interact with Standard Users on the spot in case of emergencies\n\n\u2022Be alerted in case of non-ordinary routines being followed by Standard Users\.</string>
-
-
-
 
 
 </resources>

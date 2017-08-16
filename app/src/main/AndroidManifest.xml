@@ -70,11 +70,12 @@
         </provider>
 
         <service android:name=".service.GeofenceTransitionService" />
+        <service android:name=".service.CurrentLocation"/>
 
         <activity android:name=".activities.FullScreenViewActivity" />
         <activity android:name=".activities.IntroDialogActivity" />
         <activity android:name=".activities.IntroDialogGuardianActivity" />
-
+        <activity android:name=".activities.BluzoneApplication"></activity>
     </application>
 
 </manifest>
