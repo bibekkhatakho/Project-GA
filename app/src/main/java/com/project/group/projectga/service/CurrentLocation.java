@@ -87,8 +87,10 @@ public class CurrentLocation extends Service {
     {
         super.onStartCommand(intent, flags, startId);
 
-        guardianEmail = (String) intent.getExtras().get("guardianEmail");
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
+        if(intent !=null) {
+            guardianEmail = (String) intent.getExtras().get("guardianEmail");
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
+        }
 
         return START_STICKY;
     }

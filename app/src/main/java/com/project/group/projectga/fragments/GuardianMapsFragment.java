@@ -71,7 +71,9 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     private GoogleMap mMap;
     private static final int REQUEST_LOCATION = 1;
     private LatLng latlangForGeo;
-    private Circle mCircle;
+    private Circle mCircle1;
+    private Circle mCircle2;
+    private Circle mCircle3;
     LocationManager locationManager;
     double geofenceradius[] = new double[]{10000, 20000, 25000};
     ArrayList<LatLng> arrayPoints;
@@ -88,6 +90,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     FloatingActionButton removeGeoFence;
     TextView clickMap;
     SupportMapFragment mapFragment;
+    private Marker geofenceMarker;
 	
 	String guardianEmail;
     String currentLat;
@@ -163,6 +166,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         removeGeoFence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                floatingActionsMenu.collapse();
                 removeGeoFences();
             }
         });
@@ -216,11 +220,11 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
-                        if (patientMarker != null)
-                        {
-                            patientMarker.remove();
-                        }
-                        if(locationModel!=null) {
+                        if(dataSnapshot.exists()) {
+                            if (patientMarker != null)
+                            {
+                                patientMarker.remove();
+                            }
                             currentLat = locationModel.getCurrentLat();
                             currentLong = locationModel.getCurrentLong();
                         }
@@ -234,7 +238,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                         patientMarker = mMap.addMarker(markerOptions);
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 15);
                         mMap.animateCamera(cameraUpdate);
-                    }
+						}
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -249,7 +253,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
@@ -289,10 +293,10 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                 .strokeColor(Color.argb(50, 70, 70, 70))
                 .fillColor(Color.argb(50, 255, 0, 0))
                 .radius(geofenceradius[2]);
-        mMap.addMarker(markerOptions);
-        mCircle = mMap.addCircle(circleOptions1);
-        mCircle = mMap.addCircle(circleOptions2);
-        mCircle = mMap.addCircle(circleOptions3);
+        geofenceMarker = mMap.addMarker(markerOptions);
+        mCircle1 = mMap.addCircle(circleOptions1);
+        mCircle2 = mMap.addCircle(circleOptions2);
+        mCircle3 = mMap.addCircle(circleOptions3);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
         // Zoom in, animating the camera.
         mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -302,8 +306,13 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     }
 
     public void removeGeoFences(){
-        if(mCircle !=null){
-            mCircle.remove();
+        if(mCircle1 !=null && mCircle2 != null && mCircle3 !=null){
+            mCircle1.remove();
+            mCircle2.remove();
+            mCircle3.remove();
+            if(geofenceMarker != null){
+                geofenceMarker.remove();
+            }
             mMap.animateCamera(CameraUpdateFactory.zoomOut());
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 1000, null);
             geoSetAlready = false;

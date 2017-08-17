@@ -13,7 +13,6 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="com.project.group.projectga.permission.MAPS_RECEIVE" />
 
-
     <permission
         android:name="com.project.group.projectga.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -45,8 +44,7 @@
         </activity>
 
         <!-- Declare the bundled CropImage Activity -->
-        <activity android:name="com.android.camera.CropImage"/>
-
+        <activity android:name="com.android.camera.CropImage" />
         <activity android:name=".activities.SplashScreen" />
         <activity android:name=".activities.SignInActivity" />
         <activity android:name=".activities.SignUpActivity" />
@@ -70,12 +68,13 @@
         </provider>
 
         <service android:name=".service.GeofenceTransitionService" />
-        <service android:name=".service.CurrentLocation"/>
+        <service android:name=".service.CurrentLocation" />
 
         <activity android:name=".activities.FullScreenViewActivity" />
         <activity android:name=".activities.IntroDialogActivity" />
         <activity android:name=".activities.IntroDialogGuardianActivity" />
-        <activity android:name=".activities.BluzoneApplication"></activity>
+        <activity android:name=".activities.SettingsPrefActivity" />
+        <activity android:name=".activities.SettingsHeaderActivity"></activity>
     </application>
 
 </manifest>

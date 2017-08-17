@@ -4,7 +4,10 @@ import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -107,6 +110,8 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
     String importantPeoplesKey = null;
     String userId;
+    Uri uri;
+    String photoPath;
 
     public static final int RC_CAMERA_CODE = 123;
     private final int MAX_WORD_LIMIT_SHORT = 10;
@@ -196,7 +201,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 File image = null;
                 String timeStamp = new SimpleDateFormat("dd-MMM-yyyy", Locale.US).format(new Date());
-                String imageFileName = "ProjectGA" + "_" + timeStamp + "_";
+                String imageFileName = "ImportantPeople" + "_" + timeStamp + "_";
                 File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/Important People");
                 try {
                     image = File.createTempFile(
@@ -266,7 +271,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                         personRelationTextInputEditText.setText(importantPeople.getRelation());
                         shortDescrptionTextInputEditText.setText(importantPeople.getShortDescription());
                         longDescriptionTextInputEditText.setText(importantPeople.getLongDescription());
-                        Picasso.with(getApplicationContext()).load(importantPeople.getProfile()).placeholder(R.drawable.ic_account_circle_white_24dp).rotate(270.0f).error(R.drawable.ic_error_outline_black_24dp).into(personImage);
+                        Picasso.with(getApplicationContext()).load(importantPeople.getProfile()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(personImage);
                         imgURL = importantPeople.getProfile();
                     }
                 }
@@ -387,6 +392,20 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
                 if (extras != null) {
                     Bitmap photo = extras.getParcelable("data");
+                    Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            new String[]{MediaStore.Images.Media.DATA,
+                                    MediaStore.Images.Media.DATE_ADDED,
+                                    MediaStore.Images.ImageColumns.ORIENTATION},
+                            MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+                    if(cursor != null && cursor.moveToFirst())
+                    {
+                        do {
+                            uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+                            photoPath = uri.toString();
+                        }while(cursor.moveToNext());
+                        cursor.close();
+                    }
+                    photo = rotateImage(photo);
                     personImage.setImageBitmap(photo);
                 }
                 personImage.setDrawingCacheEnabled(true);
@@ -457,6 +476,31 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             longDescriptionTextInputEditText.setText(result.get(0));
         }
+    }
+    private Bitmap rotateImage(Bitmap bitmap) {
+        Bitmap rotatedBitmap = bitmap;
+        ExifInterface exifInterface = null;
+        try {
+            exifInterface = new ExifInterface(photoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(270);
+                break;
+            default:
+        }
+        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
     }
 
     private boolean validatePersonName(String personName) {

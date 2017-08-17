@@ -214,9 +214,7 @@ public class PhotosActivity extends CoreActivity{
                             playName.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(PhotosActivity.this, "asd", Toast.LENGTH_SHORT).show();
                                     String event = eventName.getText().toString().trim();
-                                    Toast.makeText(PhotosActivity.this, event, Toast.LENGTH_SHORT).show();
                                     voice.say(event);
                                 }
                             });
@@ -240,58 +238,21 @@ public class PhotosActivity extends CoreActivity{
                             recordName.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                                            getString(R.string.speech_prompt));
-
-                                    try {
-                                        startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_NAME);
-                                    } catch (ActivityNotFoundException a) {
-                                        Toast.makeText(PhotosActivity.this,
-                                                getString(R.string.speech_not_supported),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+                                    recordDescription(v);
                                 }
                             });
 
                             recordLong.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                                            getString(R.string.speech_prompt));
-                                    try {
-                                        startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
-                                    } catch (ActivityNotFoundException a) {
-                                        Toast.makeText(PhotosActivity.this,
-                                                getString(R.string.speech_not_supported),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+                                    recordDescription(v);
                                 }
                             });
 
                             recordLonger.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-                                            getString(R.string.speech_prompt));
-                                    try {
-                                        startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
-                                    } catch (ActivityNotFoundException a) {
-                                        Toast.makeText(PhotosActivity.this,
-                                                getString(R.string.speech_not_supported),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+                                    recordDescription(v);
                                 }
                             });
 
@@ -401,22 +362,59 @@ public class PhotosActivity extends CoreActivity{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_CODE_SPEECH_INPUT_NAME && data!=null ){
-            ArrayList<String> result = data
-                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            eventName.setText(result.get(0));
-        }
-
-        if(requestCode == REQ_CODE_SPEECH_INPUT_SHORT && data!=null ){
+        if(requestCode == REQ_CODE_SPEECH_INPUT_SHORT && data!=null )
+        {
             ArrayList<String> result = data
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             shortDescription.setText(result.get(0));
         }
 
-        if(requestCode == REQ_CODE_SPEECH_INPUT_LONG && data!=null ){
+        if(requestCode == REQ_CODE_SPEECH_INPUT_LONG && data!=null )
+        {
             ArrayList<String> result = data
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             longDescription.setText(result.get(0));
+        }
+        if(requestCode == REQ_CODE_SPEECH_INPUT_NAME && data != null){
+            ArrayList<String> result = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            eventName.setText(result.get(0));
+        }
+    }
+
+    public void recordDescription(View v) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+
+
+        if (v.getId() == R.id.recordEventName) {
+            try {
+                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_NAME);
+            } catch (ActivityNotFoundException a) {
+                Toast.makeText(PhotosActivity.this,
+                        getString(R.string.speech_not_supported),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (v.getId() == R.id.recordShortDescription) {
+            try {
+                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_SHORT);
+            } catch (ActivityNotFoundException a) {
+                Toast.makeText(PhotosActivity.this,
+                        getString(R.string.speech_not_supported),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (v.getId() == R.id.recordLongDescription) {
+            try {
+                startActivityForResult(intent, REQ_CODE_SPEECH_INPUT_LONG);
+            } catch (ActivityNotFoundException a) {
+                Toast.makeText(PhotosActivity.this,
+                        getString(R.string.speech_not_supported),
+                        Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

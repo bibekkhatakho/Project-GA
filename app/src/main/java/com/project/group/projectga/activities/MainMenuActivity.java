@@ -103,38 +103,38 @@ public class MainMenuActivity extends CoreActivity {
 
         setSupportActionBar(toolbar);
 
-        if(!proactiveFunctionlaity) {
-
-            Timer timer = new Timer ();
-            TimerTask hourlyTask = new TimerTask () {
-                @Override
-                public void run () {
-                    //if (getActivity() != null) {
-                    Intent notificationIntent = new Intent( getApplicationContext(), MapsFragment.class );
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                    stackBuilder.addParentStack(MainMenuActivity.class);
-                    stackBuilder.addNextIntent(notificationIntent);
-                    PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-
-                    // Creating and sending Notification
-                    NotificationManager notificatioMng =
-                            (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
-                    notificatioMng.notify(
-                            1,
-                            createNotification("aaa", notificationPendingIntent));
-                    // }
-                    // your code here...
-                }
-            };
-
-// schedule the task to run starting now and then every hour...
-            timer.schedule (hourlyTask, 0l, 5000);
-
-
-            proactiveFunctionlaity = true;
-        }
+//        if(!proactiveFunctionlaity) {
+//
+//            Timer timer = new Timer ();
+//            TimerTask hourlyTask = new TimerTask () {
+//                @Override
+//                public void run () {
+//                    //if (getActivity() != null) {
+//                    Intent notificationIntent = new Intent( getApplicationContext(), MapsFragment.class );
+//                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+//                    stackBuilder.addParentStack(MainMenuActivity.class);
+//                    stackBuilder.addNextIntent(notificationIntent);
+//                    PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//
+//
+//                    // Creating and sending Notification
+//                    NotificationManager notificatioMng =
+//                            (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
+//                    notificatioMng.notify(
+//                            1,
+//                            createNotification("aaa", notificationPendingIntent));
+//                    // }
+//                    // your code here...
+//                }
+//            };
+//
+//// schedule the task to run starting now and then every hour...
+//            timer.schedule (hourlyTask, 0l, 5000);
+//
+//
+//            proactiveFunctionlaity = true;
+//        }
 
         gaFragmentStack = new Stack<>();
 
@@ -149,22 +149,22 @@ public class MainMenuActivity extends CoreActivity {
         Toast.makeText(this,"outside if",Toast.LENGTH_SHORT).show();
 
 
-        if(type != null){
-            Toast.makeText(this,"inside if",Toast.LENGTH_SHORT).show();
-            switch (type){
-                case "mapsFragment":
-                    Toast.makeText(this,"inside case",Toast.LENGTH_SHORT).show();
-                    Fragment mapsFragment = new MapsFragment();
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.container_gaFragments, mapsFragment).commit();
-                    break;
-                // fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                //        fragmentTransaction.addToBackStack(mapsFragment.toString());
-                //          fragmentTransaction.commit();
-                //      Toast.makeText(this,"last case",Toast.LENGTH_SHORT).show();
-
-            }
-        }
+//        if(type != null){
+//            Toast.makeText(this,"inside if",Toast.LENGTH_SHORT).show();
+//            switch (type){
+//                case "mapsFragment":
+//                    Toast.makeText(this,"inside case",Toast.LENGTH_SHORT).show();
+//                    Fragment mapsFragment = new MapsFragment();
+//                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//                    fragmentTransaction.replace(R.id.container_gaFragments, mapsFragment).commit();
+//                    break;
+//                // fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//                //        fragmentTransaction.addToBackStack(mapsFragment.toString());
+//                //          fragmentTransaction.commit();
+//                //      Toast.makeText(this,"last case",Toast.LENGTH_SHORT).show();
+//
+//            }
+//        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -196,7 +196,7 @@ public class MainMenuActivity extends CoreActivity {
         final PrimaryDrawerItem maps = new PrimaryDrawerItem().withName("Maps").withIdentifier(5).withIcon(R.drawable.ic_place_black_24dp);
         final PrimaryDrawerItem tagAndLocate = new PrimaryDrawerItem().withName("Tag & Locate").withIdentifier(6).withIcon(R.drawable.ic_remove_red_eye_black_24dp);
         final PrimaryDrawerItem gamesAndPuzzle = new PrimaryDrawerItem().withName("Games & Puzzles").withIdentifier(7).withIcon(R.drawable.ic_casino_black_24dp);
-        final PrimaryDrawerItem prefSettings = new PrimaryDrawerItem().withName("Preferences").withIdentifier(7).withIcon(GoogleMaterial.Icon.gmd_settings);
+        final PrimaryDrawerItem prefSettings = new PrimaryDrawerItem().withName("Preferences").withIdentifier(8).withIcon(GoogleMaterial.Icon.gmd_settings);
 
         final PrimaryDrawerItem logout = new PrimaryDrawerItem().withName("Logout").withIdentifier(9).withIcon(FontAwesome.Icon.faw_sign_out);
 
@@ -255,6 +255,7 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(maps)
                     .addDrawerItems(tagAndLocate)
                     .addDrawerItems(gamesAndPuzzle)
+                    .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(prefSettings)
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
@@ -272,6 +273,7 @@ public class MainMenuActivity extends CoreActivity {
                     .addDrawerItems(home)
                     .addDrawerItems(profile)
                     .addDrawerItems(maps)
+                    .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(prefSettings)
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
@@ -397,6 +399,11 @@ public class MainMenuActivity extends CoreActivity {
                             break;
                     }
                 }
+
+                if(drawItemId == 8){
+                    startActivity(new Intent(MainMenuActivity.this, SettingsPrefActivity.class));
+                    return true;
+                }
                 if (drawItemId == 9) {
                     FirebaseAuth.getInstance().signOut();
                     SharedPreferences.Editor editor = preferences.edit();
@@ -478,24 +485,24 @@ public class MainMenuActivity extends CoreActivity {
         super.onResume();
     }
 
-    public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
-        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-        intent.putExtra("Maps", "mapsFragment");
-
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
-        notificationBuilder
-                .setSmallIcon(R.drawable.ic_place_black_24dp)
-                .setColor(Color.RED)
-                .setContentTitle("Are you lost?")
-                .setContentText("are you lost?")
-                .setContentIntent(notificationPendingIntent)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-                .addAction(R.drawable.ic_close_black_24dp,"Dismiss",pIntent)
-                .addAction(R.drawable.ic_place_black_24dp,"Go to Maps",pIntent)
-                .setAutoCancel(true);
-        return notificationBuilder.build();
-
-    }
+//    public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
+//        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+//        intent.putExtra("Maps", "mapsFragment");
+//
+//        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+//        notificationBuilder
+//                .setSmallIcon(R.drawable.ic_place_black_24dp)
+//                .setColor(Color.RED)
+//                .setContentTitle("Are you lost?")
+//                .setContentText("are you lost?")
+//                .setContentIntent(notificationPendingIntent)
+//                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+//                .addAction(R.drawable.ic_close_black_24dp,"Dismiss",pIntent)
+//                .addAction(R.drawable.ic_place_black_24dp,"Go to Maps",pIntent)
+//                .setAutoCancel(true);
+//        return notificationBuilder.build();
+//
+//    }
 
 }

@@ -1,5 +1,6 @@
 package com.project.group.projectga.adapters;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,8 +13,13 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
@@ -52,6 +58,9 @@ public class FullScreenImageAdapter extends PagerAdapter {
     private ArrayList<String> _imagePaths;
     private LayoutInflater inflater;
 
+    Uri uri;
+    String photoPath;
+
     // constructor
     public FullScreenImageAdapter(Activity activity,
                                   ArrayList<String> imagePaths) {
@@ -85,6 +94,20 @@ public class FullScreenImageAdapter extends PagerAdapter {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = BitmapFactory.decodeFile(_imagePaths.get(position), options);
+        Cursor cursor = _activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media.DATA,
+                        MediaStore.Images.Media.DATE_ADDED,
+                        MediaStore.Images.ImageColumns.ORIENTATION},
+                MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+        if(cursor != null && cursor.moveToFirst())
+        {
+            do {
+                uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+                photoPath = uri.toString();
+            }while(cursor.moveToNext());
+            cursor.close();
+        }
+        bitmap = rotateImage(bitmap);
         imgDisplay.setImageBitmap(bitmap);
 
         // close button click event
@@ -104,6 +127,32 @@ public class FullScreenImageAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         ((ViewPager) container).removeView((RelativeLayout) object);
 
+    }
+
+    private Bitmap rotateImage(Bitmap bitmap) {
+        Bitmap rotatedBitmap = bitmap;
+        ExifInterface exifInterface = null;
+        try {
+            exifInterface = new ExifInterface(photoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(270);
+                break;
+            default:
+        }
+        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
     }
 
 }

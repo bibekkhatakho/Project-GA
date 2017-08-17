@@ -32,6 +32,8 @@ dependencies {
     //Added this for Visual Gallery implementation - Start
 
     //Added this for Visual Gallery implementation - End
+    compile project(':bluvisionsdk_baseline_2_0_8')
+    compile project(':cmssdk-release_2_0_8')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.google.firebase:firebase-auth:11.0.4'
     compile 'com.android.support:design:25.3.1'
@@ -57,9 +59,8 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    compile project(':bluvisionsdk_baseline_2_0_8')
-    compile project(':cmssdk-release_2_0_8')
 }
+
 
 
 

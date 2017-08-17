@@ -159,8 +159,10 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
-                            guardianEmail.setText(locationModel.getPatientEmail());
-                            guardianName.setText(locationModel.getPatientName());
+                            if (dataSnapshot.exists()) {
+                                guardianEmail.setText(locationModel.getPatientEmail());
+                                guardianName.setText(locationModel.getPatientName());
+                            }
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
@@ -178,7 +180,9 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
-                            guardianName.setText(locationModel.getGuardianName());
+                            if(dataSnapshot.exists()) {
+                                guardianName.setText(locationModel.getGuardianName());
+                            }
                         }
 
                         @Override

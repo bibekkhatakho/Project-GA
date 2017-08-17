@@ -65,15 +65,16 @@
     <string name="tempPhone">(555)555-5555</string>
 
     //Gallery Screen
-    <string name="shortDesc">Short Description</string>
+    <string name="shortDesc">Where did you meet?</string>
     <string name="importantPeople">Important People</string>
-    <string name="longDesc">Long Description</string>
-    <string name="shortDescSpecial">Quick Description: (10 words)</string>
+    <string name="longDesc">Long Memory</string>
+    <string name="shortDescSpecial">Quick Memory: (10 words)</string>
     <string name="shortDescSpecialError">Exceeded the word limit of 10 words</string>
-    <string name="longDescSpecial">Detailed Description: (50 words)</string>
+    <string name="longDescSpecial">Detailed Memory: (50 words)</string>
     <string name="longDescSpecialError">Exceeded the word limit of 50 words</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="close">Close</string>
     <string name="photoGallery">Photos and Videos</string>
     <string name="memoryInfo">Memory Information</string>
     <string name="eventName">Event Name</string>
@@ -82,7 +83,7 @@
     <string name="memory">Memory</string>
     <string name="name">Name</string>
     <string name="date">Date</string>
-    <string name="description">Description:</string>
+    <string name="description">Memory:</string>
     <string name="galleryHomeText">You can add people who are important in your life in the Important People category and have then always in your sight\. In photos and videos\, you can label all of your files with name\, date and description\, so you will never forget your memories\.  </string>
     <string name="imageName">Image Name</string>
 
@@ -181,9 +182,9 @@
     //Initial Dialog Screen
     <string name="allsetText"> Looks like you are all set \.</string>
     <string name="standardUserTextIntro"> You are a Standard User</string>
-    <string name="standardUserTextIntro2"> As a Standard User \, you are able to\:</string>
+    <string name="standardUserTextIntro2"> As a Standard User, you are able to\:</string>
     <string name="standardUserTextIntro2Info"> \u2022 Save individual profiles for people who are important to you\.\n\n \u2022 Store your personal memories for important people\, locations and events\.\n\n \u2022 Pinpoint important locations in Google Maps for easy and quick navigation\. \n\n \u2022 Tag physical objects for easy location via bluetooth\. \n\n \u2022 Define a Guardian User, who will be your guardian angel 24 hours a day\. </string>
-    <string name="guardianUserTextIntro2"> As a Guardian User \, you are able to\:</string>
+    <string name="guardianUserTextIntro2"> As a Guardian User, you are able to\:</string>
     <string name="guardianUserTextIntro2Info"> \u2022 Track Standard Users\’ whereabouts\.\n\n \u2022 Set safety zones for Standard Users\’ freedom of movement\.\n\n \u2022 Exchange emergency messages with Standard Users\. </string>
     <string name="standardUserTextIntroInfo"> You will benefit the most of our app\, as it was designed around your needs\.</string>
     <string name="guardianUserTextIntro"> You are a Guardian User</string>
@@ -197,6 +198,35 @@
     <string name="skipButtonText">SKIP</string>
     <string name="nextButtonText">NEXT</string>
     <string name="guardianUserScreenText">\u2022Track down Standard Users\n\n\u2022Define safety zones for the movement of Standard Users\n\n\u2022Interact with Standard Users on the spot in case of emergencies\n\n\u2022Be alerted in case of non-ordinary routines being followed by Standard Users\.</string>
+
+
+    //Settings Screen
+    <string name="title_activity_preferences">Preferences</string>
+    <string name="pref_header_about"> About </string>
+    <string name="app_summary"> App Summary. Get text from Rodrigo, in case this functionality stays\.</string>
+    <string name="title_version"> Version Number </string>
+    <string name="app_version"> 1.0 </string>
+    <string name="title_send_feedback"> Send Feedback </string>
+    <string name="summary_support"> Queries? Please reach out to us. We are glad to help 24/7! </string>
+    <string name="key_send_feedback"> key_send_feedback </string>
+    <string name="pref_title_notifications"> Notifications </string>
+    <string name="title_new_notification_sound"> Messages and Notifications </string>
+    <string name="notifications_new_message"> notifications_new_message </string>
+    <string name="key_notifications_new_message_ringtone"> key_notifications_new_message_ringtone </string>
+    <string name="pref_title_ringtone"> Ringtone </string>
+    <string name="summary_choose_ringtone"> Choose Notification Ringtone </string>
+    <string name="key_vibrate"> key_vibrate </string>
+    <string name="summary_vibrate"> Vibrate on new Notifications </string>
+    <string name="title_vibrate"> Vibration </string>
+    <string name="choose_email_client">Choose email client</string>
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+
+
+
 
 
 </resources>
