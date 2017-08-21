@@ -12,6 +12,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="com.project.group.projectga.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera2.full" android:required="false" />
 
     <permission
         android:name="com.project.group.projectga.permission.MAPS_RECEIVE"
@@ -67,14 +71,21 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <receiver android:name=".service.BackupReceiver">
+            <intent-filter>
+                <action android:name="com.project.group.projectga.service.BACKUP"/>
+            </intent-filter>
+        </receiver>
+
         <service android:name=".service.GeofenceTransitionService" />
         <service android:name=".service.CurrentLocation" />
+        <service android:name=".service.BackupService" />
 
         <activity android:name=".activities.FullScreenViewActivity" />
         <activity android:name=".activities.IntroDialogActivity" />
         <activity android:name=".activities.IntroDialogGuardianActivity" />
         <activity android:name=".activities.SettingsPrefActivity" />
-        <activity android:name=".activities.SettingsHeaderActivity"></activity>
+        <activity android:name=".activities.SettingsHeaderActivity" />
     </application>
 
 </manifest>

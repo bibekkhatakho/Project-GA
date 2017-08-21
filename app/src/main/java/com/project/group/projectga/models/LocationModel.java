@@ -10,17 +10,23 @@ public class LocationModel {
     private String currentLong;
     private String patientEmail;
     private String patientName;
+    private String patientPicture;
     private String guardianName;
+    private double latitude;
+    private double longitude;
+	 private String guardianPicture;
 
     public LocationModel() {
     }
 
-    public LocationModel(String currentLat, String currentLong, String patientEmail, String patientName, String guardianName) {
+    public LocationModel(String currentLat, String currentLong, String patientEmail, String patientName, String guardianName, double latitude, double longitude, String patientPicture, String guardianPicture) {
         this.currentLat = currentLat;
         this.currentLong = currentLong;
         this.patientEmail = patientEmail;
         this.patientName = patientName;
+        this.patientPicture = patientPicture;
         this.guardianName = guardianName;
+        this.guardianPicture = guardianPicture;
     }
 
     public void setCurrentLat(String currentLat) { this.currentLat = currentLat; }
@@ -48,4 +54,28 @@ public class LocationModel {
     public void setPatientName(String patientName) { this.patientName = patientName; }
 
     public String getPatientName() { return patientName; }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+	
+	 public void setPatientPicture(String patientPicture) {this.patientPicture = patientPicture; }
+
+    public String getPatientPicture() { return patientPicture; }
+
+    public void setGuardianPicture(String guardianPicture) { this.guardianPicture = guardianPicture; }
+
+    public String getGuardianPicture() { return guardianPicture; }
 }

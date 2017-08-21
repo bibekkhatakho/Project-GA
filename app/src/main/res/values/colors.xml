@@ -38,6 +38,7 @@
     <array name="dot_active">
         <item>@color/dot_light_screen_4</item>
         <item>@color/dot_light_screen_4</item>
+        <item>@color/dot_light_screen_4</item>
         <item>@color/dot_light_screen_1</item>
         <item>@color/dot_light_screen_2</item>
         <item>@color/dot_light_screen_3</item>
@@ -47,6 +48,7 @@
     </array>
 
     <array name="dot_inactive">
+        <item>@color/dot_screen_4</item>
         <item>@color/dot_screen_4</item>
         <item>@color/dot_screen_4</item>
         <item>@color/dot_screen_1</item>

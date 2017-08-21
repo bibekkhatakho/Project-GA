@@ -16,10 +16,20 @@
 
 
         <ImageView
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:src="@drawable/guardianon"
             android:contentDescription="@string/guardianLabel" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/guardianLabel"
+            android:textColor="@color/offWhite"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -28,8 +38,8 @@
         android:layout_width="336dp"
         android:layout_height="2dp"
         android:layout_below="@+id/imageLayout"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:background="@color/offWhite"
         app:srcCompat="@android:drawable/divider_horizontal_bright"
         tools:ignore="ContentDescription" />
@@ -43,22 +53,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/guardianLabel"
-            android:textColor="@color/offWhite"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/guardianUserScreenText"
             android:textColor="@color/offWhite"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:textSize="14sp" />
 
     </LinearLayout>

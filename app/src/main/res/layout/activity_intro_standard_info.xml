@@ -13,8 +13,8 @@
 
 
         <ImageView
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:src="@drawable/guardianon"
             android:contentDescription="@string/standardLabel" />
 
@@ -27,24 +27,26 @@
         android:orientation="vertical"
         android:layout_below="@+id/imageLayout">
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/standardUserTextIntro2"
             android:textColor="@color/offWhite"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:textSize="24sp"
+            android:layout_marginTop="20dp"
+            android:textSize="18sp"
             android:textStyle="bold" />
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/standardUserTextIntro2Info"
+            android:text="@string/standardUserTextIntro2Info1"
             android:textColor="@color/offWhite"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:textSize="14sp" />
 

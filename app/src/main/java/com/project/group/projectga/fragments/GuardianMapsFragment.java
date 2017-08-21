@@ -80,6 +80,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     boolean geoSetAlready;
     private GoogleApiClient mGoogleApiClient;
     Location mCurrentLocation;
+	String thisEmail;
 
     private static final int REQUEST_PERMISSIONS = 100;
 
@@ -117,12 +118,14 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         View view = inflater.inflate(R.layout.fragment_guardian_maps, null, false);
         mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        thisEmail = getEmail();
         if (getUid() != null) {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Geofence Location");
+            //databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Geofence Location");
             databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
             databaseReferenceEmail = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+			databaseReference = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails").child(thisEmail);
         }
 
         // set the background and recolor the menu icon for the toolbar
@@ -278,21 +281,21 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                 .position(latLng)
                 .title("name display")
                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
-        CircleOptions circleOptions1 = new CircleOptions()
-                .center(latLng)
-                .strokeColor(Color.argb(50, 70, 70, 70))
-                .fillColor(Color.argb(200, 00, 150, 00))
-                .radius(geofenceradius[0]);
-        CircleOptions circleOptions2 = new CircleOptions()
-                .center(latLng)
-                .strokeColor(Color.argb(50, 70, 70, 70))
-                .fillColor(Color.argb(50, 100, 00, 00))
-                .radius(geofenceradius[1]);
-        CircleOptions circleOptions3 = new CircleOptions()
-                .center(latLng)
-                .strokeColor(Color.argb(50, 70, 70, 70))
-                .fillColor(Color.argb(50, 255, 0, 0))
-                .radius(geofenceradius[2]);
+    CircleOptions circleOptions1 = new CircleOptions()
+            .center(latLng)
+            .strokeColor(Color.argb(25,239,69,56))
+            .fillColor(Color.argb(40,239,69,56))
+            .radius(geofenceradius[0]);
+    CircleOptions circleOptions2 = new CircleOptions()
+            .center(latLng)
+            .strokeColor(Color.argb(25,239,69,56))
+            .fillColor(Color.argb(50, 239, 69, 56))
+            .radius(geofenceradius[1]);
+    CircleOptions circleOptions3 = new CircleOptions()
+            .center(latLng)
+            .strokeColor(Color.argb(25,239,69,56))
+            .fillColor(Color.argb(75, 239, 69, 56))
+            .radius(geofenceradius[2]);
         geofenceMarker = mMap.addMarker(markerOptions);
         mCircle1 = mMap.addCircle(circleOptions1);
         mCircle2 = mMap.addCircle(circleOptions2);
@@ -368,5 +371,8 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+	public String getEmail() {
+        return FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",");
     }
 }

@@ -2,29 +2,47 @@ package com.project.group.projectga.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.project.group.projectga.R;
+import com.project.group.projectga.models.Photos;
+import com.project.group.projectga.preferences.Preferences;
 
-public class SettingsPrefActivity extends AppCompatPreferenceActivity {
+import java.io.File;
+
+public class SettingsPrefActivity extends AppCompatPreferenceActivity{
     private static final String TAG = SettingsPrefActivity.class.getSimpleName();
 
     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +51,20 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
     }
 
+
     public static class MainPreferenceFragment extends PreferenceFragment {
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
 
             // notification preference change listener
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_notifications_new_message_ringtone)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.notifications_new_message)));
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.backup_key)));
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.title_app_notifications_key)));
 
             // feedback preference click listener
             Preference myPref = findPreference(getString(R.string.key_send_feedback));
@@ -50,15 +74,16 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
                     return true;
                 }
             });
-        }
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            Preference restorePref = findPreference(getString(R.string.restore_key));
+            restorePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    restorePhotos(getActivity().getApplicationContext());
+                    return true;
+                }
+            });
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private static void bindPreferenceSummaryToValue(Preference preference) {
@@ -67,7 +92,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
         sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
                 PreferenceManager
                         .getDefaultSharedPreferences(preference.getContext())
-                        .getString(preference.getKey(), ""));
+                        .getBoolean(preference.getKey(), false));
     }
 
     /**
@@ -77,7 +102,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
-            String stringValue = newValue.toString();
+            String stringValue = preference.getTitle() + " is now set to " + newValue.toString();
 
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
@@ -114,7 +139,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
                 }
 
             } else {
-                preference.setSummary(stringValue);
+                //preference.setSummary(stringValue);
             }
             return true;
         }
@@ -140,5 +165,62 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for ProjectGA");
         intent.putExtra(Intent.EXTRA_TEXT, body);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.choose_email_client)));
+    }
+    public static void restorePhotos(final Context context) {
+        DatabaseReference databaseReferencePhotos = null;
+        final StorageReference storageReferencePhotos;
+        final StorageReference[] photoRef = new StorageReference[1];
+        String userId;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        userId =sharedPreferences.getString(Preferences.USERID, "");
+        databaseReferencePhotos = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
+        storageReferencePhotos = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
+
+
+        Toast.makeText(context, "Restore Photos Start", Toast.LENGTH_SHORT).show();
+        databaseReferencePhotos.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Photos photos = snapshot.getValue(Photos.class);
+                    String key = snapshot.getKey();
+                    photos.setKey(key);
+                    String folder = photos.getFolder();
+                    String keyPeriod = key.replace(",",".");
+                    String firebaseStor = folder + "/" + key.replace(",",".");
+                    File path = Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DCIM + File.separator + folder + File.separator);
+                    photoRef[0] = storageReferencePhotos.child(firebaseStor);
+                    final File myPhoto = new File(path, keyPeriod);
+
+
+                    MediaScannerConnection.scanFile(context,
+                            new String[] { myPhoto.toString() }, null,
+                            new MediaScannerConnection.OnScanCompletedListener() {
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.i("ExternalStorage", "Scanned " + path + ":");
+                                    Log.i("ExternalStorage", "-> uri=" + uri);
+                                }
+                            });
+
+                    photoRef[0].getFile(myPhoto).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            // Local temp file has been created
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 }

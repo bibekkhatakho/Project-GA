@@ -10,10 +10,12 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,19 +39,24 @@ import java.util.List;
 public class GeofenceTransitionService extends IntentService {
 
     private static final String TAG = GeofenceTransitionService.class.getSimpleName();
-    private static final int REQUEST_CODE = 1;
+
+    public static final int GEOFENCE_NOTIFICATION_ID = 0;
 
     int counter = 0;
     String geoFencingRegion;
     public GeofenceTransitionService() {
         super(TAG);
-
     }
     String str;
+    boolean appNotifications;
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        appNotifications = sharedPreferences.getBoolean(getString(R.string.title_app_notifications_key), false);
 
         // Handling
 
@@ -72,7 +79,7 @@ public class GeofenceTransitionService extends IntentService {
             counter = 3;
             geoFencingRegion = " zone 3";
         }
-            int geoFenceTransition = geofencingEvent.getGeofenceTransition();
+        int geoFenceTransition = geofencingEvent.getGeofenceTransition();
         // Check if the transition type is of interest
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
@@ -82,7 +89,9 @@ public class GeofenceTransitionService extends IntentService {
             String geofenceTransitionDetails = getGeofenceTrasitionDetails(geoFenceTransition, triggeringGeofences );
 
             // Send notification details as a String
-            sendNotification( geofenceTransitionDetails );
+            if(appNotifications) {
+                sendNotification(geofenceTransitionDetails);
+            }
         }
     }
 
@@ -107,18 +116,13 @@ public class GeofenceTransitionService extends IntentService {
 
         try {
             SmsManager smsManager = SmsManager.getDefault();
-            //Sample phone number for testing purposes
-            String phone_number = "+8172137126";
-            String uri = "tel:" + phone_number.trim();
-            //Build the intent that will make the phone call
-            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
-            PendingIntent pendingCallIntent = PendingIntent.getActivity(this,REQUEST_CODE,callIntent,PendingIntent.FLAG_CANCEL_CURRENT);
-            smsManager.sendTextMessage("+8172137126", null, "The standard user  is " + status, null, pendingCallIntent);
+            smsManager.sendTextMessage("14692589637", null, "The standard user  is " + status, null, null);
+
             Toast.makeText(getApplicationContext(), "SMS Sent!",
                     Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(),
-                    "SMS failed, please try again later!",
+                    "SMS faild, please try again later!",
                     Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
@@ -160,6 +164,7 @@ public class GeofenceTransitionService extends IntentService {
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .setAutoCancel(true);
+
         return notificationBuilder.build();
     }
 

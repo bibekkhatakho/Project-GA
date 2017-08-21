@@ -191,7 +191,9 @@ public class GalleryFragment extends Fragment {
                 storageDir      /* directory */
         );
 
-        addImageToGallery(image, context);
+        if(image.length() > 0) {
+            addImageToGallery(image, context);
+        }
 
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = "file:" + image.getPath();

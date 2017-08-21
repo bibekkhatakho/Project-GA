@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.group.projectga.R;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
 
@@ -96,8 +97,8 @@ public class CurrentLocation extends Service {
     }
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
+
         if (getUid() != null) {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
@@ -145,13 +146,15 @@ public class CurrentLocation extends Service {
     }
 
     public void updateLocation(Location location) {
-        Location currentLocation = location;
-        Double currentLat = currentLocation.getLatitude();
-        Double currentLong = currentLocation.getLongitude();
+        Double currentLat = location.getLatitude();
+        Double currentLong = location.getLongitude();
         String sCurrentLat = currentLat.toString();
         String sCurrentLong = currentLong.toString();
-        databaseReference.child(guardianEmail).child("Current Location").child("currentLat").setValue(sCurrentLat);
-        databaseReference.child(guardianEmail).child("Current Location").child("currentLong").setValue(sCurrentLong);
+        if(sCurrentLat != null && !sCurrentLat.isEmpty() && sCurrentLong != null && !sCurrentLong.isEmpty() &&
+                guardianEmail != null && !guardianEmail.isEmpty()){
+            databaseReference.child(guardianEmail).child("Current Location").child("currentLat").setValue(sCurrentLat);
+            databaseReference.child(guardianEmail).child("Current Location").child("currentLong").setValue(sCurrentLong);
+        }
     }
 
     public String getUid() {

@@ -16,9 +16,7 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:src="@drawable/guardianon"
-            android:contentDescription="@string/guardianLabel" />
-
-
+            android:contentDescription="@string/standardLabel" />
 
     </LinearLayout>
 
@@ -29,22 +27,22 @@
         android:orientation="vertical"
         android:layout_below="@+id/imageLayout">
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/guardianUserTextIntro2"
+            android:text="@string/standardUserTextIntro2"
             android:textColor="@color/offWhite"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
-
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/guardianUserTextIntro2Info"
+            android:text="@string/standardUserTextIntro2Info2"
             android:textColor="@color/offWhite"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"

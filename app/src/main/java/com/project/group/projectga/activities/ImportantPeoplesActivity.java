@@ -112,6 +112,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     String userId;
     Uri uri;
     String photoPath;
+    HashMap<String, String> personsListMap;
 
     public static final int RC_CAMERA_CODE = 123;
     private final int MAX_WORD_LIMIT_SHORT = 10;
@@ -133,6 +134,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+        personsListMap = new HashMap<>();
 
         isPlaying = false;
         voice  = new Voice(getApplicationContext());
@@ -272,7 +274,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                         shortDescrptionTextInputEditText.setText(importantPeople.getShortDescription());
                         longDescriptionTextInputEditText.setText(importantPeople.getLongDescription());
                         Picasso.with(getApplicationContext()).load(importantPeople.getProfile()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(personImage);
-                        imgURL = importantPeople.getProfile();
+                        //imgURL = importantPeople.getProfile();
                     }
                 }
                 @Override
@@ -317,13 +319,11 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             hideProgressDialog();
             return;
         }
-
-        HashMap<String, String> personsListMap = new HashMap<>();
         personsListMap.put("name", personName);
         personsListMap.put("relation", personRelation);
         personsListMap.put("shortDescription", shortDescription);
         personsListMap.put("longDescription", longDescription);
-        personsListMap.put("profile",imgURL);
+        //personsListMap.put("profile",imgURL);
 
         //personsListMap.put("profile", String.valueOf(personImage));
         if(peoples_key.getText().toString().equals("")) {
@@ -415,13 +415,15 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] d = baos.toByteArray();
 
-                final UploadTask uploadTask = storageReference.child(userId).putBytes(d);
+                final UploadTask uploadTask = storageReference.child(userId).child(photoPath).putBytes(d);
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(ImportantPeoplesActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(ImportantPeoplesActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
                         Toast.makeText(ImportantPeoplesActivity.this, "Person image set", Toast.LENGTH_SHORT).show();
-                        imgURL = taskSnapshot.getDownloadUrl().toString();
+                        //databaseReference.child("profile").setValue(taskSnapshot.getDownloadUrl().toString());
+                        personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
+                        //imgURL = taskSnapshot.getDownloadUrl().toString();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -654,9 +656,11 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             String personName = personNameTextInputEditText.getText().toString().trim();
             String personRelation = personRelationTextInputEditText.getText().toString().trim();
             String shortDescription = shortDescrptionTextInputEditText.getText().toString().trim();
-            String shortStr = personName + personRelation + shortDescription;
-            voice.say(shortStr);
-
+            voice.say(personName);
+            voice.playSilence();
+            voice.say(personRelation);
+            voice.playSilence();
+            voice.say(shortDescription);
 
         }
         else if (v.getId() == R.id.playLongDescription){
@@ -695,4 +699,5 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             }
         }
     }
+
 }

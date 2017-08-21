@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.ImportantPeoplesActivity;
 import com.project.group.projectga.adapters.ImportantPeopleAdapter;
+import com.project.group.projectga.adapters.Voice;
 import com.project.group.projectga.models.ImportantPeople;
 import com.project.group.projectga.preferences.Preferences;
 
@@ -47,6 +48,7 @@ public class ImportantPeopleFragment extends Fragment  {
     DatabaseReference databaseReference;
     ArrayList<ImportantPeople> importantPeoplesList;
 	MenuItem search;
+    Voice voice;
 
     public ImportantPeopleFragment(){
 
@@ -80,13 +82,16 @@ public class ImportantPeopleFragment extends Fragment  {
         title.setText(R.string.importantPeople);
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setVisibility(View.VISIBLE);
+
+        voice = new Voice(getActivity().getApplicationContext());
+
         addButton = (FloatingActionButton) view.findViewById(R.id.addButton);
         recyclerView = (RecyclerView) view.findViewById(R.id.people_recycler);
         recyclerView.setNestedScrollingEnabled(false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
 //        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        final RecyclerView.Adapter mAdapter = new ImportantPeopleAdapter(getContext(),importantPeoplesList);
+        final RecyclerView.Adapter mAdapter = new ImportantPeopleAdapter(getContext(),importantPeoplesList, voice);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

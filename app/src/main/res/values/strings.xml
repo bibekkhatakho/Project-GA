@@ -36,7 +36,7 @@
     <string name="homeScreen">GA Home</string>
 
     <string name="addGuardianInfo"> Our users who suffer from Alzheimer\’s can now nominate a Guardian\. A Guardian is someone close to our user\, who cares about his/her health\, whereabouts and wish to protect his/her physical integrity\. </string>
-    <string name="addStandardInfo"> Welcome to Google Alzheimer. We are here to help you with everything possible, with your destinations, keeping your memory of important people.  </string>
+    <string name="privacyInfo"> Privacy settings of the app are default. You can change them anytime by going to Preferences. </string>
     <string name="mapLabel">Maps</string>
     <string name="galleryLabel">Gallery</string>
     <string name="recognitionLabel">Recognition</string>
@@ -183,24 +183,27 @@
     <string name="allsetText"> Looks like you are all set \.</string>
     <string name="standardUserTextIntro"> You are a Standard User</string>
     <string name="standardUserTextIntro2"> As a Standard User, you are able to\:</string>
-    <string name="standardUserTextIntro2Info"> \u2022 Save individual profiles for people who are important to you\.\n\n \u2022 Store your personal memories for important people\, locations and events\.\n\n \u2022 Pinpoint important locations in Google Maps for easy and quick navigation\. \n\n \u2022 Tag physical objects for easy location via bluetooth\. \n\n \u2022 Define a Guardian User, who will be your guardian angel 24 hours a day\. </string>
+    <string name="standardUserTextIntro2Info1"> \u2022 Save individual profiles for people who are important to you\.\n\n \u2022 Store your personal memories for important people\, locations and events\.\n\n \u2022 Pinpoint important locations in Google Maps for easy and quick navigation\.</string>
+    <string name="standardUserTextIntro2Info2"> \u2022 Tag physical objects for easy location via bluetooth\. \n\n \u2022 Define a Guardian User, who will be your guardian angel 24 hours a day\.</string>
+
+
     <string name="guardianUserTextIntro2"> As a Guardian User, you are able to\:</string>
     <string name="guardianUserTextIntro2Info"> \u2022 Track Standard Users\’ whereabouts\.\n\n \u2022 Set safety zones for Standard Users\’ freedom of movement\.\n\n \u2022 Exchange emergency messages with Standard Users\. </string>
     <string name="standardUserTextIntroInfo"> You will benefit the most of our app\, as it was designed around your needs\.</string>
     <string name="guardianUserTextIntro"> You are a Guardian User</string>
     <string name="guardianUserTextIntroInfo"> A person who suffers from Alzheimer\’s disease and who also is a Standard User in our app nominated you as a his\/her guardian\.</string>
     <string name="standardScreen1"> \u2022Our app is fully integrated to Google Maps.\n\n \u2022Easily pinpoint and store locations of interest\, such as police stations\, hospitals\, pharmacies and others with easy to distinguish icons\.\n\n \u2022 Navigate to any of these locations at your own convenience\. </string>
-    <string name="standardScreen2"> \u2022Our visual gallery will allow you to store pictures and videos for important people to you\, as well key events and places you care.\n\n \u2022 Add your own personal text or voice memories to pictures and videos for later playback\.\n\n \u2022 Never forget a face\, place or event again\. </string>
+    <string name="standardScreen2"> \u2022Our visual gallery will allow you to store pictures for important people, key events and places you care.\n\n \u2022 Add your own personal text or voice memories to pictures and videos for later playback\.\n\n \u2022 Never forget a face\, place or event again\. </string>
     <string name="standardScreen3"> \u2022You can now use a Bluetooth tracker powered by X device to tag important objects\, such as your keys\, wallet\, remote control and other easy to lose objects.\n\n \u2022 Use our app to track down these objects whenever you can\’t find them\. The days of losing things are over\. </string>
-    <string name="standardScreen4"> \u2022Having trouble in remembering who a person standing in front of you is\? With our facial recognition feature\, you are better equipped to deal with such situations\. Just create a Gallery profile with a picture for each person you care to remember about\. \n\n \u2022Next time you meet someone you are not sure who is\, just take a picture on the spot of this person\, and our app will tell you who she\/he is by matching this photo against the profile pictures you have previously stored\. \n\n \u2022You can also store memories for each profile and our app will playback these memories at your convenience\. </string>
+    <string name="standardScreen4"> \u2022Having trouble in remembering who a person standing in front of you is\? With our facial recognition feature\, you are better equipped to deal with such situations\. Just create a Gallery profile with a picture for each person you care to remember about\. \n\n \u2022You can also store memories for each profile and our app will playback these memories at your convenience\. </string>
     <string name="standardScreen5">\u2022 We compiled a list of suggested games and puzzles that are recognized to provide the much needed training your brain needs\. \n\n \u2022 Our list is constantly updated with new games\, so stay tuned for news\. We want to help you in keeping your brain as sharp as possible\!</string>
     <string name="standardScreen6"> Elect a Guardian\, a person who will be your personal caregiver and bodyguard\.  </string>
     <string name="skipButtonText">SKIP</string>
     <string name="nextButtonText">NEXT</string>
-    <string name="guardianUserScreenText">\u2022Track down Standard Users\n\n\u2022Define safety zones for the movement of Standard Users\n\n\u2022Interact with Standard Users on the spot in case of emergencies\n\n\u2022Be alerted in case of non-ordinary routines being followed by Standard Users\.</string>
+    <string name="guardianUserScreenText">\u2022Track down Standard Users\n\n\u2022Define safety zones for the movement of Standard Users\n\n\u2022Interact with Standard Users on the spot in case of emergencies\n\n\u2022Be alerted of non-ordinary routines being followed by Standard Users\.</string>
 
 
-    //Settings Screen
+    //Preferences Screen
     <string name="title_activity_preferences">Preferences</string>
     <string name="pref_header_about"> About </string>
     <string name="app_summary"> App Summary. Get text from Rodrigo, in case this functionality stays\.</string>
@@ -210,7 +213,7 @@
     <string name="summary_support"> Queries? Please reach out to us. We are glad to help 24/7! </string>
     <string name="key_send_feedback"> key_send_feedback </string>
     <string name="pref_title_notifications"> Notifications </string>
-    <string name="title_new_notification_sound"> Messages and Notifications </string>
+    <string name="title_new_notification_sound"> Proactive App check </string>
     <string name="notifications_new_message"> notifications_new_message </string>
     <string name="key_notifications_new_message_ringtone"> key_notifications_new_message_ringtone </string>
     <string name="pref_title_ringtone"> Ringtone </string>
@@ -223,6 +226,22 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="pref_header_notifications">Notifications</string>
     <string name="pref_ringtone_silent">Silent</string>
+    <string name="notification_summary">Want to receive app notifications?</string>
+    <string name="backup_summary">Backup all photos from inside the application?</string>
+    <string name="backup_key">backup_key</string>
+    <string name="general_title_label">General</string>
+    <string name="restore_key">restore_key</string>
+    <string name="restore_summary">Click to restore all pictures from your backup</string>
+    <string name="restore">Restore</string>
+    <string name="title_new_notifications_sound_summary"> Constantly check whether you are doing okay.</string>
+    <string name="title_app_notifications"> App notifications</string>
+    <string name="title_app_notifications_summary"> Receive general App level Notifications?</string>
+    <string name="title_app_notifications_key"> title_app_notifications_key </string>
+
+    //Recognition Screen
+    <string name="testedPhoto"> Tested Photo </string>
+    <string name="suggestion"> Suggestions from Gallery </string>
+
 
 
 

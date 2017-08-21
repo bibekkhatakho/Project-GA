@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory android:title="@string/general_title_label">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/backupLabel"
+            android:key="@string/backup_key"/>
+
+        <Preference
+            android:title="@string/restore"
+            android:summary="@string/restore_summary"
+            android:key="@string/restore_key" />
+
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/pref_header_about">
 
         <Preference
@@ -20,23 +35,17 @@
 
     <PreferenceCategory android:title="@string/pref_title_notifications">
 
-        <SwitchPreference
-            android:defaultValue="true"
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="@string/notifications_new_message"
-            android:title="@string/title_new_notification_sound" />
+            android:title="@string/title_new_notification_sound"
+            android:summary="@string/title_new_notifications_sound_summary"/>
 
-        <RingtonePreference
-            android:defaultValue="content://settings/system/notification_sound"
-            android:dependency="notifications_new_message"
-            android:key="@string/key_notifications_new_message_ringtone"
-            android:ringtoneType="notification"
-            android:summary="@string/summary_choose_ringtone"
-            android:title="@string/pref_title_ringtone" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="@string/title_app_notifications_key"
+            android:title="@string/title_app_notifications"
+            android:summary="@string/title_app_notifications_summary"/>
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_vibrate"
-            android:summary="@string/summary_vibrate"
-            android:title="@string/title_vibrate" />
     </PreferenceCategory>
 </PreferenceScreen>

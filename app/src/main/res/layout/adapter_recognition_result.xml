@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:id="@+id/cv" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="225dp"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/people_key"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/None"
+                android:visibility="gone" />
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/profilePicture"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/ic_account_circle_white_24dp"
+                />
+
+            <TextView
+                android:id="@+id/personName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="31dp"
+                android:layout_toEndOf="@+id/profilePicture"
+                android:text="@string/personName"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/personRelation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/personName"
+                android:layout_below="@+id/personName"
+                android:layout_marginTop="15dp"
+                android:text="@string/personRelation"
+                android:textColor="@color/Recognition"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/shortDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/personRelation"
+                android:layout_below="@+id/personRelation"
+                android:layout_marginTop="10dp"
+                android:text="@string/shortDesc"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/longDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/shortDescription"
+                android:layout_below="@+id/shortDescription"
+                android:layout_marginTop="5dp"
+                android:textSize="12sp"
+                android:text="@string/longDesc" />
+
+            <ImageView
+                android:id="@+id/playInfoView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignEnd="@+id/profilePicture"
+                android:contentDescription="@string/recognitionLabel"
+                app:srcCompat="@drawable/ic_volume_up_black_48dp"
+                android:tint="@color/Recognition"/>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>

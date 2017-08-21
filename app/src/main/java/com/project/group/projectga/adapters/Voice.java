@@ -20,7 +20,7 @@ public class Voice {
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
                     tts.setLanguage(Locale.US);
-                    tts.setSpeechRate(0.7f);
+                    tts.setSpeechRate(0.3f);
                 }
             }
         });
@@ -32,6 +32,17 @@ public class Voice {
     }
     public void stop() {
         tts.stop();
+    }
+
+    public void shutDown(){
+        if(tts !=null){
+            tts.stop();
+            tts.shutdown();
+        }
+    }
+
+    public void playSilence(){
+        tts.playSilentUtterance(300, TextToSpeech.QUEUE_ADD, null);
     }
 
     public boolean isSpeaking() {
@@ -46,4 +57,5 @@ public class Voice {
         }
         super.finalize();
     }
+
 }

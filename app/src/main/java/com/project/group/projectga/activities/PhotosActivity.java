@@ -148,7 +148,7 @@ public class PhotosActivity extends CoreActivity{
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
 
                 CharSequence options[] = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?", "Fullscreen Slideshow"};
 //                if(position == 0) {
@@ -298,7 +298,10 @@ public class PhotosActivity extends CoreActivity{
                             memory = getMemoryByPath(path);
                             if(memory != null) {
                                 memoryKey = memory.getKey();
+                                String shortName = memory.getName();
                                 String shortDes = memory.getShortDescription();
+                                voice.say(shortName);
+                                voice.playSilence();
                                 voice.say(shortDes);
                             }
                         }
@@ -307,7 +310,13 @@ public class PhotosActivity extends CoreActivity{
                             memory = getMemoryByPath(path);
                             if(memory != null) {
                                 memoryKey = memory.getKey();
+                                String shortName = memory.getName();
+                                String shortDesc = memory.getShortDescription();
                                 String longDes = memory.getLongDescription();
+                                voice.say(shortName);
+                                voice.playSilence();
+                                voice.say(shortDesc);
+                                voice.playSilence();
                                 voice.say(longDes);
                             }
                         }else if(which == 3){

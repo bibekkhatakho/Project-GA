@@ -27,7 +27,7 @@ public class IntroDialogGuardianActivity extends AppCompatActivity {
     private ViewPager viewPager;
     public ViewPagerAdapter viewPagerAdapter;
 
-    @Override
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro_dialog);

@@ -162,6 +162,7 @@ public class ProfileFragment extends Fragment {
                             if (dataSnapshot.exists()) {
                                 guardianEmail.setText(locationModel.getPatientEmail());
                                 guardianName.setText(locationModel.getPatientName());
+                                Picasso.with(getContext()).load(locationModel.getPatientPicture()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularGuardianPhoto);
                             }
                         }
                         @Override
@@ -182,6 +183,7 @@ public class ProfileFragment extends Fragment {
                             LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
                             if(dataSnapshot.exists()) {
                                 guardianName.setText(locationModel.getGuardianName());
+                                Picasso.with(getContext()).load(locationModel.getGuardianPicture()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularGuardianPhoto);
                             }
                         }
 
