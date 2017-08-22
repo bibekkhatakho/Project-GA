@@ -132,6 +132,7 @@ public class BackupService extends IntentService {
                 Bitmap bitmap = BitmapFactory.decodeFile((al_images.get(i).getAl_imagepath().get(j)).toString());
                 bitmap = rotateImage(bitmap, (al_images.get(i).getAl_imagepath().get(j)).toString());
 
+
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                 byte[] data = baos.toByteArray();

@@ -20,13 +20,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
+import com.project.group.projectga.models.LocationModel;
+import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
 
 public class HomeFragment extends Fragment {
     Toolbar toolbar;
     private static final int REQUEST_LOCATION = 1;
+
+    double lat, lon;
+    boolean geoFenceLocationExists = false;
+    private LatLng testLL;
+
+    DatabaseReference gEmail;
+    String guardianEmail;
+    DatabaseReference databaseReferenceGeo;
 
     public HomeFragment() {
 
@@ -37,7 +55,11 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-
+//        if (getUid() != null) {
+//            String userId = getUid();
+//            gEmail = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+//        }
+//        getGeofenceLocation();
     }
 
     @Nullable
@@ -108,6 +130,11 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Fragment mapsFragment = new MapsFragment();
+//                    Bundle arguments = new Bundle();
+//                    arguments.putDouble("testLat", testLL.latitude);
+//                    arguments.putDouble("testLong", testLL.longitude);
+//                    arguments.putBoolean("geoExists", geoFenceLocationExists);
+//                    mapsFragment.setArguments(arguments);
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.container_gaFragments, mapsFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -174,4 +201,51 @@ public class HomeFragment extends Fragment {
 
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+//    public void getGeofenceLocation() {
+//        gEmail.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Profile profile = dataSnapshot.getValue(Profile.class);
+//                if (profile != null) {
+//                    guardianEmail = profile.getGuardianEmail().replace(".", ",");
+//                }
+//                databaseReferenceGeo = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails").child(guardianEmail);
+//                databaseReferenceGeo.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        LocationModel lModel = dataSnapshot.getValue(LocationModel.class);
+//                        if (lModel != null) {
+//                            lat = lModel.getLatitude();
+//                            lon = lModel.getLongitude();
+//                            testLL = new LatLng(lat, lon);
+//                            if (lat != 0.0 && lon != 0.0 && !testLL.toString().isEmpty() && testLL.toString() != null) {
+//                                geoFenceLocationExists = true;
+//                                Toast.makeText(getActivity(), "geo" + String.valueOf(geoFenceLocationExists), Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(getActivity(), "Lat Long not set", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                           Toast.makeText(getContext(), "The latitude from Guardiann" + lat + geoFenceLocationExists, Toast.LENGTH_SHORT).show();
+//                         Toast.makeText(getContext(), "The longitude from Guardiann" + lon, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getContext(), "The longitude from Guardiann" + testLL.toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//                //  Toast.makeText(getContext(),"g email "+ guardianEmail,Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+//    }
+//
+//    public String getUid() {
+//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+//    }
 }

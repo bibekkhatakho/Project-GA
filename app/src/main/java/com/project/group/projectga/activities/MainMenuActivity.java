@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +61,7 @@ import com.project.group.projectga.fragments.ProfileFragment;
 import com.project.group.projectga.fragments.ImportantPeopleFragment;
 import com.project.group.projectga.fragments.RecognitionFragment;
 import com.project.group.projectga.fragments.TagLocateFragment;
+import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
 import com.project.group.projectga.service.BackupReceiver;
@@ -84,6 +86,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
+
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
@@ -164,6 +167,8 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         } else {
             onAuthFailure();
         }
+
+
 
         final PrimaryDrawerItem home = new PrimaryDrawerItem().withName("Home").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_home);
         final PrimaryDrawerItem profile = new PrimaryDrawerItem().withName("Profile").withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_account);

@@ -82,6 +82,10 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     Location mCurrentLocation;
 	String thisEmail;
 
+    double lat,lon;
+    boolean geoFenceLocationExists = false;
+    private LatLng testLL;
+
     private static final int REQUEST_PERMISSIONS = 100;
 
     String userId;
@@ -109,15 +113,6 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_guardian_maps, null, false);
-        mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         thisEmail = getEmail();
         if (getUid() != null) {
             userId = getUid();
@@ -125,8 +120,18 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
             //databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Geofence Location");
             databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
             databaseReferenceEmail = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-			databaseReference = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails").child(thisEmail);
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails").child(thisEmail);
         }
+
+        getGeofenceLocation();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_guardian_maps, null, false);
+        mapFragment = (SupportMapFragment) this.getChildFragmentManager().findFragmentById(R.id.mapGuard);
+        mapFragment.getMapAsync(this);
 
         // set the background and recolor the menu icon for the toolbar
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
@@ -190,69 +195,74 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         }
         mMap.setMyLocationEnabled(true);
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
 
-                //mapFragment.getView().setAlpha(1.0f);
-                mapFragment.getView().setBackgroundColor(getResources().getColor(R.color.loginbackground));
-                clickMap.setVisibility(View.GONE);
-                databaseReference.child("latitude").setValue(latLng.latitude);
-                databaseReference.child("longitude").setValue(latLng.longitude);
-
-
-                if (!geoSetAlready) {
-
-                    setMap(latLng);
-                }
-
+        if (geoFenceLocationExists) {
+            Toast.makeText(getContext(), "Going inside geoexist true", Toast.LENGTH_SHORT).show();
+            if(!geoSetAlready) {
+                Toast.makeText(getContext(), "Going inside geoexist set already", Toast.LENGTH_SHORT).show();
+                setMap(testLL);
             }
-        });
+        } else {
+            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
 
-        databaseReferenceEmail.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Profile profile = dataSnapshot.getValue(Profile.class);
-                if(profile !=null) {
-                    guardianEmail = profile.getEmail();
-                }
-                guardianEmail = guardianEmail.replace(".", ",");
-                databaseReferenceGuardian = databaseReferenceGuardian.child(guardianEmail).child("Current Location");
+                    //mapFragment.getView().setAlpha(1.0f);
+                    mapFragment.getView().setBackgroundColor(getResources().getColor(R.color.loginbackground));
+                    clickMap.setVisibility(View.GONE);
+                    databaseReference.child("latitude").setValue(latLng.latitude);
+                    databaseReference.child("longitude").setValue(latLng.longitude);
 
-                databaseReferenceGuardian.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
-                        if(dataSnapshot.exists()) {
-                            if (patientMarker != null)
-                            {
-                                patientMarker.remove();
-                            }
-                            currentLat = locationModel.getCurrentLat();
-                            currentLong = locationModel.getCurrentLong();
-                        }
-                        Double currentLatDouble = Double.parseDouble(currentLat);
-                        Double currentLongDouble = Double.parseDouble(currentLong);
-                        LatLng newLocation = new LatLng(currentLatDouble, currentLongDouble);
-                        MarkerOptions markerOptions = new MarkerOptions()
-                                .position(newLocation)
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                                .title("Patient");
-                        patientMarker = mMap.addMarker(markerOptions);
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 15);
-                        mMap.animateCamera(cameraUpdate);
-						}
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    if(!geoSetAlready){
+                        setMap(latLng);
                     }
-                });
-            }
+                }
+            });
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+            databaseReferenceEmail.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile profile = dataSnapshot.getValue(Profile.class);
+                    if (profile != null) {
+                        guardianEmail = profile.getEmail();
+                    }
+                    guardianEmail = guardianEmail.replace(".", ",");
+                    databaseReferenceGuardian = databaseReferenceGuardian.child(guardianEmail).child("Current Location");
+
+                    databaseReferenceGuardian.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                            if (dataSnapshot.exists()) {
+                                if (patientMarker != null) {
+                                    patientMarker.remove();
+                                }
+                                currentLat = locationModel.getCurrentLat();
+                                currentLong = locationModel.getCurrentLong();
+                            }
+                            Double currentLatDouble = Double.parseDouble(currentLat);
+                            Double currentLongDouble = Double.parseDouble(currentLong);
+                            LatLng newLocation = new LatLng(currentLatDouble, currentLongDouble);
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(newLocation)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                    .title("Patient");
+                            patientMarker = mMap.addMarker(markerOptions);
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 15);
+                            mMap.animateCamera(cameraUpdate);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
     }
 
     @Override
@@ -374,5 +384,33 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     }
 	public String getEmail() {
         return FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",");
+    }
+
+    public void getGeofenceLocation(){
+
+                databaseReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        LocationModel lModel = dataSnapshot.getValue(LocationModel.class);
+                        if(lModel !=null){
+                            lat = lModel.getLatitude();
+                            lon = lModel.getLongitude();
+                            testLL = new LatLng(lat,lon);
+                            Toast.makeText(getContext(), testLL.toString(), Toast.LENGTH_SHORT).show();
+                            if(lat != 0.0 && lon != 0.0) {
+                                geoFenceLocationExists = true;
+                            }else{
+                                Toast.makeText(getContext(), "Lat Long not set", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        //   Toast.makeText(getContext(), "The latitude from Guardiann" + lat + geoFenceLocationExists, Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), "The longitude from Guardiann" + lon, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 }
