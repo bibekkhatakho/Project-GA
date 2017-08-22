@@ -254,7 +254,7 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
 
     private boolean validateAddress(String address) {
         if (address.isEmpty()){
-            addressTextInputLayout.setError("Person Name cannot be empty. Please enter a value");
+            addressTextInputLayout.setError("Address cannot be empty. Please enter a value");
             return false;
         }else{
             addressTextInputLayout.setError(null);
@@ -295,7 +295,7 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
 
         switch (v.getId()) {
 
-            case R.id.personNameTextInputEditText:
+            case R.id.addressTextInputEditText:
                 if (!hasFocus) {
                     validateAddress(addressTextInputEditText.getText().toString().trim());
                 } else {

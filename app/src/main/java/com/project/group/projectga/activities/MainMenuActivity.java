@@ -83,6 +83,9 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     private Drawer result = null;
     AccountHeader headerResult;
 
+    boolean drivingcheckPrimary = true;
+    String userStatus;
+
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
@@ -90,21 +93,19 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
     Stack<PrimaryDrawerItem> gaFragmentStack;
 
-    boolean proactiveFunctionlaity = false;
-
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
 
     String guardianEmail;
     String myEmail;
     String myName;
     String guardianName;
-    boolean timerCancelled = false;
     Timer timer;
+    Timer timerToAskFuel;
 	String guardianPicture;
     String patientPicture;
 
     boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false, backupFlag;
-    String restore;
+	String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,6 +114,16 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+
+        if (getUid() != null) {
+            String userId = getUid();
+            firebaseAuth = FirebaseAuth.getInstance();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+            databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
+        } else {
+            onAuthFailure();
+        }
 
         gaFragmentStack = new Stack<>();
 
@@ -137,6 +148,13 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                 //          fragmentTransaction.commit();
                 //      Toast.makeText(this,"last case",Toast.LENGTH_SHORT).show();
 
+                case "gasstation":
+                    Uri gmmIntentUri = Uri.parse("geo:0,0?q=gas station");
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+
+
             }
         }
 
@@ -149,26 +167,15 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
             firstTime = extras.getBoolean("firstTime");
         }
 
+
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
         final String userType = preferences.getString(Preferences.USER_TYPE, "");
-
         //final boolean notificationFlag = preferences.getBoolean(getString(R.string.notifications_new_message), false);
         //loadPreferences();
 
         //startProactiveFunctionality(notificationFlag);
 
         Log.d("userTypeMain", userType);
-
-        if (getUid() != null) {
-            String userId = getUid();
-            firebaseAuth = FirebaseAuth.getInstance();
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-            databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
-        } else {
-            onAuthFailure();
-        }
-
-
 
         final PrimaryDrawerItem home = new PrimaryDrawerItem().withName("Home").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_home);
         final PrimaryDrawerItem profile = new PrimaryDrawerItem().withName("Profile").withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_account);
@@ -472,47 +479,120 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     }
 
     public void startProactiveFunctionality(boolean notificationState) {
-       // Toast.makeText(this, String.valueOf(notificationState), Toast.LENGTH_SHORT).show();
-        if (notificationState) {
-            //if (!proactiveFunctionlaity) {
-            if (timer == null) {
-                timer = new Timer();
-            }
-            TimerTask hourlyTask = new TimerTask() {
-                @Override
-                public void run() {
-                    Intent notificationIntent = new Intent(getApplicationContext(), MapsFragment.class);
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                    stackBuilder.addParentStack(MainMenuActivity.class);
-                    stackBuilder.addNextIntent(notificationIntent);
-                    PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+        String userType = sharedPreferences.getString(Preferences.USER_TYPE, "");
 
-                    // Creating and sending Notification
-                    NotificationManager notificatioMng =
-                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificatioMng.notify(
-                            1,
-                            createNotification("aaa", notificationPendingIntent));
+        if(userType.equalsIgnoreCase("Standard User")) {
+            if (notificationState) {
+                //if (!proactiveFunctionlaity) {
+                if (timer == null) {
+                    timer = new Timer();
                 }
+                TimerTask hourlyTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        Intent notificationIntent = new Intent(getApplicationContext(), MapsFragment.class);
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                        stackBuilder.addParentStack(MainMenuActivity.class);
+                        stackBuilder.addNextIntent(notificationIntent);
+                        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            };
+
+                        // Creating and sending Notification
+                        NotificationManager notificatioMng =
+                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificatioMng.notify(
+                                1,
+                                createNotification("aaa", notificationPendingIntent));
+                    }
+
+                };
 
 // schedule the task to run starting now and then every hour...
-            timer.schedule(hourlyTask, 0l, 5000);
-            //proactiveFunctionlaity = true;
+                timer.schedule(hourlyTask, 0l, 5000);
+                //proactiveFunctionlaity = true;
 //            }else{
 //                Toast.makeText(this, "Inside Outside", Toast.LENGTH_SHORT).show();
 //
 //            }
-        } else {
-          //  Toast.makeText(this, "Notifications turned off", Toast.LENGTH_SHORT).show();
-            if (timer != null) {
-                timer.cancel();
-                timer.purge();
-                timer = null;
+            } else {
+                //  Toast.makeText(this, "Notifications turned off", Toast.LENGTH_SHORT).show();
+                if (timer != null) {
+                    timer.cancel();
+                    timer.purge();
+                    timer = null;
+                }
             }
         }
+    }
+
+    public void startProactiveFunctionalityForFuel(final boolean notificationState) {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+        String userType = sharedPreferences.getString(Preferences.USER_TYPE, "");
+
+                if (userType.equalsIgnoreCase("Standard User")) {
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Profile model = dataSnapshot.getValue(Profile.class);
+                            if (model != null) {
+                                //Toast.makeText(getBaseContext(), "inside find status", Toast.LENGTH_SHORT).show();
+                                userStatus = model.getUserStatus();
+
+                            }
+                            // Toast.makeText(getApplicationContext(), "user is" + userStatus, Toast.LENGTH_SHORT).show();
+                            if (notificationState) {
+                                if (timerToAskFuel == null) {
+                                    timerToAskFuel = new Timer();
+                                }
+                                TimerTask askFuelAvailability = new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        if (!drivingcheckPrimary) {
+                                            drivingcheckPrimary = true;
+                                            if (userStatus.equals("vehicle")) {
+                                                Intent notificationIntentFuel = new Intent(getApplicationContext(), MapsFragment.class);
+                                                TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+                                                stackBuilder.addParentStack(MainMenuActivity.class);
+                                                stackBuilder.addNextIntent(notificationIntentFuel);
+                                                PendingIntent notificationPendingIntentFuel = stackBuilder.getPendingIntent(2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                                                // Creating and sending Notification
+                                                NotificationManager notificatioMng =
+                                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                                notificatioMng.notify(
+                                                        2,
+                                                        createNotificationForFuel("bbb", notificationPendingIntentFuel));
+
+                                            }
+
+                                        }
+                                        if (drivingcheckPrimary && userStatus.equals("vehicle")) {
+                                            drivingcheckPrimary = false;
+                                        }
+
+
+                                    }
+                                };
+                                timerToAskFuel.schedule(askFuelAvailability, 0l, 5000);
+                            }else{
+                            if (timerToAskFuel != null) {
+                                timerToAskFuel.cancel();
+                                timerToAskFuel.purge();
+                                timerToAskFuel = null;
+                            }
+                        }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
     }
 
     @Override
@@ -539,26 +619,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         loadPreferences();
     }
 
-    public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
-        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
-        intent.putExtra("Maps", "mapsFragment");
-
-        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
-        notificationBuilder
-                .setSmallIcon(R.drawable.ic_place_black_24dp)
-                .setColor(Color.RED)
-                .setContentTitle("Are you lost?")
-                .setContentText("are you lost?")
-                .setContentIntent(notificationPendingIntent)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-                .addAction(R.drawable.ic_close_black_24dp, "Dismiss", pIntent)
-                .addAction(R.drawable.ic_place_black_24dp, "Go to Maps", pIntent)
-                .setAutoCancel(true);
-        return notificationBuilder.build();
-
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         loadPreferences();
@@ -572,6 +632,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         preferences.registerOnSharedPreferenceChangeListener(MainMenuActivity.this);
 
         startProactiveFunctionality(notificationFlag);
+        startProactiveFunctionalityForFuel(notificationFlag);
         startBackupService(backupFlag);
     }
 
@@ -603,5 +664,46 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         alarmManager.cancel(pendingIntent);
 
         //Toast.makeText(this, "Backup Cancelled", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
+        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+        intent.putExtra("Maps", "mapsFragment");
+
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+        notificationBuilder
+                .setSmallIcon(R.drawable.ic_place_black_24dp)
+                .setColor(Color.WHITE)
+                .setContentTitle("Your safety")
+                .setContentText("Are you in a safe place? Do you need to navigate?")
+                .setContentIntent(notificationPendingIntent)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .addAction(R.drawable.ic_close_black_24dp, "Dismiss", pIntent)
+                .addAction(R.drawable.ic_map_black_24dp, "Go to Maps", pIntent)
+                .setAutoCancel(true);
+        return notificationBuilder.build();
+
+    }
+	
+	    public Notification createNotificationForFuel(String msg, PendingIntent notificationPendingIntent) {
+        Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+        intent.putExtra("Maps", "gasstation");
+
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
+        notificationBuilder
+                .setSmallIcon(R.drawable.ic_my_location_black_24dp)
+                .setColor(Color.WHITE)
+                .setContentTitle("Car Fuel Check")
+                .setContentText("Do you have fuel in your car to drive to your location?")
+                .setContentIntent(notificationPendingIntent)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .addAction(R.drawable.ic_close_black_24dp,"Dismiss",pIntent)
+                .addAction(R.drawable.ic_local_gas_station_black_24dp,"Find Gas Station",pIntent)
+                .setAutoCancel(true);
+        return notificationBuilder.build();
+
     }
 }

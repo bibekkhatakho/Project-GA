@@ -11,6 +11,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -62,6 +63,7 @@ import com.project.group.projectga.models.GeolocationModel;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.MapMarkers;
 import com.project.group.projectga.models.Profile;
+import com.project.group.projectga.preferences.Preferences;
 import com.project.group.projectga.service.GeofenceTransitionService;
 
 import java.io.IOException;
@@ -139,8 +141,10 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getUid() != null) {
-            userId = getUid();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String userIdPref = preferences.getString(Preferences.USERID, "");
+        if (userIdPref != null) {
+            userId = userIdPref;
             firebaseAuth = FirebaseAuth.getInstance();
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Map Markers");
             gEmail = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
@@ -650,10 +654,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.w(TAG, "onConnectionFailed()");
-    }
-
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
     public void getGeofenceLocation(){

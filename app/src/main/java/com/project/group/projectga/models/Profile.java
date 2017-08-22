@@ -13,10 +13,12 @@ public class Profile {
     private String guardianEmail;
     private String profile;
 
+    private String userStatus;
+
     public Profile() {
     }
 
-    public Profile(String fullName,String profile, String userType, String userId, String email, String phoneNumber, String dateOfBirth, String guardianEmail) {
+    public Profile(String fullName,String profile, String userType, String userId, String email, String phoneNumber, String dateOfBirth, String guardianEmail,String userStatus) {
         this.fullName = fullName;
         this.userId = userId;
         this.email = email;
@@ -25,6 +27,7 @@ public class Profile {
         this.dateOfBirth = dateOfBirth;
         this.guardianEmail = guardianEmail;
         this.profile = profile;
+        this.userStatus = userStatus;
     }
 
     public String getProfile() {
@@ -89,6 +92,13 @@ public class Profile {
 
     public void setGuardianEmail(String guardianEmail) {
         this.guardianEmail = guardianEmail;
+    }
+    public String getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus;
     }
 
 }

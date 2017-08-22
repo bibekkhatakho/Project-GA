@@ -245,7 +245,9 @@
     //MessagesScreen
     <string name="messages_label">Messages</string>
     <string name="send">Send</string>
-    <string name="enterMessages">Type your message...</string>
+    <string name="enterMessages">Type your message..</string>
+    <string name="yourText">Your Text</string>
+
 
 
 </resources>

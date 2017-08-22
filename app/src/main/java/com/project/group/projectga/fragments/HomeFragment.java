@@ -1,14 +1,18 @@
 package com.project.group.projectga.fragments;
 
 import android.Manifest;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.pm.ActivityInfoCompat;
 import android.support.v7.widget.CardView;
@@ -23,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,12 +41,16 @@ import com.project.group.projectga.R;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
+import com.project.group.projectga.service.ActivityRecognizedService;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     Toolbar toolbar;
     private static final int REQUEST_LOCATION = 1;
 
     FloatingActionButton smsButton;
+	GoogleApiClient mApiClient;
+
+    int counter=0;
 
     public HomeFragment() {
 
@@ -112,8 +123,19 @@ public class HomeFragment extends Fragment {
         } else {
             Log.e("DB", "PERMISSION GRANTED");
         }
+        mApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(ActivityRecognition.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        mApiClient.connect();
+
+
+
         return view;
     }
+
 
 
     public void initControls(View view, String userType) {
@@ -205,6 +227,24 @@ public class HomeFragment extends Fragment {
         menu.add(null).setIcon(R.drawable.ic_android_trans_24dp).setShowAsActionFlags(1);
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Intent intent;
+        intent = new Intent(getContext(),ActivityRecognizedService.class);
+        PendingIntent pendingIntent = PendingIntent.getService( getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(mApiClient, 1000, pendingIntent);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
 }

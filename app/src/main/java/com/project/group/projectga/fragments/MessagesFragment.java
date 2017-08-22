@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +81,7 @@ public class MessagesFragment extends Fragment
         title.setText(getString(R.string.messages_label));
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
         toolbar.setBackground(getResources().getDrawable(R.drawable.tile_green));
+
         context = this.getContext();
         messages = (ListView) view.findViewById(R.id.messages);
         input = (EditText) view.findViewById(R.id.input);

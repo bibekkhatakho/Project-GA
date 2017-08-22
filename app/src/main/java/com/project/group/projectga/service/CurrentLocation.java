@@ -42,38 +42,33 @@ public class CurrentLocation extends Service {
 
         Location mLastLocation;
 
-        public LocationListener(String provider)
-        {
+        public LocationListener(String provider) {
             mLastLocation = new Location(provider);
         }
 
         @Override
-        public void onLocationChanged(Location location)
-        {
+        public void onLocationChanged(Location location) {
             mLastLocation.set(location);
             updateLocation(location);
         }
 
         @Override
-        public void onProviderDisabled(String provider)
-        {
+        public void onProviderDisabled(String provider) {
             Log.e(TAG, "onProviderDisabled: " + provider);
         }
 
         @Override
-        public void onProviderEnabled(String provider)
-        {
+        public void onProviderEnabled(String provider) {
             Log.e(TAG, "onProviderEnabled: " + provider);
         }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras)
-        {
+        public void onStatusChanged(String provider, int status, Bundle extras) {
             Log.e(TAG, "onStatusChanged: " + provider);
         }
     }
 
-    LocationListener[] mLocationListeners = new LocationListener[] {
+    LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER),
             new LocationListener(LocationManager.NETWORK_PROVIDER)
     };
@@ -84,11 +79,10 @@ public class CurrentLocation extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        if(intent !=null) {
+        if (intent != null) {
             guardianEmail = (String) intent.getExtras().get("guardianEmail");
             databaseReference = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
         }
@@ -99,8 +93,11 @@ public class CurrentLocation extends Service {
     @Override
     public void onCreate() {
 
-        if (getUid() != null) {
-            userId = getUid();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String userIdPref = sharedPreferences.getString(Preferences.USERID, "");
+
+        if (userIdPref != null) {
+            userId = userIdPref;
             firebaseAuth = FirebaseAuth.getInstance();
         } else {
         }
@@ -125,8 +122,7 @@ public class CurrentLocation extends Service {
         }
     }
 
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         if (mLocationManager != null) {
             for (int i = 0; i < mLocationListeners.length; i++) {
@@ -150,14 +146,10 @@ public class CurrentLocation extends Service {
         Double currentLong = location.getLongitude();
         String sCurrentLat = currentLat.toString();
         String sCurrentLong = currentLong.toString();
-        if(sCurrentLat != null && !sCurrentLat.isEmpty() && sCurrentLong != null && !sCurrentLong.isEmpty() &&
-                guardianEmail != null && !guardianEmail.isEmpty()){
+        if (sCurrentLat != null && !sCurrentLat.isEmpty() && sCurrentLong != null && !sCurrentLong.isEmpty() &&
+                guardianEmail != null && !guardianEmail.isEmpty()) {
             databaseReference.child(guardianEmail).child("Current Location").child("currentLat").setValue(sCurrentLat);
             databaseReference.child(guardianEmail).child("Current Location").child("currentLong").setValue(sCurrentLong);
         }
-    }
-
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 }

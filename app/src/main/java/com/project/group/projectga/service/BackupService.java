@@ -3,6 +3,7 @@ package com.project.group.projectga.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.group.projectga.models.Model_images;
+import com.project.group.projectga.preferences.Preferences;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -56,8 +59,12 @@ public class BackupService extends IntentService {
     }
 
     public void getInfo(){
-        if (getUid() != null) {
-            userId = getUid();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String userIdPref = sharedPreferences.getString(Preferences.USERID, "");
+
+        if (userIdPref != null) {
+            userId = userIdPref;
             firebaseAuth = FirebaseAuth.getInstance();
             storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
@@ -171,7 +178,4 @@ public class BackupService extends IntentService {
         return rotatedBitmap;
     }
 
-    public String getUid() {
-        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-    }
 }
