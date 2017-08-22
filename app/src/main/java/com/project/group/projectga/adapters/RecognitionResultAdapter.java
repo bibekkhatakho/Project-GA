@@ -70,12 +70,12 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0)
                         {
-                            Toast.makeText(mContext,shortString,Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(mContext,shortString,Toast.LENGTH_SHORT).show();
                             play.say(shortString);
                         }
                         if (which == 1)
                         {
-                            Toast.makeText(mContext,longString,Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext,longString,Toast.LENGTH_SHORT).show();
                             play.say(longString);
                         }
                     }

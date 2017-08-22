@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -38,13 +39,7 @@ public class HomeFragment extends Fragment {
     Toolbar toolbar;
     private static final int REQUEST_LOCATION = 1;
 
-    double lat, lon;
-    boolean geoFenceLocationExists = false;
-    private LatLng testLL;
-
-    DatabaseReference gEmail;
-    String guardianEmail;
-    DatabaseReference databaseReferenceGeo;
+    FloatingActionButton smsButton;
 
     public HomeFragment() {
 
@@ -55,11 +50,6 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-//        if (getUid() != null) {
-//            String userId = getUid();
-//            gEmail = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-//        }
-//        getGeofenceLocation();
     }
 
     @Nullable
@@ -83,6 +73,20 @@ public class HomeFragment extends Fragment {
         toolbar.setBackground(null);
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_red_24dp));
 
+        smsButton = (FloatingActionButton) getActivity().findViewById(R.id.messageActionButton);
+
+        smsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment messagesFragment = new MessagesFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.container_gaFragments, messagesFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commit();
+            }
+        });
+
         initControls(view, userType);
         setHasOptionsMenu(true);
         if (ActivityCompat.checkSelfPermission(getContext(),
@@ -91,13 +95,19 @@ public class HomeFragment extends Fragment {
                         android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SET_ALARM) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SET_ALARM) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
                             android.Manifest.permission.ACCESS_FINE_LOCATION,
                             android.Manifest.permission.READ_EXTERNAL_STORAGE,
                             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            android.Manifest.permission.SET_ALARM},
+                            android.Manifest.permission.SET_ALARM,
+                            android.Manifest.permission.RECEIVE_SMS,
+                            android.Manifest.permission.READ_SMS,
+                            android.Manifest.permission.SEND_SMS},
                     REQUEST_LOCATION);
         } else {
             Log.e("DB", "PERMISSION GRANTED");
@@ -130,11 +140,6 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Fragment mapsFragment = new MapsFragment();
-//                    Bundle arguments = new Bundle();
-//                    arguments.putDouble("testLat", testLL.latitude);
-//                    arguments.putDouble("testLong", testLL.longitude);
-//                    arguments.putBoolean("geoExists", geoFenceLocationExists);
-//                    mapsFragment.setArguments(arguments);
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.container_gaFragments, mapsFragment);
                     ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
@@ -202,50 +207,4 @@ public class HomeFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-//    public void getGeofenceLocation() {
-//        gEmail.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Profile profile = dataSnapshot.getValue(Profile.class);
-//                if (profile != null) {
-//                    guardianEmail = profile.getGuardianEmail().replace(".", ",");
-//                }
-//                databaseReferenceGeo = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails").child(guardianEmail);
-//                databaseReferenceGeo.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        LocationModel lModel = dataSnapshot.getValue(LocationModel.class);
-//                        if (lModel != null) {
-//                            lat = lModel.getLatitude();
-//                            lon = lModel.getLongitude();
-//                            testLL = new LatLng(lat, lon);
-//                            if (lat != 0.0 && lon != 0.0 && !testLL.toString().isEmpty() && testLL.toString() != null) {
-//                                geoFenceLocationExists = true;
-//                                Toast.makeText(getActivity(), "geo" + String.valueOf(geoFenceLocationExists), Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(getActivity(), "Lat Long not set", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                           Toast.makeText(getContext(), "The latitude from Guardiann" + lat + geoFenceLocationExists, Toast.LENGTH_SHORT).show();
-//                         Toast.makeText(getContext(), "The longitude from Guardiann" + lon, Toast.LENGTH_SHORT).show();
-//                        Toast.makeText(getContext(), "The longitude from Guardiann" + testLL.toString(), Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//                //  Toast.makeText(getContext(),"g email "+ guardianEmail,Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        });
-//    }
-//
-//    public String getUid() {
-//        return FirebaseAuth.getInstance().getCurrentUser().getUid();
-//    }
 }

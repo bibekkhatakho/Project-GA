@@ -118,8 +118,8 @@ public class GeofenceTransitionService extends IntentService {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage("14692589637", null, "The standard user  is " + status, null, null);
 
-            Toast.makeText(getApplicationContext(), "SMS Sent!",
-                    Toast.LENGTH_LONG).show();
+           // Toast.makeText(getApplicationContext(), "SMS Sent!",
+                 //   Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(),
                     "SMS faild, please try again later!",

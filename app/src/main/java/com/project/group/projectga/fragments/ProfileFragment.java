@@ -224,7 +224,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 Log.d("click", "remove");
                 databaseReference.child("profile").setValue("https://firebasestorage.googleapis.com/v0/b/projectga-4c8e4.appspot.com/o/ic_account_circle_white_48dp.png?alt=media&token=20dba348-4406-4117-86ee-d2b0a06280d5");
-                Toast.makeText(getContext(), "Profile Picture Removed", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getContext(), "Profile Picture Removed", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -250,7 +250,7 @@ public class ProfileFragment extends Fragment {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Picasso.with(getContext()).load(taskSnapshot.getDownloadUrl()).into(circularProfilePhoto);
                     databaseReference.child("profile").setValue(taskSnapshot.getDownloadUrl().toString());
-                    Toast.makeText(getContext(), "Profile Picture Set", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getContext(), "Profile Picture Set", Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -285,7 +285,7 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     databaseReference.child("profile").setValue(taskSnapshot.getDownloadUrl().toString());
-                    Toast.makeText(getContext(), "Profile Picture Set", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getContext(), "Profile Picture Set", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

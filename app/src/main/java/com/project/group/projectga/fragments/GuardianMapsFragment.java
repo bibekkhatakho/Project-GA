@@ -197,9 +197,9 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
 
 
         if (geoFenceLocationExists) {
-            Toast.makeText(getContext(), "Going inside geoexist true", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Going inside geoexist true", Toast.LENGTH_SHORT).show();
             if(!geoSetAlready) {
-                Toast.makeText(getContext(), "Going inside geoexist set already", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getContext(), "Going inside geoexist set already", Toast.LENGTH_SHORT).show();
                 setMap(testLL);
             }
         } else {
@@ -396,11 +396,11 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                             lat = lModel.getLatitude();
                             lon = lModel.getLongitude();
                             testLL = new LatLng(lat,lon);
-                            Toast.makeText(getContext(), testLL.toString(), Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getContext(), testLL.toString(), Toast.LENGTH_SHORT).show();
                             if(lat != 0.0 && lon != 0.0) {
                                 geoFenceLocationExists = true;
                             }else{
-                                Toast.makeText(getContext(), "Lat Long not set", Toast.LENGTH_SHORT).show();
+                              //  Toast.makeText(getContext(), "Lat Long not set", Toast.LENGTH_SHORT).show();
                             }
                         }
                         //   Toast.makeText(getContext(), "The latitude from Guardiann" + lat + geoFenceLocationExists, Toast.LENGTH_SHORT).show();

@@ -178,7 +178,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
         storageReferencePhotos = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
 
 
-        Toast.makeText(context, "Restore Photos Start", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Restore Photos Start", Toast.LENGTH_SHORT).show();
         databaseReferencePhotos.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

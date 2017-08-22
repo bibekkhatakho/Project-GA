@@ -242,10 +242,10 @@
     <string name="testedPhoto"> Tested Photo </string>
     <string name="suggestion"> Suggestions from Gallery </string>
 
-
-
-
-
+    //MessagesScreen
+    <string name="messages_label">Messages</string>
+    <string name="send">Send</string>
+    <string name="enterMessages">Type your message...</string>
 
 
 </resources>

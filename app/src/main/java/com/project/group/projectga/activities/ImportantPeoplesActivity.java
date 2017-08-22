@@ -348,34 +348,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//        if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            personImage.setImageBitmap(imageBitmap);
-//            personImage.setDrawingCacheEnabled(true);
-//            personImage.buildDrawingCache();
-//            Bitmap bitmap = personImage.getDrawingCache();
-//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-//            byte[] d = baos.toByteArray();
-//
-//            final UploadTask uploadTask = storageReference.child(userId).putBytes(d);
-//            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                    Toast.makeText(ImportantPeoplesActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(ImportantPeoplesActivity.this, "Person image set", Toast.LENGTH_SHORT).show();
-//                    imgURL = taskSnapshot.getDownloadUrl().toString();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    Log.d("fail", "fail");
-//                }
-//            });
-//
-//        }
-
         //Adding code for Testing Image Cropping - Start
 
         if (resultCode != RESULT_OK) {
@@ -419,11 +391,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                       // Toast.makeText(ImportantPeoplesActivity.this,taskSnapshot.getDownloadUrl().toString(), Toast.LENGTH_SHORT).show();
-                        Toast.makeText(ImportantPeoplesActivity.this, "Person image set", Toast.LENGTH_SHORT).show();
-                        //databaseReference.child("profile").setValue(taskSnapshot.getDownloadUrl().toString());
                         personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
-                        //imgURL = taskSnapshot.getDownloadUrl().toString();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
