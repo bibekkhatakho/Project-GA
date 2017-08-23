@@ -156,8 +156,8 @@ public class GeofenceTransitionService extends IntentService {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
         notificationBuilder
-                .setSmallIcon(R.drawable.ic_place_black_24dp)
-                .setColor(Color.RED)
+                .setSmallIcon(R.drawable.ic_contact_phone_black_24dp)
+                .setColor(Color.WHITE)
                 .setAutoCancel(true)
                 .setContentTitle("Geofence Notification!")
                 .setContentText(msg + "Do you want to call the user?")

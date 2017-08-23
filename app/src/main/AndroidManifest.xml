@@ -53,18 +53,54 @@
         </activity>
 
         <!-- Declare the bundled CropImage Activity -->
-        <activity android:name="com.android.camera.CropImage" />
-        <activity android:name=".activities.SplashScreen" />
-        <activity android:name=".activities.SignInActivity" />
-        <activity android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.ContactDetailsActivity" />
-        <activity android:name=".activities.AddGuardianActivity" />
-        <activity android:name=".activities.MainMenuActivity" />
-        <activity android:name=".activities.ResetPasswordActivity" />
-        <activity android:name=".activities.PhotosActivity" />
-        <activity android:name=".activities.ImportantPeoplesActivity" />
-        <activity android:name=".activities.RecognitionActivity" />
-        <activity android:name=".activities.MapMarkerActivity" />
+        <activity
+            android:name="com.android.camera.CropImage"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.SplashScreen"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.SignInActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.SignUpActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ContactDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.AddGuardianActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.MainMenuActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ResetPasswordActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.PhotosActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.ImportantPeoplesActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.RecognitionActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.MapMarkerActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -97,10 +133,22 @@
         <service android:name=".service.CurrentLocation" />
         <service android:name=".service.BackupService" />
 
-        <activity android:name=".activities.FullScreenViewActivity" />
-        <activity android:name=".activities.IntroDialogActivity" />
-        <activity android:name=".activities.IntroDialogGuardianActivity" />
-        <activity android:name=".activities.SettingsPrefActivity" />
+        <activity
+            android:name=".activities.FullScreenViewActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.IntroDialogActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.IntroDialogGuardianActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activities.SettingsPrefActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activities.SettingsHeaderActivity" />
     </application>
 
