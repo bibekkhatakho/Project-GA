@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
-import com.project.group.projectga.adapters.ImportantPeopleAdapter;
 import com.project.group.projectga.adapters.RecognitionResultAdapter;
 import com.project.group.projectga.models.ImportantPeople;
 import com.project.group.projectga.models.Recognition;
@@ -30,7 +29,11 @@ import com.project.group.projectga.preferences.Preferences;
 
 import java.util.ArrayList;
 
+import static com.mikepenz.iconics.Iconics.TAG;
+
 public class RecognitionResultFragment extends Fragment {
+
+    public static final double THRESHOLD = 80;
 
     Toolbar toolbar;
     ArrayList<ImportantPeople> importantPeoplesList;
@@ -73,42 +76,53 @@ public class RecognitionResultFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        ImageView img = (ImageView) getActivity().findViewById(R.id.testPhoto);
+        ImageView img = (ImageView) getView().findViewById(R.id.testPhoto);
         img.setImageBitmap(Recognition.testImage);
 
-//        TextView txt = (TextView) getActivity().findViewById(R.id.suggestionText);
-//        txt.setText("Best guess: " + Recognition.result);
+//        TextView txt = (TextView) getView().findViewById(R.id.suggestionText);
+//        txt.setText("Distance: " + Recognition.distance);
+        Log.d(TAG, "onStart: recognition result distance: " + Recognition.distance);
 
-
-        importantPeoplesList = new ArrayList<>();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String userId = sharedPreferences.getString(Preferences.USERID,null);
-        if (userId != null) {
-            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Important Peoples");
-        }
-        recyclerView = (RecyclerView) getView().findViewById(R.id.recognition_people_recycler);
-        recyclerView.setNestedScrollingEnabled(false);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        final RecyclerView.Adapter mAdapter = new RecognitionResultAdapter(getContext(),importantPeoplesList);
-        databaseReference.orderByChild("name").equalTo(Recognition.result).addListenerForSingleValueEvent(new ValueEventListener() {
+        getView().findViewById(R.id.retakeButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                    ImportantPeople importantPeople = snapshot.getValue(ImportantPeople.class);
-//                    String key=snapshot.getKey();
-//                    importantPeople.setKey(key);
-                    Log.d("Important People", "Invoked");
-                    importantPeoplesList.add(importantPeople);
-                }
-                recyclerView.setAdapter(mAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
+            public void onClick(View v) {
+                getFragmentManager().popBackStack();
             }
         });
+
+        if (Recognition.distance <= THRESHOLD) {
+            getView().findViewById(R.id.noMatch).setVisibility(View.GONE);
+
+            importantPeoplesList = new ArrayList<>();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String userId = sharedPreferences.getString(Preferences.USERID, null);
+            if (userId != null) {
+                databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Important Peoples");
+            }
+            recyclerView = (RecyclerView) getView().findViewById(R.id.recognition_people_recycler);
+            recyclerView.setNestedScrollingEnabled(false);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(mLayoutManager);
+            final RecyclerView.Adapter mAdapter = new RecognitionResultAdapter(getContext(), importantPeoplesList);
+            databaseReference.orderByChild("name").equalTo(Recognition.result).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        ImportantPeople importantPeople = snapshot.getValue(ImportantPeople.class);
+//                    String key=snapshot.getKey();
+//                    importantPeople.setKey(key);
+                        Log.d("Important People", "Invoked");
+                        importantPeoplesList.add(importantPeople);
+                    }
+                    recyclerView.setAdapter(mAdapter);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
 
     }
 

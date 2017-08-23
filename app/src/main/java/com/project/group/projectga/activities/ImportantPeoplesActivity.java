@@ -390,8 +390,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 final UploadTask uploadTask = storageReference.child(userId).child(photoPath).putBytes(d);
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

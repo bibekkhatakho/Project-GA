@@ -1,8 +1,13 @@
 package com.project.group.projectga.fragments;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -23,31 +28,41 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.Recognition;
+
 
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+
 import static android.content.ContentValues.TAG;
 
 
-public class RecognitionFragment extends Fragment  {
+public class RecognitionFragment extends Fragment {
 
     Toolbar toolbar;
     CameraView cam;
     FloatingActionButton snap;
-    Recognition recognizer = new Recognition();
+    Recognition recognizer;
+    Uri uri;
+    String photoPath;
+    Uri mImageCaptureUri;
+    CircularImageView personImage;
+
 
     private ProgressBar spinner;
     private CardView loadingCard;
     private TextView loadingText;
 
-
-    public RecognitionFragment(){
-
-    }
+    public RecognitionFragment() {    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +76,7 @@ public class RecognitionFragment extends Fragment  {
         spinner = (ProgressBar) getView().findViewById(R.id.progressBar);
         loadingCard = (CardView) getView().findViewById(R.id.loadingCard);
         loadingText = (TextView) getView().findViewById(R.id.loadingText);
+        personImage = (CircularImageView) getView().findViewById(R.id.personImage);
 
         spinner.isIndeterminate();
 
@@ -76,10 +92,52 @@ public class RecognitionFragment extends Fragment  {
                 // Create a bitmap
                 Bitmap result = BitmapFactory.decodeByteArray(picture, 0, picture.length);
 
+                Log.d(TAG, "onPictureTaken: before face cropping");
+                result = Recognition.cropToFace(result);
+                Log.d(TAG, "onPictureTaken: after face cropping");
+
+                loadingText.setText("Converting image...");
+
+                File f = new File(getActivity().getExternalFilesDir(null), "temp.jpg");
+                mImageCaptureUri = Uri.fromFile(f);
+                try {
+                    OutputStream out = new FileOutputStream(f);
+                    result.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    out.flush();
+                    out.close();
+                }
+                catch (Exception e) {
+                    // nothing for now
+                }
+
+                Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        new String[]{MediaStore.Images.Media.DATA,
+                                MediaStore.Images.Media.DATE_ADDED,
+                                MediaStore.Images.ImageColumns.ORIENTATION},
+                        MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+                if(cursor != null && cursor.moveToFirst())
+                {
+                    do {
+                        uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+                        photoPath = uri.toString();
+                    }while(cursor.moveToNext());
+                    cursor.close();
+                }
+                result = rotateImage(result);
+                personImage.setImageBitmap(result);
+
+                personImage.setDrawingCacheEnabled(true);
+                personImage.buildDrawingCache();
+                Bitmap bitmap = personImage.getDrawingCache();
+
+                //Wysie_Soh: Delete the temporary file
+                f = new File(mImageCaptureUri.getPath());
+                if (f.exists()) {
+                    f.delete();
+                }
+
                 loadingText.setText("Recognizing face...");
-
-                recognizer.predict(result);
-
+                recognizer.predict(bitmap);
             }
         });
 
@@ -90,7 +148,7 @@ public class RecognitionFragment extends Fragment  {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(uid).child("Important Peoples");
         Log.d(TAG, "readPhotos: database reference set: " + databaseReference.toString());
 
-
+        recognizer = new Recognition();
         recognizer.giveContext(getActivity(), this);
         //get the important people from firebase
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,8 +167,7 @@ public class RecognitionFragment extends Fragment  {
                         recognizer.addData(name, picURL);
                     }
                     recognizer.buildTrainingSet();
-                }
-                else {
+                } else {
                     Log.d(TAG, "onDataChange: datasnapshot does not exist...");
                 }
             }
@@ -128,8 +185,14 @@ public class RecognitionFragment extends Fragment  {
             @Override
             public void onClick(View v) {
                 loadingCard.setVisibility(View.VISIBLE);
-                loadingText.setText("Saving Image...");
-                cam.captureImage();
+                loadingText.setText("Finding faces...");
+                try {
+                    cam.captureImage();
+                }
+                catch (Exception e) {
+                    Log.d(TAG, "onClick: TakePictureFailed, try again...");
+                    loadingCard.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -177,6 +240,32 @@ public class RecognitionFragment extends Fragment  {
         // implement search functionality here
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private Bitmap rotateImage(Bitmap bitmap) {
+        Bitmap rotatedBitmap;
+        ExifInterface exifInterface = null;
+        try {
+            exifInterface = new ExifInterface(photoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(270);
+                break;
+            default:
+        }
+        rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return rotatedBitmap;
     }
 
 }

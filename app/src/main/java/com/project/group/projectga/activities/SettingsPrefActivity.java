@@ -66,14 +66,14 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.title_app_notifications_key)));
 
-            // feedback preference click listener
-            Preference myPref = findPreference(getString(R.string.key_send_feedback));
-            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                public boolean onPreferenceClick(Preference preference) {
-                    sendFeedback(getActivity());
-                    return true;
-                }
-            });
+//            // feedback preference click listener
+//            Preference myPref = findPreference(getString(R.string.key_send_feedback));
+//            myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//                public boolean onPreferenceClick(Preference preference) {
+//                    sendFeedback(getActivity());
+//                    return true;
+//                }
+//            });
 
             Preference restorePref = findPreference(getString(R.string.restore_key));
             restorePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -150,22 +150,22 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
      * Appends the necessary device information to email body
      * useful when providing support
      */
-    public static void sendFeedback(Context context) {
-        String body = null;
-        try {
-            body = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-            body = "\n\n-----------------------------\n\n Device OS: Android \n Device OS version: " +
-                    Build.VERSION.RELEASE + "\n App Version: " + body + "\n Device Brand: " + Build.BRAND +
-                    "\n Device Model: " + Build.MODEL + "\n Device Manufacturer: " + Build.MANUFACTURER;
-        } catch (PackageManager.NameNotFoundException e) {
-        }
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("message/rfc822");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"projectgateam@gmail.com"});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for ProjectGA");
-        intent.putExtra(Intent.EXTRA_TEXT, body);
-        context.startActivity(Intent.createChooser(intent, context.getString(R.string.choose_email_client)));
-    }
+//    public static void sendFeedback(Context context) {
+//        String body = null;
+//        try {
+//            body = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+//            body = "\n\n-----------------------------\n\n Device OS: Android \n Device OS version: " +
+//                    Build.VERSION.RELEASE + "\n App Version: " + body + "\n Device Brand: " + Build.BRAND +
+//                    "\n Device Model: " + Build.MODEL + "\n Device Manufacturer: " + Build.MANUFACTURER;
+//        } catch (PackageManager.NameNotFoundException e) {
+//        }
+//        Intent intent = new Intent(Intent.ACTION_SEND);
+//        intent.setType("message/rfc822");
+//        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"projectgateam@gmail.com"});
+//        intent.putExtra(Intent.EXTRA_SUBJECT, "Feedback for ProjectGA");
+//        intent.putExtra(Intent.EXTRA_TEXT, body);
+//        context.startActivity(Intent.createChooser(intent, context.getString(R.string.choose_email_client)));
+//    }
     public static void restorePhotos(final Context context) {
         DatabaseReference databaseReferencePhotos = null;
         final StorageReference storageReferencePhotos;

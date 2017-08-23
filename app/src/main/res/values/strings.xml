@@ -36,7 +36,7 @@
     <string name="homeScreen">GA Home</string>
 
     <string name="addGuardianInfo"> Our users who suffer from Alzheimer\’s can now nominate a Guardian\. A Guardian is someone close to our user\, who cares about his/her health\, whereabouts and wish to protect his/her physical integrity\. </string>
-    <string name="privacyInfo"> Privacy settings of the app are default. You can change them anytime by going to Preferences. </string>
+    <string name="privacyInfo"> You can reset your Preferences at anytime in "App Preferences". Click "Go to Preferences" to go change your App Preferences or click cancel to hide this message. </string>
     <string name="mapLabel">Maps</string>
     <string name="galleryLabel">Gallery</string>
     <string name="recognitionLabel">Recognition</string>
@@ -65,7 +65,7 @@
     <string name="tempPhone">(555)555-5555</string>
 
     //Gallery Screen
-    <string name="shortDesc">Where did you meet?</string>
+    <string name="shortDesc">Short Memory</string>
     <string name="importantPeople">Important People</string>
     <string name="longDesc">Long Memory</string>
     <string name="shortDescSpecial">Quick Memory: (10 words)</string>
@@ -173,34 +173,35 @@
     //Maps
     <string name="mapMarker">Map Marker</string>
     <string name="address">Address</string>
-    <string name="addressDesc">Description</string>
-    <string name="addressDescSpecial">Description (10 Words Max)</string>
+    <string name="addressDesc">Marker Name</string>
+    <string name="addressDescSpecial">Marker Description (10 Words Max)</string>
     <string name="chooseIcon">Choose Icon</string>
     <string name="clickMap">Long press anywhere on the map to add Geofence</string>
 
 
     //Initial Dialog Screen
-    <string name="allsetText"> Looks like you are all set \.</string>
+    <string name="allsetText"> Looks like you are all set.</string>
     <string name="standardUserTextIntro"> You are a Standard User</string>
-    <string name="standardUserTextIntro2"> As a Standard User, you are able to\:</string>
-    <string name="standardUserTextIntro2Info1"> \u2022 Save individual profiles for people who are important to you\.\n\n \u2022 Store your personal memories for important people\, locations and events\.\n\n \u2022 Pinpoint important locations in Google Maps for easy and quick navigation\.</string>
-    <string name="standardUserTextIntro2Info2"> \u2022 Tag physical objects for easy location via bluetooth\. \n\n \u2022 Define a Guardian User, who will be your guardian angel 24 hours a day\.</string>
+    <string name="standardUserTextIntro2"> As a Standard User, you are able to:</string>
+    <string name="standardUserTextIntro2Info1"> \u2022 Save individual profiles for people who are important to you;\n\n \u2022 Store your personal memories for important people, locations and events;\n\n \u2022 Pinpoint important locations in Google Maps for easy and quick navigation.</string>
+    <string name="standardUserTextIntro2Info2"> \u2022 Tag physical objects for easy location via bluetooth; \n\n \u2022 Define a Guardian User, who will be your guardian angel 24 hours a day.</string>
 
 
-    <string name="guardianUserTextIntro2"> As a Guardian User, you are able to\:</string>
-    <string name="guardianUserTextIntro2Info"> \u2022 Track Standard Users\’ whereabouts\.\n\n \u2022 Set safety zones for Standard Users\’ freedom of movement\.\n\n \u2022 Exchange emergency messages with Standard Users\. </string>
-    <string name="standardUserTextIntroInfo"> You will benefit the most of our app\, as it was designed around your needs\.</string>
+    <string name="guardianUserTextIntro2"> As a Guardian User, you are able to:</string>
+    <string name="guardianUserTextIntro2Info"> \u2022 Track Standard Users\’ whereabouts;\n\n \u2022 Set safety zones for Standard Users\’ freedom of movement;\n\n \u2022 Exchange emergency messages with Standard Users. </string>
+    <string name="standardUserTextIntroInfo"> You will benefit the most of our app, as it was designed around your needs.</string>
     <string name="guardianUserTextIntro"> You are a Guardian User</string>
-    <string name="guardianUserTextIntroInfo"> A person who suffers from Alzheimer\’s disease and who also is a Standard User in our app nominated you as a his\/her guardian\.</string>
-    <string name="standardScreen1"> \u2022Our app is fully integrated to Google Maps.\n\n \u2022Easily pinpoint and store locations of interest\, such as police stations\, hospitals\, pharmacies and others with easy to distinguish icons\.\n\n \u2022 Navigate to any of these locations at your own convenience\. </string>
-    <string name="standardScreen2"> \u2022Our visual gallery will allow you to store pictures for important people, key events and places you care.\n\n \u2022 Add your own personal text or voice memories to pictures and videos for later playback\.\n\n \u2022 Never forget a face\, place or event again\. </string>
-    <string name="standardScreen3"> \u2022You can now use a Bluetooth tracker powered by X device to tag important objects\, such as your keys\, wallet\, remote control and other easy to lose objects.\n\n \u2022 Use our app to track down these objects whenever you can\’t find them\. The days of losing things are over\. </string>
-    <string name="standardScreen4"> \u2022Having trouble in remembering who a person standing in front of you is\? With our facial recognition feature\, you are better equipped to deal with such situations\. Just create a Gallery profile with a picture for each person you care to remember about\. \n\n \u2022You can also store memories for each profile and our app will playback these memories at your convenience\. </string>
-    <string name="standardScreen5">\u2022 We compiled a list of suggested games and puzzles that are recognized to provide the much needed training your brain needs\. \n\n \u2022 Our list is constantly updated with new games\, so stay tuned for news\. We want to help you in keeping your brain as sharp as possible\!</string>
-    <string name="standardScreen6"> Elect a Guardian\, a person who will be your personal caregiver and bodyguard\.  </string>
+    <string name="guardianUserTextIntroInfo"> A person who suffers from Alzheimer\’s disease and who also is a Standard User in our app nominated you as a his\/her guardian.</string>
+    <string name="standardScreen1"> \u2022Our app is fully integrated to Google Maps;\n\n \u2022Easily pinpoint and store locations of interest, such as police stations, hospitals, pharmacies and others with easy to distinguish icons;\n\n \u2022 Navigate to any of these locations at your own convenience. </string>
+    <string name="standardScreen2"> \u2022Our visual gallery will allow you to store pictures for important people, key events and places you care;\n\n \u2022 Add your own personal text or voice memories to pictures and videos for later playback;\n\n \u2022 Never forget a face, place or event again. </string>
+    <string name="standardScreen3"> \u2022We compiled a list of top bluetooth tracker that are recognized to provide the much needed feature of tagging and locating lost items. </string>
+    <string name="standardScreen4"> \u2022Having trouble in remembering who a person standing in front of you is? With our facial recognition feature, you are better equipped to deal with such situations. Just create a Gallery profile with a picture for each person you care to remember about; \n\n \u2022You can also store memories for each profile and our app will playback these memories at your convenience\. </string>
+    <string name="standardScreen5">\u2022 We compiled a list of suggested games and puzzles that are recognized to provide the much needed training your brain needs; \n\n \u2022 Our list is constantly updated with new games, so stay tuned for news. We want to help you in keeping your brain as sharp as possible\!</string>
+    <string name="standardScreen6"> Elect a Guardian, a person who will be your personal caregiver and bodyguard.  </string>
     <string name="skipButtonText">SKIP</string>
     <string name="nextButtonText">NEXT</string>
-    <string name="guardianUserScreenText">\u2022Track down Standard Users\n\n\u2022Define safety zones for the movement of Standard Users\n\n\u2022Interact with Standard Users on the spot in case of emergencies\n\n\u2022Be alerted of non-ordinary routines being followed by Standard Users\.</string>
+    <string name="guardian">Guardian User</string>
+    <string name="guardianUserScreenText">\u2022Track down Standard Users;\n\n\u2022Define safety zones for the movement of Standard Users;\n\n\u2022Interact with Standard Users on the spot in case of emergencies;\n\n\u2022Be alerted of non-ordinary routines being followed by Standard Users.</string>
 
 
     //Preferences Screen

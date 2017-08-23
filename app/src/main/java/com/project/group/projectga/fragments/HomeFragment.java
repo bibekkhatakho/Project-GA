@@ -109,13 +109,15 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SET_ALARM) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
                             android.Manifest.permission.ACCESS_FINE_LOCATION,
                             android.Manifest.permission.READ_EXTERNAL_STORAGE,
                             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             android.Manifest.permission.SET_ALARM,
+                            android.Manifest.permission.CALL_PHONE,
                             android.Manifest.permission.RECEIVE_SMS,
                             android.Manifest.permission.READ_SMS,
                             android.Manifest.permission.SEND_SMS},
@@ -232,7 +234,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Intent intent;
-        intent = new Intent(getContext(),ActivityRecognizedService.class);
+        intent = new Intent(this.getContext(),ActivityRecognizedService.class);
         PendingIntent pendingIntent = PendingIntent.getService( getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT );
         ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(mApiClient, 1000, pendingIntent);
     }

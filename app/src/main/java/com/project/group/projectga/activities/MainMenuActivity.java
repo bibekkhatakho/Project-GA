@@ -1,5 +1,6 @@
 package com.project.group.projectga.activities;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -16,6 +18,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -82,6 +85,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
     private Drawer result = null;
     AccountHeader headerResult;
+    private static final int REQUEST_LOCATION = 1;
 
     boolean drivingcheckPrimary = true;
     String userStatus;
@@ -101,11 +105,11 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     String guardianName;
     Timer timer;
     Timer timerToAskFuel;
-	String guardianPicture;
+    String guardianPicture;
     String patientPicture;
 
     boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false, backupFlag;
-	String userId;
+    String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -153,6 +157,26 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
+                    break;
+                case "geofenceCall":
+                    String phone_number = "+18172137126";
+                    String uri = "tel:" + phone_number.trim();
+                    //Build the intent that will make the phone call
+                    Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
+                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    getApplicationContext().startActivity(callIntent);
+
+                    break;
 
 
             }
@@ -207,26 +231,28 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
         if (firstTime) {
 
-            AlertDialog.Builder alertDialogBuilder;
-            alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
-            alertDialogBuilder.setTitle("Welcome " + name + "!!");
-            alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
-            alertDialogBuilder.setMessage(R.string.privacyInfo);
-            alertDialogBuilder.setPositiveButton("Go to Preferences", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(MainMenuActivity.this, SettingsPrefActivity.class));
-                }
-            });
-            alertDialogBuilder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    hideProgressDialog();
-                }
-            });
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
-            alertDialog.setCancelable(false);
+            if (userType.equalsIgnoreCase("Standard User")) {
+                AlertDialog.Builder alertDialogBuilder;
+                alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
+                alertDialogBuilder.setTitle("Welcome " + name + "!!");
+                alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
+                alertDialogBuilder.setMessage(R.string.privacyInfo);
+                alertDialogBuilder.setPositiveButton("Go to Preferences", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(MainMenuActivity.this, SettingsPrefActivity.class));
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        hideProgressDialog();
+                    }
+                });
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+                alertDialog.setCancelable(false);
+            }
         }
 
         final ProfileDrawerItem userProfile = new ProfileDrawerItem().withName(name).withEmail(email).withIcon(R.drawable.ic_account_circle_white_24dp);
@@ -285,8 +311,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     .addDrawerItems(home)
                     .addDrawerItems(profile)
                     .addDrawerItems(maps)
-                    .addDrawerItems(new DividerDrawerItem())
-                    .addDrawerItems(prefSettings)
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
@@ -510,7 +534,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                 };
 
 // schedule the task to run starting now and then every hour...
-                timer.schedule(hourlyTask, 0l, 5000);
+                timer.schedule(hourlyTask, 0l, 1000*60*10);
                 //proactiveFunctionlaity = true;
 //            }else{
 //                Toast.makeText(this, "Inside Outside", Toast.LENGTH_SHORT).show();
@@ -577,7 +601,9 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
                                     }
                                 };
-                                timerToAskFuel.schedule(askFuelAvailability, 0l, 5000);
+
+                                timerToAskFuel.schedule(askFuelAvailability, 0l, 1000*60*10);
+
                             }else{
                             if (timerToAskFuel != null) {
                                 timerToAskFuel.cancel();
@@ -616,7 +642,30 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     @Override
     protected void onResume() {
         super.onResume();
-        loadPreferences();
+        ActivityCompat.requestPermissions(MainMenuActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission granted and now can proceed
+                    loadPreferences();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(MainMenuActivity.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            // add other cases for more permissions
+        }
     }
 
     @Override

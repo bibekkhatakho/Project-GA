@@ -48,27 +48,29 @@ public class SmsBroadcastReceiver extends BroadcastReceiver
         if (intentExtras != null) {
             Object[] sms = (Object[]) intentExtras.get(SMS_BUNDLE);
             String smsMessageStr = "";
-            for (int i = 0; i < sms.length; ++i)
-            {
-                String format = intentExtras.getString("format");
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                    smsMessage = SmsMessage.createFromPdu((byte[]) sms[i], format);
-                }else{
-                    smsMessage = SmsMessage.createFromPdu((byte[]) sms[i]);
+            if(sms !=null) {
+                for (int i = 0; i < sms.length; ++i) {
+                    String format = intentExtras.getString("format");
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        smsMessage = SmsMessage.createFromPdu((byte[]) sms[i], format);
+                    } else {
+                        smsMessage = SmsMessage.createFromPdu((byte[]) sms[i]);
+                    }
+
+                    smsBody = smsMessage.getMessageBody();
+                    address = smsMessage.getOriginatingAddress();
+
+                    smsMessageStr += "SMS From: " + address + "\n";
+                    smsMessageStr += smsBody + "\n";
                 }
 
-                smsBody = smsMessage.getMessageBody();
-                address = smsMessage.getOriginatingAddress();
+                MessagesFragment inst = MessagesFragment.instance();
+                inst.updateInbox(smsMessageStr);
 
-                smsMessageStr += "SMS From: " + address + "\n";
-                smsMessageStr += smsBody + "\n";
+
+                createNotification(context);
+                sendNotification();
             }
-
-            MessagesFragment inst = MessagesFragment.instance();
-            inst.updateInbox(smsMessageStr);
-
-            createNotification(context);
-            sendNotification();
         }
     }
 

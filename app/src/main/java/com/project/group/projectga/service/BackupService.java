@@ -48,6 +48,7 @@ public class BackupService extends IntentService {
     public static ArrayList<Model_images> al_images = new ArrayList<>();
 
     private boolean boolean_folder;
+    byte[] data;
 
     public BackupService() {
         super("BackupService");
@@ -105,52 +106,56 @@ public class BackupService extends IntentService {
                 }
             }
 
-            if (boolean_folder) {
+            if (al_images.size() > 0 && !al_images.isEmpty()) {
+                if (boolean_folder) {
 
-                ArrayList<String> al_path = new ArrayList<>();
-                al_path.addAll(al_images.get(int_position).getAl_imagepath());
-                al_path.add(absolutePathOfImage);
-                al_images.get(int_position).setAl_imagepath(al_path);
+                    ArrayList<String> al_path = new ArrayList<>();
+                    al_path.addAll(al_images.get(int_position).getAl_imagepath());
+                    al_path.add(absolutePathOfImage);
+                    al_images.get(int_position).setAl_imagepath(al_path);
 
-            } else {
-                ArrayList<String> al_path = new ArrayList<>();
-                al_path.add(absolutePathOfImage);
-                Model_images obj_model = new Model_images();
-                obj_model.setStr_folder(cursor.getString(column_index_folder_name));
-                obj_model.setAl_imagepath(al_path);
-                al_images.add(obj_model);
+                } else {
+                    ArrayList<String> al_path = new ArrayList<>();
+                    al_path.add(absolutePathOfImage);
+                    Model_images obj_model = new Model_images();
+                    obj_model.setStr_folder(cursor.getString(column_index_folder_name));
+                    obj_model.setAl_imagepath(al_path);
+                    al_images.add(obj_model);
+                }
             }
         }
 
-        for (int i = 0; i < al_images.size(); i++) {
-            Log.e("FOLDER", al_images.get(i).getStr_folder());
-            for (int j = 0; j < al_images.get(i).getAl_imagepath().size(); j++) {
+            for (int i = 0; i < al_images.size(); i++) {
+                Log.e("FOLDER", al_images.get(i).getStr_folder());
+                for (int j = 0; j < al_images.get(i).getAl_imagepath().size(); j++) {
+                    storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
+                    storageReference = storageReference.child(al_images.get(i).getStr_folder());
+                    String folder = al_images.get(i).getStr_folder();
+                    Log.e("FILE", al_images.get(i).getAl_imagepath().get(j));
+                    String fileUri = (al_images.get(i).getAl_imagepath().get(j)).toString();
+
+                    fileUri = fileUri.substring(fileUri.lastIndexOf("/") + 1);
+
+                    String fileUriPeriod = fileUri.replace(".", ",");
+                    databaseReference.child(fileUriPeriod).child("folder").setValue(folder);
+
+                    Bitmap bitmap = BitmapFactory.decodeFile((al_images.get(i).getAl_imagepath().get(j)).toString());
+                    if(bitmap != null && !bitmap.toString().isEmpty()) {
+                        bitmap = rotateImage(bitmap, (al_images.get(i).getAl_imagepath().get(j)).toString());
+
+
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                        data = baos.toByteArray();
+                    }
+
+                    storageReference = storageReference.child(fileUri);
+                    UploadTask uploadTask = storageReference.putBytes(data);
+                    databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
+                }
                 storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
-                storageReference = storageReference.child(al_images.get(i).getStr_folder());
-                String folder = al_images.get(i).getStr_folder();
-                Log.e("FILE", al_images.get(i).getAl_imagepath().get(j));
-                String fileUri = (al_images.get(i).getAl_imagepath().get(j)).toString();
-
-                fileUri = fileUri.substring(fileUri.lastIndexOf("/") + 1);
-
-                String fileUriPeriod = fileUri.replace(".",",");
-                databaseReference.child(fileUriPeriod).child("folder").setValue(folder);
-
-                Bitmap bitmap = BitmapFactory.decodeFile((al_images.get(i).getAl_imagepath().get(j)).toString());
-                bitmap = rotateImage(bitmap, (al_images.get(i).getAl_imagepath().get(j)).toString());
-
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-                byte[] data = baos.toByteArray();
-
-                storageReference = storageReference.child(fileUri);
-                UploadTask uploadTask = storageReference.putBytes(data);
-                databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
             }
-            storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
         }
-    }
 
     private Bitmap rotateImage(Bitmap bitmap, String photoPath) {
         Bitmap rotatedBitmap = bitmap;

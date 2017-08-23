@@ -16,23 +16,6 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_header_about">
-
-        <Preference
-            android:selectable="false"
-            android:summary="@string/app_summary" />
-
-        <Preference
-            android:summary="@string/app_version"
-            android:title="@string/title_version" />
-
-        <Preference
-            android:key="@string/key_send_feedback"
-            android:summary="@string/summary_support"
-            android:title="@string/title_send_feedback" />
-
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/pref_title_notifications">
 
         <CheckBoxPreference

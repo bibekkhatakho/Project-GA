@@ -53,6 +53,8 @@ public class GeofenceTransitionService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+
+
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -133,16 +135,13 @@ public class GeofenceTransitionService extends IntentService {
         Log.i(TAG, "sendNotification: " + msg );
 
         // Intent to start the main Activity
-        Intent notificationIntent = MainMenuActivity.makeNotificationIntent(
-                getApplicationContext(), msg
-        );
+        Intent notificationIntent = MainMenuActivity.makeNotificationIntent(getApplicationContext(), msg);
+        notificationIntent.putExtra("Maps", "geofenceCall");
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainMenuActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
         PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(counter, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
 
         // Creating and sending Notification
         NotificationManager notificatioMng =
@@ -150,20 +149,21 @@ public class GeofenceTransitionService extends IntentService {
         notificatioMng.notify(
                 counter,
                 createNotification(msg, notificationPendingIntent));
-
     }
 
     // Create notification
     private Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
         notificationBuilder
                 .setSmallIcon(R.drawable.ic_place_black_24dp)
                 .setColor(Color.RED)
-                .setContentTitle(msg)
-                .setContentText("Geofence Notification!")
+                .setAutoCancel(true)
+                .setContentTitle("Geofence Notification!")
+                .setContentText(msg + "Do you want to call the user?")
+                .addAction(R.drawable.ic_call_black_24dp,"Call",notificationPendingIntent)
                 .setContentIntent(notificationPendingIntent)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-                .setAutoCancel(true);
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
 
         return notificationBuilder.build();
     }
