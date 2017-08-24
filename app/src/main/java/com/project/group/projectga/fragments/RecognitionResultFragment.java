@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.RecognitionResultAdapter;
+import com.project.group.projectga.adapters.Voice;
 import com.project.group.projectga.models.ImportantPeople;
 import com.project.group.projectga.models.Recognition;
 import com.project.group.projectga.preferences.Preferences;
@@ -39,7 +40,7 @@ public class RecognitionResultFragment extends Fragment {
     ArrayList<ImportantPeople> importantPeoplesList;
     RecyclerView recyclerView;
     DatabaseReference databaseReference;
-
+    Voice voice;
 
     public RecognitionResultFragment() {
         // Required empty public constructor
@@ -94,6 +95,8 @@ public class RecognitionResultFragment extends Fragment {
             getView().findViewById(R.id.noMatch).setVisibility(View.GONE);
 
             importantPeoplesList = new ArrayList<>();
+            voice = new Voice(getActivity().getApplicationContext());
+
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             String userId = sharedPreferences.getString(Preferences.USERID, null);
             if (userId != null) {
@@ -103,7 +106,7 @@ public class RecognitionResultFragment extends Fragment {
             recyclerView.setNestedScrollingEnabled(false);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(mLayoutManager);
-            final RecyclerView.Adapter mAdapter = new RecognitionResultAdapter(getContext(), importantPeoplesList);
+            final RecyclerView.Adapter mAdapter = new RecognitionResultAdapter(getContext(), importantPeoplesList, voice);
             databaseReference.orderByChild("name").equalTo(Recognition.result).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

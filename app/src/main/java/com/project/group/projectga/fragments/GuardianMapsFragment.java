@@ -287,7 +287,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     }
 
     public void setMap(LatLng latLng) {
-        BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.logoga);
+        BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.markericon);
         Bitmap b = bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
         latlangForGeo = latLng;

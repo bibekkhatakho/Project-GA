@@ -101,13 +101,13 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     private final int UPDATE_INTERVAL =  3 * 60 * 1000;
     private final int FASTEST_INTERVAL = 30 * 1000;
-    private final int REQ_PERMISSION = 140;
+    private final int REQ_PERMISSION = 999;
     double lat,lon;
     boolean geoFenceLocationExists = false;
     String guardianEmail;
     private final String KEY_GEOFENCE_LAT = "GEOFENCE LATITUDE";
     private final String KEY_GEOFENCE_LON = "GEOFENCE LONGITUDE";
-    public static final int SEND_SMS = 141;
+    public static final int SEND_SMS = 101;
     private final int GEOFENCE_REQ_CODE = 0;
 
 
@@ -390,6 +390,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         //Toast.makeText(getContext(),"geo created",Toast.LENGTH_SHORT).show();
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
+                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                 .title(title);
 

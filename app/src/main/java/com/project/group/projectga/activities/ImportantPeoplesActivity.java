@@ -117,16 +117,15 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     public static final int RC_CAMERA_CODE = 123;
     private final int MAX_WORD_LIMIT_SHORT = 10;
     private final int MAX_WORD_LIMIT_LONG = 50;
-    private final int REQ_CODE_SPEECH_INPUT_SHORT = 124;
-    private final int REQ_CODE_SPEECH_INPUT_LONG = 125;
-    public static final int CROP_FROM_CAMERA = 126;
+    private final int REQ_CODE_SPEECH_INPUT_SHORT = 100;
+    private final int REQ_CODE_SPEECH_INPUT_LONG = 200;
 
 
     private InputFilter mInputFilter;
 
     //Code test for imageCropping
     private Uri mImageCaptureUri;
-
+    public static final int CROP_FROM_CAMERA = 126;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -208,10 +207,10 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES + "/Important People");
                 try {
                     image = File.createTempFile(
-                                imageFileName,  /* prefix */
-                                ".jpg",         /* suffix */
-                                storageDir      /* directory */
-                        );
+                            imageFileName,  /* prefix */
+                            ".jpg",         /* suffix */
+                            storageDir      /* directory */
+                    );
                     ContentValues values = new ContentValues();
 
                     values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
@@ -223,9 +222,9 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                     e.printStackTrace();
                 }
                 //Adding code for cropping the image taken from Camera intent - Start
-                    mImageCaptureUri = FileProvider.getUriForFile(getApplicationContext(),
-                            "com.example.projectga.fileprovider",
-                            image);
+                mImageCaptureUri = FileProvider.getUriForFile(getApplicationContext(),
+                        "com.example.projectga.fileprovider",
+                        image);
                 intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
                 try {
                     intent.putExtra("return-data", true);

@@ -1,15 +1,19 @@
 package com.project.group.projectga.fragments;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +33,9 @@ public class GalleryHomeFragment extends Fragment {
 
     TextInputEditText gallery;
     TextInputEditText importantPeople;
+
+    private static final int REQUEST_CAMERA = 199;
+
     public GalleryHomeFragment(){
 
     }
@@ -54,6 +61,14 @@ public class GalleryHomeFragment extends Fragment {
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_green_24dp));
 
         setHasOptionsMenu(true);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{
+                            android.Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
+        } else {
+            Log.e("DB", "PERMISSION GRANTED");
+        }
 
         initControls(view);
         return view;

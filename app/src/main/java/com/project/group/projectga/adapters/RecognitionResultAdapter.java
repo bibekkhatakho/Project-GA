@@ -31,12 +31,12 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
 
     private Context mContext;
     private ArrayList<ImportantPeople> mImportantPeoplesList;
-    Voice play;
+    Voice mPlay;
 
-    public RecognitionResultAdapter(Context context, ArrayList<ImportantPeople> importantPeoplesList) {
+    public RecognitionResultAdapter(Context context, ArrayList<ImportantPeople> importantPeoplesList, Voice play) {
         mContext = context;
         mImportantPeoplesList = importantPeoplesList;
-        play = new Voice(mContext);
+        mPlay = play;
     }
 
 
@@ -57,8 +57,10 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
         holder.longDescription.setText(importantPeople.getLongDescription());
 //        holder.importantPeoplesKey.setText(importantPeople.getKey());
         holder.play.setOnClickListener(new View.OnClickListener() {
-            String shortString  = importantPeople.getShortDescription().replaceAll("\\.","");
-            String longString  = importantPeople.getShortDescription().replaceAll("\\.","") + importantPeople.getLongDescription().replaceAll("\\.","               ");
+            String shortPersonName  = importantPeople.getName().replaceAll("\\.","");
+            String shortRelation  = importantPeople.getRelation().replaceAll("\\.","");
+            String shortDescription  = importantPeople.getShortDescription().replaceAll("\\.","");
+            String longString  = importantPeople.getLongDescription().replaceAll("\\.","               ");
 
             @Override
             public void onClick(View v) {
@@ -68,15 +70,21 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0)
-                        {
-                           // Toast.makeText(mContext,shortString,Toast.LENGTH_SHORT).show();
-                            play.say(shortString);
+                        if (which == 0) {
+                            mPlay.say(shortPersonName);
+                            mPlay.playSilence();
+                            mPlay.say(shortRelation);
+                            mPlay.playSilence();
+                            mPlay.say(shortDescription);
                         }
-                        if (which == 1)
-                        {
-                            //Toast.makeText(mContext,longString,Toast.LENGTH_SHORT).show();
-                            play.say(longString);
+                        if (which == 1) {
+                            mPlay.say(shortPersonName);
+                            mPlay.playSilence();
+                            mPlay.say(shortRelation);
+                            mPlay.playSilence();
+                            mPlay.say(shortDescription);
+                            mPlay.playSilence();
+                            mPlay.say(longString);
                         }
                     }
                 });

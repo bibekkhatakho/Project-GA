@@ -25,30 +25,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
-import com.project.group.projectga.models.LocationModel;
-import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
 import com.project.group.projectga.service.ActivityRecognizedService;
 
 public class HomeFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     Toolbar toolbar;
-    private static final int REQUEST_LOCATION = 139;
+    private static final int REQUEST_LOCATION = 1;
 
     FloatingActionButton smsButton;
 	GoogleApiClient mApiClient;
+
+    private static final String TAG = "HomeFragment";
 
     int counter=0;
 
@@ -76,7 +68,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
         }
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         ImageView icon = (ImageView) getActivity().findViewById(R.id.toolbarIcon);
-        icon.setImageResource(R.drawable.logoga);
+        icon.setImageResource(R.drawable.applogo);
         icon.setColorFilter(null);
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(getString(R.string.googleAlzheimer));
@@ -241,12 +233,13 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.i(TAG, "Connection Suspended");
+        mApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.i(TAG, "Connection failed. Error: " + connectionResult.getErrorCode());
     }
 
 }

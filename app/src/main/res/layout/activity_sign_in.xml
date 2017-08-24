@@ -41,7 +41,7 @@
                     android:id="@+id/projectgalogo"
                     android:layout_width="125dp"
                     android:layout_height="125dp"
-                    android:src="@drawable/logoga"
+                    android:src="@drawable/applogo"
                     tools:ignore="ContentDescription" />
 
             </RelativeLayout>

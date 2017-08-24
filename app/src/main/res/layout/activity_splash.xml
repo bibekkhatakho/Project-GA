@@ -17,7 +17,7 @@
         android:layout_height="300dp"
         android:layout_margin="20dp"
         android:paddingTop="30dp"
-        android:src="@drawable/logoga"
+        android:src="@drawable/applogo"
         tools:ignore="ContentDescription" />
 
     <TextView

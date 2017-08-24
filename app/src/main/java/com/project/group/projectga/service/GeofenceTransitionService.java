@@ -54,7 +54,6 @@ public class GeofenceTransitionService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
 
-
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -159,8 +158,8 @@ public class GeofenceTransitionService extends IntentService {
                 .setSmallIcon(R.drawable.ic_contact_phone_black_24dp)
                 .setColor(Color.WHITE)
                 .setAutoCancel(true)
-                .setContentTitle("Geofence Notification!")
-                .setContentText(msg + "Do you want to call the user?")
+                .setContentTitle("Geofence Alert!")
+                .setContentText(msg + "Do you want to call the patient you are tracking?")
                 .addAction(R.drawable.ic_call_black_24dp,"Call",notificationPendingIntent)
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
