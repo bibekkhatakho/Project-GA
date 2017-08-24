@@ -11,19 +11,25 @@ public class LocationModel {
     private String patientEmail;
     private String patientName;
     private String patientPicture;
+    private String patientNumber;
     private String guardianName;
     private double latitude;
     private double longitude;
-	 private String guardianPicture;
+    private String guardianPicture;
+    private String guardianNumber;
 
     public LocationModel() {
     }
 
-    public LocationModel(String currentLat, String currentLong, String patientEmail, String patientName, String guardianName, double latitude, double longitude, String patientPicture, String guardianPicture) {
+    public LocationModel(String currentLat, String currentLong, String patientEmail, String patientName, String guardianName, double latitude, double longitude, String patientPicture, String guardianPicture, String patientNumber, String guardianNumber) {
         this.currentLat = currentLat;
         this.currentLong = currentLong;
         this.patientEmail = patientEmail;
         this.patientName = patientName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.patientNumber = patientNumber;
+        this.guardianNumber = guardianNumber;
         this.patientPicture = patientPicture;
         this.guardianName = guardianName;
         this.guardianPicture = guardianPicture;
@@ -78,4 +84,12 @@ public class LocationModel {
     public void setGuardianPicture(String guardianPicture) { this.guardianPicture = guardianPicture; }
 
     public String getGuardianPicture() { return guardianPicture; }
+
+    public void setGuardianNumber(String guardianNumber) { this.guardianNumber = guardianNumber; }
+
+    public String getGuardianNumber() { return guardianNumber; }
+
+    public void setPatientNumber(String patientNumber) {this.patientNumber = patientNumber; }
+
+    public String getPatientNumber() { return patientNumber; }
 }

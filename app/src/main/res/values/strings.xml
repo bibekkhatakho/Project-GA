@@ -249,7 +249,18 @@
     <string name="enterMessages">Type your message..</string>
     <string name="yourText">Your Text</string>
 
-
+    //Tag and Locate Screen
+    <string name="tiles"> Tile </string>
+    <string name="tilesComp"> Tile Inc. </string>
+    <string name="tilesDesc"> Tile makes tiny Bluetooth trackers and a companion app that allow you to locate lost or misplaced items in seconds — like your phone, keys, and wallet. Compatible with Tile Mate, Tile Slim and Tile Original. </string>
+    <string name="chipolo"> Chipolo </string>
+    <string name="chipoloDescText"> Attach or drop Chipolo to anything you want to track and use it to find your misplaced keys, phone or wallet in seconds. Or use the Chipolo to ring and find your phone, even if it’s on silent. </string>
+    <string name="duet"> PROTAG </string>
+    <string name="duetComp"> Innova Technology. </string>
+    <string name="duetDescText">PROTAG acts like a wireless leash which chains your mobile phone to your valuable. In the event when your valuables are left behind, your mobile phone will alert you before any trouble arises.</string>
+    <string name="trackRText"> TrackR </string>
+    <string name="trackRComp"> TrackR Inc. </string>
+    <string name="trackRDesc">Attach one of the coin-sized TrackR devices to any item - then use the TrackR app to locate it in seconds. TrackR\'s Crowd GPS Network enables you to even recover lost or stolen items on a map with GPS updates when another user walks by your missing item. </string>
 
 </resources>
 

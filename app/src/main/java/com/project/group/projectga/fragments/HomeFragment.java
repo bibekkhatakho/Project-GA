@@ -45,7 +45,7 @@ import com.project.group.projectga.service.ActivityRecognizedService;
 
 public class HomeFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     Toolbar toolbar;
-    private static final int REQUEST_LOCATION = 1;
+    private static final int REQUEST_LOCATION = 139;
 
     FloatingActionButton smsButton;
 	GoogleApiClient mApiClient;

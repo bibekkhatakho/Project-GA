@@ -101,13 +101,13 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     private final int UPDATE_INTERVAL =  3 * 60 * 1000;
     private final int FASTEST_INTERVAL = 30 * 1000;
-    private final int REQ_PERMISSION = 999;
+    private final int REQ_PERMISSION = 140;
     double lat,lon;
     boolean geoFenceLocationExists = false;
     String guardianEmail;
     private final String KEY_GEOFENCE_LAT = "GEOFENCE LATITUDE";
     private final String KEY_GEOFENCE_LON = "GEOFENCE LONGITUDE";
-    public static final int SEND_SMS = 101;
+    public static final int SEND_SMS = 141;
     private final int GEOFENCE_REQ_CODE = 0;
 
 

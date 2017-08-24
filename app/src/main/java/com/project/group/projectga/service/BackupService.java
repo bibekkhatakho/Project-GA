@@ -1,9 +1,11 @@
 package com.project.group.projectga.service;
 
+import android.Manifest;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.project.group.projectga.activities.MainMenuActivity;
 import com.project.group.projectga.models.Model_images;
 import com.project.group.projectga.preferences.Preferences;
 
@@ -44,6 +49,8 @@ public class BackupService extends IntentService {
     private FirebaseAuth firebaseAuth;
     private StorageReference storageReference;
     private DatabaseReference databaseReference;
+
+    private static final int REQUEST_PERMISSIONS = 145;
 
     public static ArrayList<Model_images> al_images = new ArrayList<>();
 
@@ -123,7 +130,6 @@ public class BackupService extends IntentService {
                     al_images.add(obj_model);
                 }
             }
-        }
 
             for (int i = 0; i < al_images.size(); i++) {
                 Log.e("FOLDER", al_images.get(i).getStr_folder());
@@ -140,7 +146,7 @@ public class BackupService extends IntentService {
                     databaseReference.child(fileUriPeriod).child("folder").setValue(folder);
 
                     Bitmap bitmap = BitmapFactory.decodeFile((al_images.get(i).getAl_imagepath().get(j)).toString());
-                    if(bitmap != null && !bitmap.toString().isEmpty()) {
+                    if (bitmap != null && !bitmap.toString().isEmpty()) {
                         bitmap = rotateImage(bitmap, (al_images.get(i).getAl_imagepath().get(j)).toString());
 
 
@@ -156,6 +162,7 @@ public class BackupService extends IntentService {
                 storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
             }
         }
+    }
 
     private Bitmap rotateImage(Bitmap bitmap, String photoPath) {
         Bitmap rotatedBitmap = bitmap;

@@ -67,7 +67,7 @@ public class SignInActivity extends CoreActivity implements View.OnFocusChangeLi
     @BindView(R.id.signInWithGoogle)
     protected Button signInWithGoogleButton;
 
-    private final static int RC_SIGN_IN = 2;
+    private final static int RC_SIGN_IN = 134;
     private static final String TAG = "MainActivity";
     FirebaseAuth.AuthStateListener firebaseAuthListener;
     DatabaseReference databaseReference;

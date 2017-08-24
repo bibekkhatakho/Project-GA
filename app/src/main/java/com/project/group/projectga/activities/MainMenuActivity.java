@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -85,7 +86,9 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
     private Drawer result = null;
     AccountHeader headerResult;
-    private static final int REQUEST_LOCATION = 1;
+    private static final int REQUEST_LOCATION = 127;
+    private static final int REQUEST_PERMISSIONS = 128;
+
 
     boolean drivingcheckPrimary = true;
     String userStatus;
@@ -107,6 +110,8 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     Timer timerToAskFuel;
     String guardianPicture;
     String patientPicture;
+    String patientNumber;
+    String guardianNumber;
 
     boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false, backupFlag;
     String userId;
@@ -329,17 +334,21 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                         myEmail = profile.getEmail();
                         myName = profile.getFullName();
                         patientPicture = profile.getProfile();
+                        patientNumber = profile.getPhoneNumber();
                         databaseReferenceGuardian.child(guardianEmail).child("patientEmail").setValue(myEmail);
                         databaseReferenceGuardian.child(guardianEmail).child("patientName").setValue(myName);
                         databaseReferenceGuardian.child(guardianEmail).child("patientPicture").setValue(patientPicture);
+                        databaseReferenceGuardian.child(guardianEmail).child("patientNumber").setValue(patientNumber);
                     }
                     if (userType.equalsIgnoreCase("Guardian User")) {
                         guardianEmail = profile.getEmail();
                         guardianEmail = guardianEmail.replace(".", ",");
                         guardianName = profile.getFullName();
                         guardianPicture = profile.getProfile();
+                        guardianNumber = profile.getPhoneNumber();
                         databaseReferenceGuardian.child(guardianEmail).child("guardianName").setValue(guardianName);
                         databaseReferenceGuardian.child(guardianEmail).child("guardianPicture").setValue(guardianPicture);
+                        databaseReferenceGuardian.child(guardianEmail).child("guardianNumber").setValue(guardianNumber);
                     }
                     if (profilePic != null && !profilePic.equals("")) {
                         userProfile.withIcon(profilePic);
@@ -375,7 +384,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
             startFragment(fragment);
             result.setSelection(maps);
         }
-        result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+            result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
             @Override
             public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
 
@@ -642,30 +651,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     @Override
     protected void onResume() {
         super.onResume();
-        ActivityCompat.requestPermissions(MainMenuActivity.this,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case 1: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission granted and now can proceed
-                    loadPreferences();
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(MainMenuActivity.this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
-                }
-                return;
-            }
-            // add other cases for more permissions
-        }
+        loadPreferences();
     }
 
     @Override
@@ -682,7 +668,40 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
         startProactiveFunctionality(notificationFlag);
         startProactiveFunctionalityForFuel(notificationFlag);
-        startBackupService(backupFlag);
+        if ((ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+            if ((ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) && (ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE))) {
+
+            } else {
+                ActivityCompat.requestPermissions(MainMenuActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                        REQUEST_PERMISSIONS);
+            }
+        }else {
+            Log.e("Else","Else");
+            startBackupService(backupFlag);
+        }
+        //startBackupService(backupFlag);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case REQUEST_PERMISSIONS: {
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        startBackupService(backupFlag);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "The app was not allowed to read or write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        }
     }
 
     public void startBackupService(boolean backupFlag){

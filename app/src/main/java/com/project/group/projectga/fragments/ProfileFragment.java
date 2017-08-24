@@ -68,8 +68,8 @@ public class ProfileFragment extends Fragment {
 
     ConstraintLayout guardianDividerLayout, guardianLayout;
 
-    private static final int RC_PHOTO_PICKER = 3;
-    public static final int RC_CAMERA_CODE = 123;
+    private static final int RC_PHOTO_PICKER = 143;
+    public static final int RC_CAMERA_CODE = 144;
 
     String userId;
 	String guardianEmailText;
@@ -148,8 +148,9 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Profile profile = dataSnapshot.getValue(Profile.class);
-                nameText.setText(profile.getFullName());
-                emailText.setText(profile.getEmail());
+                    nameText.setText(profile.getFullName());
+                    emailText.setText(profile.getEmail());
+
                 if(userType.equalsIgnoreCase("Guardian User")) {
                     guardianEmailText = profile.getEmail();
                     guardianEmailText = guardianEmailText.replace(".", ",");
@@ -160,9 +161,11 @@ public class ProfileFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
                             if (dataSnapshot.exists()) {
-                                guardianEmail.setText(locationModel.getPatientEmail());
-                                guardianName.setText(locationModel.getPatientName());
-                                Picasso.with(getContext()).load(locationModel.getPatientPicture()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularGuardianPhoto);
+                                if(locationModel != null) {
+                                    guardianEmail.setText(locationModel.getPatientEmail());
+                                    guardianName.setText(locationModel.getPatientName());
+                                    Picasso.with(getContext()).load(locationModel.getPatientPicture()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularGuardianPhoto);
+                                }
                             }
                         }
                         @Override
@@ -182,8 +185,14 @@ public class ProfileFragment extends Fragment {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
                             if(dataSnapshot.exists()) {
-                                guardianName.setText(locationModel.getGuardianName());
-                                Picasso.with(getContext()).load(locationModel.getGuardianPicture()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularGuardianPhoto);
+                                if(locationModel != null) {
+                                    if (locationModel.getGuardianName() != null) {
+                                        guardianName.setText(locationModel.getGuardianName());
+                                    } else {
+                                        guardianName.setText(getString(R.string.fullName));
+                                    }
+                                    Picasso.with(getContext()).load(locationModel.getGuardianPicture()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(circularGuardianPhoto);
+                                }
                             }
                         }
 

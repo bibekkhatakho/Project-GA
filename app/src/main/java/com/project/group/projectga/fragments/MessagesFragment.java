@@ -4,9 +4,11 @@ import android.Manifest;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -29,7 +31,15 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
+import com.project.group.projectga.models.LocationModel;
+import com.project.group.projectga.models.Profile;
+import com.project.group.projectga.preferences.Preferences;
 
 import java.util.ArrayList;
 
@@ -47,9 +57,16 @@ public class MessagesFragment extends Fragment
     String[] columns = new String[] { "address", "person", "date", "body","type" };
     private Context context;
 
+    String userId;
+    String number, numberPlus;
+    String guardianEmail;
+
+    DatabaseReference databaseReference;
+    DatabaseReference databaseReferenceGuardian;
+
     Toolbar toolbar;
 
-    private static final int READ_SMS_PERMISSIONS_REQUEST = 1;
+    private static final int READ_SMS_PERMISSIONS_REQUEST = 142;
 
     public static MessagesFragment instance()
     {
@@ -92,6 +109,105 @@ public class MessagesFragment extends Fragment
         arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, smsMessagesList);
         messages.setAdapter(arrayAdapter);
 
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String userType = preferences.getString(Preferences.USER_TYPE, "");
+        String userIdPref = preferences.getString(Preferences.USERID, "");
+
+        if (userIdPref != null) {
+            userId = userIdPref;
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+            databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
+        }
+
+        if (userType.equalsIgnoreCase("Standard User")) {
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile profile = dataSnapshot.getValue(Profile.class);
+                    if(dataSnapshot.exists()) {
+                        if(profile !=null) {
+                            guardianEmail = profile.getGuardianEmail().replace(".", ",");
+                        }
+                        databaseReferenceGuardian = databaseReferenceGuardian.child(guardianEmail);
+
+                        databaseReferenceGuardian.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                                if(dataSnapshot.exists()) {
+                                    if(locationModel !=null && !locationModel.toString().isEmpty() && number != null && !number.isEmpty()) {
+                                        number = locationModel.getGuardianNumber();
+                                        number = number.replaceAll("[^0-9]", "");
+                                        numberPlus = "+1" + number;
+
+                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                            getPermissionToReadSMS();
+                                        } else {
+                                            refreshSmsInbox();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+        if (userType.equalsIgnoreCase("Guardian User")) {
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Profile profile = dataSnapshot.getValue(Profile.class);
+                    if(dataSnapshot.exists()) {
+                        if(profile != null) {
+                            guardianEmail = profile.getEmail().replace(".", ",");
+                        }
+                        databaseReferenceGuardian = databaseReferenceGuardian.child(guardianEmail);
+
+                        databaseReferenceGuardian.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                                if(dataSnapshot.exists()) {
+                                    if(locationModel !=null) {
+                                        number = locationModel.getPatientNumber();
+                                        number = number.replaceAll("[^0-9]", "");
+                                        numberPlus = "+1" + number;
+
+                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                            getPermissionToReadSMS();
+                                        } else {
+                                            refreshSmsInbox();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
         buttonSend.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -104,11 +220,11 @@ public class MessagesFragment extends Fragment
                 else
                 {
                     smsBody = input.getText().toString();
-                    smsAddress = "8172137126";
+                    smsAddress = number;
                     smsManager.sendTextMessage(smsAddress, null, smsBody, null, null);
 
                     //Toast.makeText(context, "Message sent!", Toast.LENGTH_SHORT).show();
-                    String message = "SMS To: " + "8172137126" +
+                    String message = "SMS To: " + number +
                             "\n" + smsBody + "\n";
                     updateInbox(message);
 
@@ -188,7 +304,7 @@ public class MessagesFragment extends Fragment
                 str = "SMS From: " + smsInboxCursor.getString(indexAddress) +
                         "\n" + smsInboxCursor.getString(indexBody) + "\n";
             }
-            if (smsInboxCursor.getString(indexAddress).equals("+16822397604") || smsInboxCursor.getString(indexAddress).equals("6822397604")) {
+            if (smsInboxCursor.getString(indexAddress).equals(numberPlus) || smsInboxCursor.getString(indexAddress).equals(number)) {
                 arrayAdapter.add(str);
             }
         } while (smsInboxCursor.moveToNext());

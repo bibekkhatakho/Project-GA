@@ -99,9 +99,9 @@ public class PhotosActivity extends CoreActivity{
 
     Voice voice;
 
-    private final int REQ_CODE_SPEECH_INPUT_NAME = 50;
-    private final int REQ_CODE_SPEECH_INPUT_SHORT = 100;
-    private final int REQ_CODE_SPEECH_INPUT_LONG = 200;
+    private final int REQ_CODE_SPEECH_INPUT_NAME = 131;
+    private final int REQ_CODE_SPEECH_INPUT_SHORT = 132;
+    private final int REQ_CODE_SPEECH_INPUT_LONG = 133;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

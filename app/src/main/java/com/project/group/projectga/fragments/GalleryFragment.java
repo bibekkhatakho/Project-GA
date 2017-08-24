@@ -54,8 +54,8 @@ public class GalleryFragment extends Fragment {
     Adapter_PhotosFolder obj_adapter;
     GridView gv_folder;
     FloatingActionButton cameraButton;
-    private static final int REQUEST_PERMISSIONS = 100;
-    static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int REQUEST_PERMISSIONS = 135;
+    static final int REQUEST_TAKE_PHOTO = 136;
 
     String projectName = "ProjectGA";
     File directory;

@@ -69,7 +69,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
 
     Toolbar toolbar;
     private GoogleMap mMap;
-    private static final int REQUEST_LOCATION = 1;
+    private static final int REQUEST_LOCATION = 137;
     private LatLng latlangForGeo;
     private Circle mCircle1;
     private Circle mCircle2;
@@ -86,7 +86,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     boolean geoFenceLocationExists = false;
     private LatLng testLL;
 
-    private static final int REQUEST_PERMISSIONS = 100;
+    private static final int REQUEST_PERMISSIONS = 138;
 
     String userId;
 
@@ -237,19 +237,23 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                                 if (patientMarker != null) {
                                     patientMarker.remove();
                                 }
-                                currentLat = locationModel.getCurrentLat();
-                                currentLong = locationModel.getCurrentLong();
+                                if (locationModel != null && !locationModel.toString().isEmpty() && !locationModel.getCurrentLat().isEmpty() && !locationModel.getCurrentLong().isEmpty() && locationModel.getCurrentLat() != null && locationModel.getCurrentLong() != null) {
+                                    currentLat = locationModel.getCurrentLat();
+                                    currentLong = locationModel.getCurrentLong();
+
+
+                                Double currentLatDouble = Double.parseDouble(currentLat);
+                                Double currentLongDouble = Double.parseDouble(currentLong);
+                                LatLng newLocation = new LatLng(currentLatDouble, currentLongDouble);
+                                MarkerOptions markerOptions = new MarkerOptions()
+                                        .position(newLocation)
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                        .title("Patient");
+                                patientMarker = mMap.addMarker(markerOptions);
+                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 15);
+                                mMap.animateCamera(cameraUpdate);
+                                }
                             }
-                            Double currentLatDouble = Double.parseDouble(currentLat);
-                            Double currentLongDouble = Double.parseDouble(currentLong);
-                            LatLng newLocation = new LatLng(currentLatDouble, currentLongDouble);
-                            MarkerOptions markerOptions = new MarkerOptions()
-                                    .position(newLocation)
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                                    .title("Patient");
-                            patientMarker = mMap.addMarker(markerOptions);
-                            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 15);
-                            mMap.animateCamera(cameraUpdate);
                         }
 
                         @Override
