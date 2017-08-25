@@ -102,7 +102,8 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
                             android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -110,6 +111,7 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
                             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             android.Manifest.permission.SET_ALARM,
                             android.Manifest.permission.CALL_PHONE,
+                            android.Manifest.permission.CAMERA,
                             android.Manifest.permission.RECEIVE_SMS,
                             android.Manifest.permission.READ_SMS,
                             android.Manifest.permission.SEND_SMS},

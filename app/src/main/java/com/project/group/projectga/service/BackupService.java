@@ -71,7 +71,7 @@ public class BackupService extends IntentService {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String userIdPref = sharedPreferences.getString(Preferences.USERID, "");
 
-        if (userIdPref != null) {
+        if (userIdPref !=null) {
             userId = userIdPref;
             firebaseAuth = FirebaseAuth.getInstance();
             storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");

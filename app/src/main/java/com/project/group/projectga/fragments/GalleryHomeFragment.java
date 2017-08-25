@@ -34,8 +34,6 @@ public class GalleryHomeFragment extends Fragment {
     TextInputEditText gallery;
     TextInputEditText importantPeople;
 
-    private static final int REQUEST_CAMERA = 199;
-
     public GalleryHomeFragment(){
 
     }
@@ -61,15 +59,6 @@ public class GalleryHomeFragment extends Fragment {
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_menu_green_24dp));
 
         setHasOptionsMenu(true);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{
-                            android.Manifest.permission.CAMERA},
-                    REQUEST_CAMERA);
-        } else {
-            Log.e("DB", "PERMISSION GRANTED");
-        }
-
         initControls(view);
         return view;
     }

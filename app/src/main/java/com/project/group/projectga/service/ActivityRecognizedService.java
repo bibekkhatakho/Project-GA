@@ -124,4 +124,5 @@ public class ActivityRecognizedService extends IntentService {
         databaseReference.setValue(status);
         //Toast.makeText(this, "status set", Toast.LENGTH_SHORT).show();
     }
+
 }

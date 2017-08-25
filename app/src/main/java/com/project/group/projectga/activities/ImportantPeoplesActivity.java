@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -50,7 +51,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +63,7 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 /**
  * Created by ramjiseetharaman on 7/13/17.
@@ -96,6 +100,8 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     protected FloatingActionButton doneButton;
     @BindView(R.id.toolbar)
     protected Toolbar toolbar;
+    @BindView(R.id.gallButtonPeople)
+    protected FancyButton galleryButton;
 
     String imgURL;
     Voice voice;
@@ -119,6 +125,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     private final int MAX_WORD_LIMIT_LONG = 50;
     private final int REQ_CODE_SPEECH_INPUT_SHORT = 100;
     private final int REQ_CODE_SPEECH_INPUT_LONG = 200;
+    private final int RC_GALLERY_PICKER = 666;
 
 
     private InputFilter mInputFilter;
@@ -195,7 +202,16 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             }
         });
 
-        Intent intent = getIntent();
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_GALLERY_PICKER);
+            }
+        });
+
 
         personImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,6 +263,8 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
             onAuthFailure();
         }
+
+        Intent intent = getIntent();
 
         importantPeoplesKey = null;
 
@@ -348,6 +366,30 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == RC_GALLERY_PICKER && resultCode == RESULT_OK) {
+
+            Uri selectedImageUri = data.getData();
+
+            Bitmap bitmapGallery = useImage(selectedImageUri);
+            photoPath = selectedImageUri.getPath();
+            personImage.setImageBitmap(bitmapGallery);
+            personImage.setDrawingCacheEnabled(true);
+            personImage.buildDrawingCache();
+            Bitmap personBitmap = personImage.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            personBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] d = baos.toByteArray();
+
+            final StorageReference photoref = storageReference.child(userId).child(photoPath);
+            photoref.putBytes(d).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
+
+                }
+            });
+        }
+
         //Adding code for Testing Image Cropping - Start
 
         if (resultCode != RESULT_OK) {
@@ -446,6 +488,19 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             longDescriptionTextInputEditText.setText(result.get(0));
         }
     }
+
+    private Bitmap useImage(Uri uri)
+    {
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //use the bitmap as you like
+        return bitmap;
+    }
+
     private Bitmap rotateImage(Bitmap bitmap) {
         Bitmap rotatedBitmap = bitmap;
         ExifInterface exifInterface = null;

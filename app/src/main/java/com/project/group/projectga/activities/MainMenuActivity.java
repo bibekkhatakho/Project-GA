@@ -68,7 +68,9 @@ import com.project.group.projectga.fragments.TagLocateFragment;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
+import com.project.group.projectga.service.ActivityRecognizedService;
 import com.project.group.projectga.service.BackupReceiver;
+import com.project.group.projectga.service.BackupService;
 import com.project.group.projectga.service.CurrentLocation;
 import com.squareup.picasso.Picasso;
 
@@ -458,6 +460,8 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.clear();
                     editor.apply();
+                    //stopService(new Intent(MainMenuActivity.this, BackupService.class));
+                    //stopService(new Intent(MainMenuActivity.this, ActivityRecognizedService.class));
                     intent = new Intent(MainMenuActivity.this, SplashActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
