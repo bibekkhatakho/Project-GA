@@ -299,8 +299,11 @@ public class PhotosActivity extends CoreActivity{
                             if(memory != null) {
                                 memoryKey = memory.getKey();
                                 String shortName = memory.getName();
+                                String eventDateMem = memory.getDate();
                                 String shortDes = memory.getShortDescription();
                                 voice.say(shortName);
+                                voice.playSilence();
+                                voice.say(eventDateMem);
                                 voice.playSilence();
                                 voice.say(shortDes);
                             }
@@ -311,9 +314,12 @@ public class PhotosActivity extends CoreActivity{
                             if(memory != null) {
                                 memoryKey = memory.getKey();
                                 String shortName = memory.getName();
+                                String eventNameMem = memory.getDate();
                                 String shortDesc = memory.getShortDescription();
                                 String longDes = memory.getLongDescription();
                                 voice.say(shortName);
+                                voice.playSilence();
+                                voice.say(eventNameMem);
                                 voice.playSilence();
                                 voice.say(shortDesc);
                                 voice.playSilence();

@@ -60,9 +60,14 @@ public class MessagesFragment extends Fragment
     String userId;
     String number, numberPlus;
     String guardianEmail;
+    String guardianName, standardName;
 
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
+
+    final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+    final String userType = preferences.getString(Preferences.USER_TYPE, "");
+    String userIdPref = preferences.getString(Preferences.USERID, "");
 
     Toolbar toolbar;
 
@@ -109,10 +114,6 @@ public class MessagesFragment extends Fragment
         arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, smsMessagesList);
         messages.setAdapter(arrayAdapter);
 
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        final String userType = preferences.getString(Preferences.USER_TYPE, "");
-        String userIdPref = preferences.getString(Preferences.USERID, "");
-
         if (userIdPref != null) {
             userId = userIdPref;
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
@@ -135,16 +136,18 @@ public class MessagesFragment extends Fragment
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
                                 if(dataSnapshot.exists()) {
-                                    if(locationModel !=null && !locationModel.toString().isEmpty() && number != null && !number.isEmpty()) {
-                                        number = locationModel.getGuardianNumber();
-                                        number = number.replaceAll("[^0-9]", "");
-                                        numberPlus = "+1" + number;
+                                    number = locationModel.getGuardianNumber();
+                                    guardianName = locationModel.getGuardianName();
+                                    number = number.replaceAll("[^0-9]","");
+                                    numberPlus = "+1" + number;
 
-                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                            getPermissionToReadSMS();
-                                        } else {
-                                            refreshSmsInbox();
-                                        }
+                                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED)
+                                    {
+                                        getPermissionToReadSMS();
+                                    }
+                                    else
+                                    {
+                                        refreshStandardSmsInbox();
                                     }
                                 }
                             }
@@ -181,14 +184,17 @@ public class MessagesFragment extends Fragment
                                 if(dataSnapshot.exists()) {
                                     if(locationModel !=null) {
                                         number = locationModel.getPatientNumber();
+										standardName = locationModel.getPatientName();
                                         number = number.replaceAll("[^0-9]", "");
                                         numberPlus = "+1" + number;
 
-                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                            getPermissionToReadSMS();
-                                        } else {
-                                            refreshSmsInbox();
-                                        }
+                                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED)
+                                    {
+                                        getPermissionToReadSMS();
+                                    }
+                                    else
+                                    {
+                                        refreshGuardianSmsInbox();
                                     }
                                 }
                             }
@@ -242,7 +248,12 @@ public class MessagesFragment extends Fragment
         }
         else
         {
-            refreshSmsInbox();
+            if(userType.equalsIgnoreCase("Standard User")) {
+                refreshStandardSmsInbox();
+            }
+            if(userType.equalsIgnoreCase("Guardian User")) {
+                refreshGuardianSmsInbox();
+            }
         }
 
         return view;
@@ -270,7 +281,12 @@ public class MessagesFragment extends Fragment
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 Toast.makeText(this.getContext(), "Read SMS permission granted", Toast.LENGTH_SHORT).show();
-                refreshSmsInbox();
+                if(userType.equalsIgnoreCase("Standard User")) {
+                    refreshStandardSmsInbox();
+                }
+                if(userType.equalsIgnoreCase("Guardian User")) {
+                    refreshGuardianSmsInbox();
+                }
             }
             else
             {
@@ -284,7 +300,31 @@ public class MessagesFragment extends Fragment
         }
     }
 
-    public void refreshSmsInbox()
+    public void refreshGuardianSmsInbox() {
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        getPermissionToReadSMS();
+        Cursor smsInboxCursor = contentResolver.query(Uri.parse("content://sms"), null, null, null, null);
+        int indexBody = smsInboxCursor.getColumnIndex("body");
+        int indexAddress = smsInboxCursor.getColumnIndex("address");
+        if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return;
+        arrayAdapter.clear();
+
+        do {
+            String type = smsInboxCursor.getString(smsInboxCursor.getColumnIndex(columns[4]));
+            if (type.equals("2")) {
+                str = "You" +
+                        "\n" + smsInboxCursor.getString(indexBody) + "\n";
+            } else {
+                str = standardName +
+                        "\n" + smsInboxCursor.getString(indexBody) + "\n";
+            }
+            if (smsInboxCursor.getString(indexAddress).equals(numberPlus) || smsInboxCursor.getString(indexAddress).equals(number)) {
+                arrayAdapter.add(str);
+            }
+        } while (smsInboxCursor.moveToNext());
+    }
+
+    public void refreshStandardSmsInbox()
     {
         ContentResolver contentResolver = getActivity().getContentResolver();
         getPermissionToReadSMS();
@@ -293,15 +333,16 @@ public class MessagesFragment extends Fragment
         int indexAddress = smsInboxCursor.getColumnIndex("address");
         if (indexBody < 0 || !smsInboxCursor.moveToFirst()) return;
         arrayAdapter.clear();
+
         do
         {
             String type = smsInboxCursor.getString(smsInboxCursor.getColumnIndex(columns[4]));
             if (type.equals("2")) {
-                str = "SMS To: " + smsInboxCursor.getString(indexAddress) +
+                str = "You" +
                         "\n" + smsInboxCursor.getString(indexBody) + "\n";
             }
             else {
-                str = "SMS From: " + smsInboxCursor.getString(indexAddress) +
+                str = guardianName +
                         "\n" + smsInboxCursor.getString(indexBody) + "\n";
             }
             if (smsInboxCursor.getString(indexAddress).equals(numberPlus) || smsInboxCursor.getString(indexAddress).equals(number)) {

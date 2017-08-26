@@ -193,7 +193,10 @@
                 android:drawableStart="@drawable/ic_attach_file_green_24dp"
                 android:hint="@string/longDesc"
                 android:alpha="0.5"
-                android:inputType="textEmailAddress"
+                android:inputType="textMultiLine"
+                android:gravity="start|top"
+                android:lines="5"
+                android:scrollbars="vertical"
                 tools:ignore="MissingPrefix,UnusedAttribute" />
 
         </android.support.design.widget.TextInputLayout>
