@@ -181,20 +181,18 @@ public class MessagesFragment extends Fragment
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
-                                if(dataSnapshot.exists()) {
-                                    if(locationModel !=null) {
+                                if (dataSnapshot.exists()) {
+                                    if (locationModel != null) {
                                         number = locationModel.getPatientNumber();
-										standardName = locationModel.getPatientName();
+                                        standardName = locationModel.getPatientName();
                                         number = number.replaceAll("[^0-9]", "");
                                         numberPlus = "+1" + number;
 
-                                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED)
-                                    {
-                                        getPermissionToReadSMS();
-                                    }
-                                    else
-                                    {
-                                        refreshGuardianSmsInbox();
+                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                            getPermissionToReadSMS();
+                                        } else {
+                                            refreshGuardianSmsInbox();
+                                        }
                                     }
                                 }
                             }
