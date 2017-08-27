@@ -81,6 +81,7 @@ public class BackupService extends IntentService {
     }
 
     public void backupPhotos(Context context) {
+        //Toast.makeText(context, "Inside Backup", Toast.LENGTH_SHORT).show();
         al_images.clear();
 
         int int_position = 0;
@@ -90,6 +91,7 @@ public class BackupService extends IntentService {
 
         String absolutePathOfImage = null;
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        //Toast.makeText(context, "Inside Backup" + uri, Toast.LENGTH_SHORT).show();
 
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
@@ -112,24 +114,23 @@ public class BackupService extends IntentService {
                     boolean_folder = false;
                 }
             }
+                if(al_images.size() > 0) {
+                    if (boolean_folder) {
 
-            if (al_images.size() > 0 && !al_images.isEmpty()) {
-                if (boolean_folder) {
+                        ArrayList<String> al_path = new ArrayList<>();
+                        al_path.addAll(al_images.get(int_position).getAl_imagepath());
+                        al_path.add(absolutePathOfImage);
+                        al_images.get(int_position).setAl_imagepath(al_path);
 
-                    ArrayList<String> al_path = new ArrayList<>();
-                    al_path.addAll(al_images.get(int_position).getAl_imagepath());
-                    al_path.add(absolutePathOfImage);
-                    al_images.get(int_position).setAl_imagepath(al_path);
-
-                } else {
-                    ArrayList<String> al_path = new ArrayList<>();
-                    al_path.add(absolutePathOfImage);
-                    Model_images obj_model = new Model_images();
-                    obj_model.setStr_folder(cursor.getString(column_index_folder_name));
-                    obj_model.setAl_imagepath(al_path);
-                    al_images.add(obj_model);
+                    } else {
+                        ArrayList<String> al_path = new ArrayList<>();
+                        al_path.add(absolutePathOfImage);
+                        Model_images obj_model = new Model_images();
+                        obj_model.setStr_folder(cursor.getString(column_index_folder_name));
+                        obj_model.setAl_imagepath(al_path);
+                        al_images.add(obj_model);
+                    }
                 }
-            }
 
             for (int i = 0; i < al_images.size(); i++) {
                 Log.e("FOLDER", al_images.get(i).getStr_folder());

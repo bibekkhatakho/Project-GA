@@ -123,7 +123,7 @@ public class RecognitionFragment extends Fragment {
                     }while(cursor.moveToNext());
                     cursor.close();
                 }
-                //result = rotateImage(result);
+                result = rotateImage(result);
                 personImage.setImageBitmap(result);
 
                 personImage.setDrawingCacheEnabled(true);
@@ -160,15 +160,20 @@ public class RecognitionFragment extends Fragment {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String name = snapshot.child("name").getValue(String.class);
-                        String picURL = snapshot.child("profile").getValue(String.class);
-
                         Log.d(TAG, "onDataChange: person name: " + name);
 
-                        recognizer.addData(name, picURL);
+                        if (snapshot.child("profile").exists()) {
+                            String picURL = snapshot.child("profile").getValue(String.class);
+                            recognizer.addData(name, picURL);
+                        }
+                        else {
+                            Log.d(TAG, "onDataChange: No image saved for this person, skipping");
+                        }
                     }
                     recognizer.buildTrainingSet();
                 } else {
                     Log.d(TAG, "onDataChange: datasnapshot does not exist...");
+                    recognizer.buildTrainingSet();
                 }
             }
 

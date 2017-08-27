@@ -34,7 +34,7 @@ import static com.mikepenz.iconics.Iconics.TAG;
 
 public class RecognitionResultFragment extends Fragment {
 
-    public static final double THRESHOLD = 80;
+    public static final double THRESHOLD = 60;
 
     Toolbar toolbar;
     ArrayList<ImportantPeople> importantPeoplesList;

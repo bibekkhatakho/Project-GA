@@ -685,7 +685,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                         REQUEST_PERMISSIONS);
             }
         }else {
-            Log.e("Else","Else");
+            Log.e("ElseMain","Else");
             startBackupService(backupFlag);
         }
         //startBackupService(backupFlag);

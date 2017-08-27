@@ -65,10 +65,6 @@ public class MessagesFragment extends Fragment
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
 
-    final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-    final String userType = preferences.getString(Preferences.USER_TYPE, "");
-    String userIdPref = preferences.getString(Preferences.USERID, "");
-
     Toolbar toolbar;
 
     private static final int READ_SMS_PERMISSIONS_REQUEST = 142;
@@ -102,7 +98,11 @@ public class MessagesFragment extends Fragment
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(getString(R.string.messages_label));
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
-        toolbar.setBackground(getResources().getDrawable(R.drawable.tile_green));
+        toolbar.setBackground(getResources().getDrawable(R.drawable.tile_red));
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String userType = preferences.getString(Preferences.USER_TYPE, "");
+        String userIdPref = preferences.getString(Preferences.USERID, "");
 
         context = this.getContext();
         messages = (ListView) view.findViewById(R.id.messages);
@@ -273,6 +273,9 @@ public class MessagesFragment extends Fragment
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[],int[] grantResults)
     {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String userType = preferences.getString(Preferences.USER_TYPE, "");
+        String userIdPref = preferences.getString(Preferences.USERID, "");
         // Make sure it's our original READ_CONTACTS request
         if (requestCode == READ_SMS_PERMISSIONS_REQUEST)
         {
@@ -310,11 +313,11 @@ public class MessagesFragment extends Fragment
         do {
             String type = smsInboxCursor.getString(smsInboxCursor.getColumnIndex(columns[4]));
             if (type.equals("2")) {
-                str = "You" +
-                        "\n" + smsInboxCursor.getString(indexBody) + "\n";
+                str = "\nYou:" +
+                        "\n\n" + smsInboxCursor.getString(indexBody);
             } else {
-                str = standardName +
-                        "\n" + smsInboxCursor.getString(indexBody) + "\n";
+                str = "\n" + standardName + ":" +
+                        "\n\n" + smsInboxCursor.getString(indexBody);
             }
             if (smsInboxCursor.getString(indexAddress).equals(numberPlus) || smsInboxCursor.getString(indexAddress).equals(number)) {
                 arrayAdapter.add(str);
@@ -336,12 +339,12 @@ public class MessagesFragment extends Fragment
         {
             String type = smsInboxCursor.getString(smsInboxCursor.getColumnIndex(columns[4]));
             if (type.equals("2")) {
-                str = "You" +
-                        "\n" + smsInboxCursor.getString(indexBody) + "\n";
+                str = "\nYou:" +
+                        "\n\n" + smsInboxCursor.getString(indexBody);
             }
             else {
-                str = guardianName +
-                        "\n" + smsInboxCursor.getString(indexBody) + "\n";
+                str = "\n" + guardianName + ":" +
+                        "\n\n" + smsInboxCursor.getString(indexBody);
             }
             if (smsInboxCursor.getString(indexAddress).equals(numberPlus) || smsInboxCursor.getString(indexAddress).equals(number)) {
                 arrayAdapter.add(str);

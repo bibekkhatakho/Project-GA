@@ -2,20 +2,26 @@ package com.project.group.projectga.models;
 
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.media.FaceDetector;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.*;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.project.group.projectga.fragments.RecognitionFragment;
@@ -48,54 +54,33 @@ import static org.bytedeco.javacpp.opencv_face.createLBPHFaceRecognizer;
 public class Recognition {
 
 
-    public static final int size = 150;
+    public static final int SIZE = 150;
     public static Bitmap testImage;
     public static String result;
     public static double distance;
+    public static final long ONE_MEGABYTE = 1024 * 1024;
 
 
     private FragmentActivity activity;
     private RecognitionFragment fragment;
 
+    FirebaseStorage storage;
 
-//    opencv_face.FaceRecognizer eigenFR;
+
+    //    opencv_face.FaceRecognizer eigenFR;
 //    opencv_face.FaceRecognizer fisherFR;
     private opencv_face.FaceRecognizer LBPHFR = createLBPHFaceRecognizer();
 
     private List<Label> labels = new ArrayList<>();
     private List<Integer> ids = new ArrayList<>();
     private List<String> urls = new ArrayList<>();
-
-    public static Bitmap cropToFace(Bitmap source) {
-        Bitmap result = source.copy(Bitmap.Config.RGB_565, true);
-        FaceDetector facer = new FaceDetector(result.getWidth(), result.getHeight(), 1);
-        FaceDetector.Face[] faces = new FaceDetector.Face[1];
-
-        int numFaces = facer.findFaces(result, faces);
-        
-        if ( numFaces > 0){
-            PointF midpoint = new PointF();
-            faces[0].getMidPoint(midpoint);
-
-            float distance = faces[0].eyesDistance();
-
-            int startX = (int) Math.round(midpoint.x - (distance * 1.5));
-            int startY = (int) Math.round(midpoint.y - distance);
-
-            int width = Math.round(distance * 3);
-
-            return Bitmap.createBitmap(result, startX, startY, width, width);
-        }
-        else {
-            Log.d(TAG, "cropToFace: NO FACES FOUND");
-            return source;
-        }
-    }
-
     private class Label {
         String name;
         int id;
     }
+
+
+
 
     private class TrainingSet {
         opencv_core.MatVector images;
@@ -106,7 +91,7 @@ public class Recognition {
 
     private TrainingSet training = new TrainingSet();
 
-//    public void waitForLock() {
+    //    public void waitForLock() {
 //        Log.d(TAG, "waitForLock: start");
 //        synchronized (LOCK) {
 //            while (wait) {
@@ -131,6 +116,56 @@ public class Recognition {
 //            LOCK.notifyAll();
 //        }
 //    }
+    public static Bitmap cropToFace(Bitmap source) {
+        Bitmap result = source.copy(Bitmap.Config.RGB_565, true);
+        Log.d(TAG, "cropToFace: image of size: " + result.getWidth() + " * " + result.getHeight());
+
+        final int max_size = 1600;
+        int size = Math.max(result.getWidth(), result.getHeight());
+        double factor = ((double)max_size) / ((double)size);
+
+        if (size > max_size) {
+            int w = (int) (result.getWidth() * factor);
+            int h = (int) (result.getHeight() * factor);
+
+            result = Bitmap.createScaledBitmap(result, w, h, true);
+        }
+
+        FaceDetector facer = new FaceDetector(result.getWidth(), result.getHeight(), 1);
+        FaceDetector.Face[] faces = new FaceDetector.Face[1];
+
+        int numFaces = facer.findFaces(result, faces);
+
+        if ( numFaces > 0){
+            PointF midpoint = new PointF();
+            faces[0].getMidPoint(midpoint);
+
+            float distance = faces[0].eyesDistance();
+
+            int startX = (int) Math.round(midpoint.x - (distance * 1.5));
+            int startY = (int) Math.round(midpoint.y - distance);
+
+            int widthX = Math.round(distance * 3);
+            int widthY = widthX;
+
+            if (startX < 0) {
+                widthX += startX;
+                startX = 0;
+            }
+            if (startY < 0) {
+                widthY += startY;
+                startY = 0;
+            }
+            if ((startX + widthX) > result.getWidth()) widthX = result.getWidth() - startX;
+            if ((startY + widthY) > result.getWidth()) widthY = result.getHeight() - startY;
+
+            return Bitmap.createBitmap(result, startX, startY, widthX, widthY);
+        }
+        else {
+            Log.d(TAG, "cropToFace: NO FACES FOUND");
+            return source;
+        }
+    }
 
     public void giveContext(FragmentActivity suppliedActivity, RecognitionFragment suppliedFragment) {
         activity = suppliedActivity;
@@ -148,61 +183,64 @@ public class Recognition {
 
     // add to training data
     public void buildTrainingSet() {
+        if (urls.size() > 0) {
 
-        training.size = 0;
+            training.size = 0;
 
-        training.images = new opencv_core.MatVector(ids.size());
-        training.labels = new Mat(ids.size(), 1, CV_32SC1);
-        training.labelsBuf = training.labels.createBuffer();
+            training.images = new opencv_core.MatVector(ids.size());
+            training.labels = new Mat(ids.size(), 1, CV_32SC1);
+            training.labelsBuf = training.labels.createBuffer();
 
-        if (urls.size() != ids.size()) {
-            Log.d(TAG, "buildTrainingSet: size mismatch: urls: " + urls.size() + ", ids: " + ids.size());
+            if (urls.size() != ids.size()) {
+                Log.d(TAG, "buildTrainingSet: size mismatch: urls: " + urls.size() + ", ids: " + ids.size());
+            }
+            else {
+                Log.d(TAG, "buildTrainingSet: Training set construction beginning");
+            }
+
+            storage = FirebaseStorage.getInstance();
+            loadNext();
         }
         else {
-            Log.d(TAG, "buildTrainingSet: Training set construction beginning");
+            Log.d(TAG, "buildTrainingSet: No images exist to build training set.");
+            ((TextView)activity.findViewById(R.id.loadingText)).setText("Please add important people photos in order to access Recognition.");
+            ((ProgressBar)activity.findViewById(R.id.progressBar)).setVisibility(View.GONE);
         }
-
-        //StorageReference httpsReference = getStorage().getReferenceFromUrl();
-
-        loadNext();
     }
 
     private void loadNext() {
 
 //        Log.d(TAG, "loadNext: start");
-        
+
         if (training.size >= ids.size()) {
             ((TextView)activity.findViewById(R.id.loadingText)).setText("Loading Recognition Model...");
             initialTraining();
             return;
         }
-        Picasso.with(activity).load(urls.get(training.size))
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded (final Bitmap bitmap, Picasso.LoadedFrom from){
-//                        Log.d(TAG, "onBitmapLoaded: start");
 
-                        training.images.put(training.size, bitmapToMat(scaleDown(bitmap.copy(bitmap.getConfig(),true))));
-                        training.labelsBuf.put(training.size,ids.get(training.size));
-                        Log.d(TAG, "onBitmapLoaded: added data for id: " + ids.get(training.size));
-                        training.size++;
-                        loadNext();
-                    }
+        StorageReference httpsReference = storage.getReferenceFromUrl(urls.get(training.size));
 
-
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                        loadNext();
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                    }
-                });
+        httpsReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                training.images.put(training.size, bitmapToMat(Bitmap.createScaledBitmap(bmp, SIZE, SIZE, true)));
+                training.labelsBuf.put(training.size, ids.get(training.size));
+                Log.d(TAG, "storage onSuccess: added data for id: " + ids.get(training.size));
+                training.size++;
+                loadNext();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.d(TAG, "onFailure: Failed to load image #: " + training.size);
+                loadNext();
+            }
+        });
 //        Log.d(TAG, "loadNext: bitmap loading initialized, waiting on picasso...");
     }
-    
+
     // update model (left out for now)
 
 
@@ -218,10 +256,8 @@ public class Recognition {
         }
 
         CardView loadingCard = (CardView) activity.findViewById(R.id.loadingCard);
-        CircularImageView personImage = (CircularImageView) activity.findViewById(R.id.personImage);
 
         loadingCard.setVisibility(View.GONE);
-        personImage.setVisibility(View.GONE);
         fragment.setCamButton();
 
 //        eigenFR = createEigenFaceRecognizer();
@@ -232,21 +268,15 @@ public class Recognition {
 //        }
     }
 
-    public static Bitmap scaleDown(Bitmap realImage) {
-        return Bitmap.createScaledBitmap(realImage, size, size, true);
-    }
-
     public void predict(Bitmap bmp) {
-        testImage = scaleDown(bmp);
+        testImage = bmp;
 
         IntPointer label = new IntPointer(1);
         DoublePointer confidence = new DoublePointer(1);
-        LBPHFR.predict(bitmapToMat(testImage), label, confidence);
-        int predictedLabel = label.get(0);
+        LBPHFR.predict(bitmapToMat(Bitmap.createScaledBitmap(bmp, SIZE, SIZE, true)), label, confidence);
 
-        result = getNameFromID(predictedLabel);
+        result = getNameFromID(label.get(0));
         distance = confidence.get(0);
-
 
         FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         Fragment rrf = new RecognitionResultFragment();
