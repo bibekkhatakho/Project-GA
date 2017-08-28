@@ -35,6 +35,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -321,13 +323,28 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
                         @Override
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.set(year, monthOfYear, dayOfMonth);
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
-                            String startDate = dateFormat.format(calendar.getTime());
-                            dateofBirthTextInputEditText.setText(startDate);
+                            Calendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+                            Calendar minAdultAge = new GregorianCalendar();
+                            minAdultAge.add(Calendar.YEAR, -10);
+                            if (minAdultAge.before(calendar)) {
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
+                                String startDate = dateFormat.format(calendar.getTime());
+                                dateOfBirthTextInputLayout.setError("You must be atleast 10 years old to use this app.");
+                                dateofBirthTextInputEditText.setText(startDate);
+                                nextButtonGuardian.setEnabled(false);
+                                nextButtonGuardian.setAlpha(0.5f);
+                            } else {
+                                calendar.set(year, monthOfYear, dayOfMonth);
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("MMM-dd-yyyy", Locale.US);
+                                String startDate = dateFormat.format(calendar.getTime());
+                                dateOfBirthTextInputLayout.setError(null);
+                                dateofBirthTextInputEditText.setText(startDate);
+                                nextButtonGuardian.setEnabled(true);
+                                nextButtonGuardian.setAlpha(1.0f);
+                            }
                         }
                     }, mYear, mMonth, mDay);
+            datePickerDialog.getDatePicker().setMaxDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000).getTime());
             datePickerDialog.show();
         }
     }

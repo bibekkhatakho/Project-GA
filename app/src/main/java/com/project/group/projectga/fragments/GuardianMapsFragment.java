@@ -196,7 +196,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
             Log.d("MapsFragment", "Permission Granted");
             mMap.setMyLocationEnabled(true);
         }
-
+        mMap.setMyLocationEnabled(true);
         if (geoFenceLocationExists) {
             //Toast.makeText(getContext(), "Going inside geoexist true", Toast.LENGTH_SHORT).show();
             if(!geoSetAlready) {
@@ -280,7 +280,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                     if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
 
                     } else {
-                        Toast.makeText(getContext(), "The app was not allowed to read or write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "The app was not allowed to access your location. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
                     }
                 }
             }

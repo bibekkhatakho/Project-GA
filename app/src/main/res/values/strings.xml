@@ -207,7 +207,7 @@
     //Preferences Screen
     <string name="title_activity_preferences">Preferences</string>
     <string name="pref_header_about"> About </string>
-    <string name="app_summary"> App Summary. Get text from Rodrigo, in case this functionality stays\.</string>
+    <string name="app_summary"> GAProject app is a Proof of Concept (POC) release. It is not intended for selling or for publication at Google Playstore, but for demonstration purposes only.</string>
     <string name="title_version"> Version Number </string>
     <string name="app_version"> 1.0 </string>
     <string name="title_send_feedback"> Send Feedback </string>
@@ -238,6 +238,8 @@
     <string name="title_app_notifications"> App notifications</string>
     <string name="title_app_notifications_summary"> Receive general App level Notifications?</string>
     <string name="title_app_notifications_key"> title_app_notifications_key </string>
+    <string name="app_preferences"> App Preferences </string>
+
 
     //Recognition Screen
     <string name="testedPhoto"> Tested Photo </string>

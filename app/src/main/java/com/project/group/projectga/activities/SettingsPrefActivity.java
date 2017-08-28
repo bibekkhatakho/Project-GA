@@ -17,9 +17,17 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,24 +49,39 @@ import java.io.File;
 public class SettingsPrefActivity extends AppCompatPreferenceActivity{
     private static final String TAG = SettingsPrefActivity.class.getSimpleName();
 
-    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // load settings fragment
+        getLayoutInflater().inflate(R.layout.toolbar, (ViewGroup)findViewById(android.R.id.content));
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarPref);
+        toolbar.setTitle(getString(R.string.app_preferences));
+        setSupportActionBar(toolbar);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
+
     }
 
 
     public static class MainPreferenceFragment extends PreferenceFragment {
 
+        Toolbar toolbar;
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View v = super.onCreateView(inflater, container, savedInstanceState);
+            if(v != null) {
+                ListView lv = (ListView) v.findViewById(android.R.id.list);
+                lv.setPadding(0, 120, 0, 30);
+            }
+            return v;
+        }
+
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
-
             // notification preference change listener
             bindPreferenceSummaryToValue(findPreference(getString(R.string.notifications_new_message)));
 
@@ -167,7 +190,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.choose_email_client)));
     }
     public static void restorePhotos(final Context context) {
-        DatabaseReference databaseReferencePhotos = null;
+        DatabaseReference databaseReferencePhotos;
         final StorageReference storageReferencePhotos;
         final StorageReference[] photoRef = new StorageReference[1];
         String userId;
