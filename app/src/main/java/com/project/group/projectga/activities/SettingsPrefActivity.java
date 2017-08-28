@@ -73,7 +73,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
             View v = super.onCreateView(inflater, container, savedInstanceState);
             if(v != null) {
                 ListView lv = (ListView) v.findViewById(android.R.id.list);
-                lv.setPadding(0, 120, 0, 30);
+                lv.setPadding(0, 150, 0, 30);
             }
             return v;
         }
