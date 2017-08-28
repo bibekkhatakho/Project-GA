@@ -114,6 +114,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     String patientPicture;
     String patientNumber;
     String guardianNumber;
+    String numberPlus;
 
     boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false, backupFlag;
     String userId;
@@ -166,26 +167,38 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     startActivity(mapIntent);
                     break;
                 case "geofenceCall":
-                    String phone_number = "+18172137126";
-                    String uri = "tel:" + phone_number.trim();
-                    //Build the intent that will make the phone call
-                    Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
-                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    getApplicationContext().startActivity(callIntent);
+                    databaseReferenceGuardian.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
+                            if(locationModel !=null){
+                                guardianNumber = locationModel.getGuardianNumber();
+                                guardianNumber = guardianNumber.replaceAll("[^0-9]","");
+                                numberPlus = "+1" + guardianNumber;
+                                String uri = "tel:" + numberPlus;
+                                //Build the intent that will make the phone call
+                                Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(uri));
+                                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                if (ActivityCompat.checkSelfPermission(MainMenuActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
+                                    //    ActivityCompat#requestPermissions
+                                    // here to request the missing permissions, and then overriding
+                                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                    //                                          int[] grantResults)
+                                    // to handle the case where the user grants the permission. See the documentation
+                                    // for ActivityCompat#requestPermissions for more details.
+                                    return;
+                                }
+                                getApplicationContext().startActivity(callIntent);
+                            }
 
-                    break;
+                        }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
+                        }
+                    });
             }
         }
 

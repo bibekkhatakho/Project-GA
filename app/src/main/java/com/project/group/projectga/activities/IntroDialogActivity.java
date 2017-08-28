@@ -120,8 +120,8 @@ public class IntroDialogActivity extends AppCompatActivity {
     private void addButtonDots(int position){
 
         dots = new TextView[layouts.length];
-        int[] colorActive = getResources().getIntArray(R.array.dot_active);
-        int[] colorInactive = getResources().getIntArray(R.array.dot_inactive);
+        int[] colorActive = getResources().getIntArray(R.array.dot_active_standard);
+        int[] colorInactive = getResources().getIntArray(R.array.dot_inactive_standard);
         dotsLayout.removeAllViews();
 
         for(int i=0; i<dots.length ; i++){

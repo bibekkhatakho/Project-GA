@@ -27,10 +27,17 @@ import android.widget.Toast;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.MainMenuActivity;
 import com.project.group.projectga.fragments.GuardianMapsFragment;
 import com.project.group.projectga.fragments.MapsFragment;
+import com.project.group.projectga.models.LocationModel;
+import com.project.group.projectga.preferences.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +55,13 @@ public class GeofenceTransitionService extends IntentService {
         super(TAG);
     }
     String str;
+    String guardianNumber;
     boolean appNotifications;
+
+    DatabaseReference gPhone;
+    String guardianPhoneNumber;
+    String status;
+    String numberPlus;
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -57,7 +70,12 @@ public class GeofenceTransitionService extends IntentService {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String userId = sharedPreferences.getString(Preferences.USERID, "");
         appNotifications = sharedPreferences.getBoolean(getString(R.string.title_app_notifications_key), false);
+
+        if(userId != null){
+            gPhone = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
+        }
 
         // Handling
 
@@ -103,22 +121,33 @@ public class GeofenceTransitionService extends IntentService {
         for ( Geofence geofence : triggeringGeofences ) {
             triggeringGeofencesList.add( geofence.getRequestId() );
         }
-
-        String status = null;
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ) {
             status = "Entering " + geoFencingRegion;
 
-
-
-
         }
-        else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
+        else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
             status = "Exiting " + geoFencingRegion;
+        }
 
         try {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage("14692589637", null, "The standard user  is " + status, null, null);
+                gPhone.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        LocationModel myModel = dataSnapshot.getValue(LocationModel.class);
+                        if(myModel !=null){
+                            guardianPhoneNumber = myModel.getGuardianNumber();
+                            guardianPhoneNumber = guardianPhoneNumber.replaceAll("[^0-9]","");
+                            numberPlus = "+1" + guardianPhoneNumber;
+                            SmsManager smsManager = SmsManager.getDefault();
+                            smsManager.sendTextMessage(numberPlus, null, "The standard user  is " + status, null, null);
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
            // Toast.makeText(getApplicationContext(), "SMS Sent!",
                  //   Toast.LENGTH_LONG).show();
         } catch (Exception e) {

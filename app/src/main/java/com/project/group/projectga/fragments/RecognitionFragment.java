@@ -123,7 +123,7 @@ public class RecognitionFragment extends Fragment {
                     }while(cursor.moveToNext());
                     cursor.close();
                 }
-                result = rotateImage(result);
+                //result = rotateImage(result);
                 personImage.setImageBitmap(result);
 
                 personImage.setDrawingCacheEnabled(true);

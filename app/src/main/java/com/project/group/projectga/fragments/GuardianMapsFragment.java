@@ -192,9 +192,10 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION,
                             android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        }else{
+            Log.d("MapsFragment", "Permission Granted");
+            mMap.setMyLocationEnabled(true);
         }
-        mMap.setMyLocationEnabled(true);
-
 
         if (geoFenceLocationExists) {
             //Toast.makeText(getContext(), "Going inside geoexist true", Toast.LENGTH_SHORT).show();

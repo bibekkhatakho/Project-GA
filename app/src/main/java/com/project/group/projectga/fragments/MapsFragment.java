@@ -120,6 +120,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     DatabaseReference databaseReferenceGeo;
     DatabaseReference gEmail;
 
+
     String userId;
 
     private String[] markerIcons = {
@@ -180,7 +181,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(R.string.mapLabel);
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
-
+        //getGuardianNumber();
         return view;
     }
 
@@ -410,12 +411,12 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     }
 
     // Create a Geofence
-    private Geofence createGeofence(LatLng latLng, float radius ) {
+    private Geofence createGeofence(LatLng latLng, float radius,String reqCode ) {
         Log.d(TAG, "createGeofence");
         //Toast.makeText(getContext(),"geo building",Toast.LENGTH_SHORT).show();
 
         return new Geofence.Builder()
-                .setRequestId(GEOFENCE_REQ_ID)
+                .setRequestId(reqCode)
                 .setCircularRegion( latLng.latitude, latLng.longitude, radius)
                 .setExpirationDuration( GEO_DURATION )
                 .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_ENTER
@@ -437,7 +438,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
         if(myRange == 3) {
             // Toast.makeText(getContext(), "creating intent 3", Toast.LENGTH_SHORT).show();
-            Intent intent3 = new Intent(getContext(), GeofenceTransitionService.class);
+            final Intent intent3 = new Intent(getContext(), GeofenceTransitionService.class);
             intent3.putExtra("region", inString[2]);
             return geoFencePendingIntent3 = PendingIntent.getService(
                     getContext(), 1, intent3, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -445,7 +446,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         }
         if(myRange == 1) {
             // Toast.makeText(getContext(), "creating intent 1", Toast.LENGTH_SHORT).show();
-            Intent intent1 = new Intent(getContext(), GeofenceTransitionService.class);
+            final Intent intent1 = new Intent(getContext(), GeofenceTransitionService.class);
             intent1.putExtra("region", inString[0]);
             return geoFencePendingIntent1 = PendingIntent.getService(
                     getContext(), 2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -454,7 +455,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
         if(myRange == 2) {
             //  Toast.makeText(getContext(), "creating intent 2", Toast.LENGTH_SHORT).show();
-            Intent intent2 = new Intent(getContext(), GeofenceTransitionService.class);
+            final Intent intent2 = new Intent(getContext(), GeofenceTransitionService.class);
             intent2.putExtra("region", inString[1]);
             return geoFencePendingIntent2 = PendingIntent.getService(
                     getContext(), 3, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -527,15 +528,15 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         Log.i(TAG, "startGeofence()");
         //  Toast.makeText(this.getContext(), "start geofence" + geoFenceMarker.getPosition().toString(), Toast.LENGTH_SHORT).show();
         if( geoFenceMarker != null ) {
-            Geofence geofence = createGeofence( geoFenceMarker.getPosition(),10000);
+            Geofence geofence = createGeofence( geoFenceMarker.getPosition(),100,"first geofence");
             GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
             addGeofence( geofenceRequest,1 );
 
-            Geofence geofence2 = createGeofence( geoFenceMarker.getPosition(), 20000);
+            Geofence geofence2 = createGeofence( geoFenceMarker.getPosition(), 300,"second geofence");
             GeofencingRequest geofenceRequest2 = createGeofenceRequest( geofence2 );
             addGeofence( geofenceRequest2 ,2);
 
-            Geofence geofence3 = createGeofence( geoFenceMarker.getPosition(), 30000 );
+            Geofence geofence3 = createGeofence( geoFenceMarker.getPosition(), 500 ,"third geofence");
             GeofencingRequest geofenceRequest3 = createGeofenceRequest( geofence3 );
             addGeofence( geofenceRequest3 ,3);
         } else {

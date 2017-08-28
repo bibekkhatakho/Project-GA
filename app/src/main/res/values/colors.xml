@@ -29,33 +29,53 @@
     <color name="dot_screen_4">#EF4538</color>
     <color name="dot_screen_5">#903E97</color>
 
+    <color name="dot_inactive_1">#FFAB00</color>
+    <color name="dot_inactive_2">#1B5E20</color>
+    <color name="dot_inactive_3">#01579B</color>
+    <color name="dot_inactive_4">#B71C1C</color>
+    <color name="dot_inactive_5">#4A148C</color>
+
     <color name="dot_light_screen_1">#E6EE9C</color>
     <color name="dot_light_screen_2">#A5D6A7</color>
     <color name="dot_light_screen_3">#81D4FA</color>
     <color name="dot_light_screen_4">#FFAB91</color>
     <color name="dot_light_screen_5">#B39DDB</color>
 
-    <array name="dot_active">
+    <array name="dot_active_standard">
+        <item>@color/dot_light_screen_4</item>
+        <item>@color/dot_light_screen_4</item>
         <item>@color/dot_light_screen_4</item>
         <item>@color/dot_light_screen_1</item>
         <item>@color/dot_light_screen_2</item>
         <item>@color/dot_light_screen_3</item>
         <item>@color/dot_light_screen_4</item>
+        <item>@color/dot_light_screen_5</item>
         <item>@color/dot_light_screen_4</item>
-        <item>@color/dot_light_screen_4</item>
-        <item>@color/dot_light_screen_4</item>
-        <item>@color/dot_light_screen_3</item>
     </array>
 
-    <array name="dot_inactive">
-        <item>@color/dot_screen_4</item>
-        <item>@color/dot_screen_1</item>
-        <item>@color/dot_screen_2</item>
-        <item>@color/dot_screen_3</item>
-        <item>@color/dot_screen_4</item>
-        <item>@color/dot_screen_4</item>
-        <item>@color/dot_screen_4</item>
-        <item>@color/dot_screen_4</item>
-        <item>@color/dot_screen_3</item>
+    <array name="dot_inactive_standard">
+        <item>@color/dot_inactive_4</item>
+        <item>@color/dot_inactive_4</item>
+        <item>@color/dot_inactive_4</item>
+        <item>@color/dot_inactive_1</item>
+        <item>@color/dot_inactive_2</item>
+        <item>@color/dot_inactive_3</item>
+        <item>@color/dot_inactive_4</item>
+        <item>@color/dot_inactive_5</item>
+        <item>@color/dot_inactive_4</item>
+    </array>
+
+    <array name="dot_active_guardian">
+        <item>@color/dot_light_screen_4</item>
+        <item>@color/dot_light_screen_4</item>
+        <item>@color/dot_light_screen_4</item>
+        <item>@color/dot_light_screen_4</item>
+    </array>
+
+    <array name="dot_inactive_guardian">
+        <item>@color/dot_inactive_4</item>
+        <item>@color/dot_inactive_4</item>
+        <item>@color/dot_inactive_4</item>
+        <item>@color/dot_inactive_4</item>
     </array>
 </resources>

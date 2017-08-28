@@ -63,6 +63,7 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
     private FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
+    DatabaseReference guardianPhoneNumber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -209,6 +210,12 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         databaseReference.child("phoneNumber").setValue(phoneNumber);
         databaseReference.child("dateOfBirth").setValue(dateOfBirth);
         databaseReference.child("userType").setValue(userType);
+
+        if(userType.equalsIgnoreCase("Guardian User")) {
+            guardianPhoneNumber = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails").child("guardianNumber");
+            guardianPhoneNumber.setValue(phoneNumber);
+        }
+
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
