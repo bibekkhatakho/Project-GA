@@ -135,23 +135,21 @@ public class MessagesFragment extends Fragment
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
-                                if(dataSnapshot.exists()) {
-                                    number = locationModel.getGuardianNumber();
-                                    guardianName = locationModel.getGuardianName();
-                                    number = number.replaceAll("[^0-9]","");
-                                    numberPlus = "+1" + number;
+                                if (dataSnapshot.exists()) {
+                                    if (locationModel != null && !locationModel.toString().isEmpty() && number != null && !number.isEmpty()) {
+                                        number = locationModel.getGuardianNumber();
+                                        guardianName = locationModel.getGuardianName();
+                                        number = number.replaceAll("[^0-9]", "");
+                                        numberPlus = "+1" + number;
 
-                                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED)
-                                    {
-                                        getPermissionToReadSMS();
-                                    }
-                                    else
-                                    {
-                                        refreshStandardSmsInbox();
+                                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                            getPermissionToReadSMS();
+                                        } else {
+                                            refreshStandardSmsInbox();
+                                        }
                                     }
                                 }
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
 
@@ -182,7 +180,7 @@ public class MessagesFragment extends Fragment
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
                                 if (dataSnapshot.exists()) {
-                                    if (locationModel != null) {
+                                    if (locationModel != null && !locationModel.toString().isEmpty() && number != null && !number.isEmpty()) {
                                         number = locationModel.getPatientNumber();
                                         standardName = locationModel.getPatientName();
                                         number = number.replaceAll("[^0-9]", "");

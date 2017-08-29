@@ -81,17 +81,12 @@ public class BackupService extends IntentService {
     }
 
     public void backupPhotos(Context context) {
-        //Toast.makeText(context, "Inside Backup", Toast.LENGTH_SHORT).show();
-        al_images.clear();
-
-        int int_position = 0;
         Uri uri;
         Cursor cursor;
         int column_index_data, column_index_folder_name;
 
         String absolutePathOfImage = null;
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        //Toast.makeText(context, "Inside Backup" + uri, Toast.LENGTH_SHORT).show();
 
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
@@ -105,63 +100,34 @@ public class BackupService extends IntentService {
             Log.e("Column", absolutePathOfImage);
             Log.e("Folder", cursor.getString(column_index_folder_name));
 
-            for (int i = 0; i < al_images.size(); i++) {
-                if (al_images.get(i).getStr_folder().equals(cursor.getString(column_index_folder_name))) {
-                    boolean_folder = true;
-                    int_position = i;
-                    break;
-                } else {
-                    boolean_folder = false;
-                }
+            String folder = cursor.getString(column_index_folder_name);
+            Uri photoUri = Uri.fromFile(new File(absolutePathOfImage));
+            String originalFileUri = photoUri.getPath();
+            String fileUri = photoUri.toString();
+
+            storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
+            storageReference = storageReference.child(folder);
+
+            fileUri = fileUri.substring(fileUri.lastIndexOf("/") + 1);
+
+            String fileUriPeriod = fileUri.replace(".", ",");
+            databaseReference.child(fileUriPeriod).child("folder").setValue(folder);
+
+            Bitmap bitmap = BitmapFactory.decodeFile(originalFileUri);
+            Log.e("FILE", originalFileUri);
+            if (bitmap != null && !bitmap.toString().isEmpty()) {
+                bitmap = rotateImage(bitmap, (originalFileUri));
+
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+                data = baos.toByteArray();
             }
-                if(al_images.size() > 0) {
-                    if (boolean_folder) {
 
-                        ArrayList<String> al_path = new ArrayList<>();
-                        al_path.addAll(al_images.get(int_position).getAl_imagepath());
-                        al_path.add(absolutePathOfImage);
-                        al_images.get(int_position).setAl_imagepath(al_path);
-
-                    } else {
-                        ArrayList<String> al_path = new ArrayList<>();
-                        al_path.add(absolutePathOfImage);
-                        Model_images obj_model = new Model_images();
-                        obj_model.setStr_folder(cursor.getString(column_index_folder_name));
-                        obj_model.setAl_imagepath(al_path);
-                        al_images.add(obj_model);
-                    }
-                }
-
-            for (int i = 0; i < al_images.size(); i++) {
-                Log.e("FOLDER", al_images.get(i).getStr_folder());
-                for (int j = 0; j < al_images.get(i).getAl_imagepath().size(); j++) {
-                    storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
-                    storageReference = storageReference.child(al_images.get(i).getStr_folder());
-                    String folder = al_images.get(i).getStr_folder();
-                    Log.e("FILE", al_images.get(i).getAl_imagepath().get(j));
-                    String fileUri = (al_images.get(i).getAl_imagepath().get(j)).toString();
-
-                    fileUri = fileUri.substring(fileUri.lastIndexOf("/") + 1);
-
-                    String fileUriPeriod = fileUri.replace(".", ",");
-                    databaseReference.child(fileUriPeriod).child("folder").setValue(folder);
-
-                    Bitmap bitmap = BitmapFactory.decodeFile((al_images.get(i).getAl_imagepath().get(j)).toString());
-                    if (bitmap != null && !bitmap.toString().isEmpty()) {
-                        bitmap = rotateImage(bitmap, (al_images.get(i).getAl_imagepath().get(j)).toString());
-
-
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-                        data = baos.toByteArray();
-                    }
-
-                    storageReference = storageReference.child(fileUri);
-                    UploadTask uploadTask = storageReference.putBytes(data);
-                    databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
-                }
-                storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
-            }
+            storageReference = storageReference.child(fileUri);
+            UploadTask uploadTask = storageReference.putBytes(data);
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
+            storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
         }
     }
 
@@ -190,5 +156,4 @@ public class BackupService extends IntentService {
         rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         return rotatedBitmap;
     }
-
 }

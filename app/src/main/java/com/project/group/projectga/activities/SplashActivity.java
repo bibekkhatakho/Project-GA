@@ -22,7 +22,6 @@ public class SplashActivity extends AppCompatActivity{
         setContentView(R.layout.activity_splash);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
         Thread splashThread = new Thread(){
             public void run(){
                 try {

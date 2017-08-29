@@ -93,6 +93,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
             Preference myPref = findPreference(getString(R.string.key_send_feedback));
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Preference changed and clicked", Toast.LENGTH_SHORT).show();
                     sendFeedback(getActivity());
                     return true;
                 }
@@ -205,21 +206,25 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
         databaseReferencePhotos.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Toast.makeText(context, "Inside DataChange", Toast.LENGTH_SHORT).show();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Photos photos = snapshot.getValue(Photos.class);
                     String key = snapshot.getKey();
+                    Toast.makeText(context, "Inside DataChange key" + key, Toast.LENGTH_SHORT).show();
                     photos.setKey(key);
                     String folder = photos.getFolder();
+                    Toast.makeText(context, "Inside DataChange Folder " + folder, Toast.LENGTH_SHORT).show();
                     String keyPeriod = key.replace(",",".");
                     String firebaseStor = folder + "/" + key.replace(",",".");
                     File path = Environment.getExternalStoragePublicDirectory(
                             Environment.DIRECTORY_DCIM + File.separator + folder + File.separator);
                     photoRef[0] = storageReferencePhotos.child(firebaseStor);
+                    Toast.makeText(context, "Inside DataChange Path " + path, Toast.LENGTH_SHORT).show();
                     final File myPhoto = new File(path, keyPeriod);
 
 
                     MediaScannerConnection.scanFile(context,
-                            new String[] { myPhoto.toString() }, null,
+                            new String[] { myPhoto.getPath() }, null,
                             new MediaScannerConnection.OnScanCompletedListener() {
                                 public void onScanCompleted(String path, Uri uri) {
                                     Log.i("ExternalStorage", "Scanned " + path + ":");
