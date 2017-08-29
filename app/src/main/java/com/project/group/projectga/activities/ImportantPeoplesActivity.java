@@ -47,6 +47,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.Voice;
 import com.project.group.projectga.models.ImportantPeople;
+import com.project.group.projectga.models.Recognition;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -103,7 +104,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     @BindView(R.id.gallButtonPeople)
     protected FancyButton galleryButton;
 
-    String imgURL;
     Voice voice;
     boolean isPlaying;
 
@@ -129,10 +129,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
 
     private InputFilter mInputFilter;
-
-    //Code test for imageCropping
-    private Uri mImageCaptureUri;
-    public static final int CROP_FROM_CAMERA = 126;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -237,19 +233,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //Adding code for cropping the image taken from Camera intent - Start
-                mImageCaptureUri = FileProvider.getUriForFile(getApplicationContext(),
-                        "com.example.projectga.fileprovider",
-                        image);
-                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                try {
-                    intent.putExtra("return-data", true);
                     startActivityForResult(intent, RC_CAMERA_CODE);
-                } catch (ActivityNotFoundException e) {
-                    //Do nothing for now
-                }
-                //Adding code for cropping the image taken from Camera intent - End
-                //startActivityForResult(intent, RC_CAMERA_CODE);
             }
         });
 
@@ -292,7 +276,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                         shortDescrptionTextInputEditText.setText(importantPeople.getShortDescription());
                         longDescriptionTextInputEditText.setText(importantPeople.getLongDescription());
                         Picasso.with(getApplicationContext()).load(importantPeople.getProfile()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(personImage);
-                        //imgURL = importantPeople.getProfile();
                     }
                 }
                 @Override
@@ -341,9 +324,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         personsListMap.put("relation", personRelation);
         personsListMap.put("shortDescription", shortDescription);
         personsListMap.put("longDescription", longDescription);
-        //personsListMap.put("profile",imgURL);
 
-        //personsListMap.put("profile", String.valueOf(personImage));
         if(peoples_key.getText().toString().equals("")) {
 
             databaseReference.push().setValue(personsListMap);
@@ -390,19 +371,8 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             });
         }
 
-        //Adding code for Testing Image Cropping - Start
-
-        if (resultCode != RESULT_OK) {
-            return;
-        }
-
-        switch (requestCode) {
-
-            case CROP_FROM_CAMERA: {
-                //Wysie_Soh: After a picture is taken, it will go to PICK_FROM_CAMERA, which will then come here
-                //after the image is cropped.
-
-                final Bundle extras = data.getExtras();
+        if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
+            final Bundle extras = data.getExtras();
 
                 if (extras != null) {
                     Bitmap photo = extras.getParcelable("data");
@@ -420,7 +390,8 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                         cursor.close();
                     }
                     photo = rotateImage(photo);
-                    personImage.setImageBitmap(photo);
+                    Bitmap croppedPhoto = Recognition.cropToFace(photo);
+                    personImage.setImageBitmap(croppedPhoto);
                 }
                 personImage.setDrawingCacheEnabled(true);
                 personImage.buildDrawingCache();
@@ -441,40 +412,9 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                     }
                 });
 
-                //Wysie_Soh: Delete the temporary file
-                File f = new File(mImageCaptureUri.getPath());
-                if (f.exists()) {
-                    f.delete();
-                }
-
                 InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 mgr.showSoftInput(personImage, InputMethodManager.SHOW_IMPLICIT);
-
-                break;
-            }
-
-            case RC_CAMERA_CODE: {
-                //Wysie_Soh: After an image is taken and saved to the location of mImageCaptureUri, come here
-                //and load the crop editor, with the necessary parameters (96x96, 1:1 ratio)
-
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setClassName("com.project.group.projectga", "com.android.camera.CropImage");
-
-                intent.setData(mImageCaptureUri);
-                intent.putExtra("outputX", 96);
-                intent.putExtra("outputY", 96);
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                intent.putExtra("scale", true);
-                intent.putExtra("return-data", true);
-                startActivityForResult(intent, CROP_FROM_CAMERA);
-
-                break;
-
-            }
         }
-
-        //Adding code for Testing Image Cropping - End
 
         if(requestCode == REQ_CODE_SPEECH_INPUT_SHORT && data!=null ){
             ArrayList<String> result = data
