@@ -61,6 +61,7 @@ public class MessagesFragment extends Fragment
     String number, numberPlus;
     String guardianEmail;
     String guardianName, standardName;
+    String message;
 
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
@@ -136,11 +137,13 @@ public class MessagesFragment extends Fragment
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
                                 if (dataSnapshot.exists()) {
-                                    if (locationModel != null && !locationModel.toString().isEmpty() && number != null && !number.isEmpty()) {
+                                    if (locationModel != null && !locationModel.toString().isEmpty()) {
                                         number = locationModel.getGuardianNumber();
-                                        guardianName = locationModel.getGuardianName();
-                                        number = number.replaceAll("[^0-9]", "");
-                                        numberPlus = "+1" + number;
+                                        if(number != null && !number.isEmpty()) {
+                                            guardianName = locationModel.getGuardianName();
+                                            number = number.replaceAll("[^0-9]", "");
+                                            numberPlus = "+1" + number;
+                                        }
 
                                         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
                                             getPermissionToReadSMS();
@@ -180,7 +183,7 @@ public class MessagesFragment extends Fragment
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 LocationModel locationModel = dataSnapshot.getValue(LocationModel.class);
                                 if (dataSnapshot.exists()) {
-                                    if (locationModel != null && !locationModel.toString().isEmpty() && number != null && !number.isEmpty()) {
+                                    if (locationModel != null && !locationModel.toString().isEmpty()) {
                                         number = locationModel.getPatientNumber();
                                         standardName = locationModel.getPatientName();
                                         number = number.replaceAll("[^0-9]", "");
@@ -223,11 +226,17 @@ public class MessagesFragment extends Fragment
                 {
                     smsBody = input.getText().toString();
                     smsAddress = number;
-                    smsManager.sendTextMessage(smsAddress, null, smsBody, null, null);
+                    if(smsAddress !=null && smsBody!=null) {
+                        smsManager.sendTextMessage(smsAddress, null, smsBody, null, null);
+                    }
 
                     //Toast.makeText(context, "Message sent!", Toast.LENGTH_SHORT).show();
-                    String message = "SMS To: " + number +
-                            "\n" + smsBody + "\n";
+                    if(userType.equalsIgnoreCase("Standard User")) {
+                        message = "\nYou:" + "\n\n" + smsBody;
+                    }
+                    if(userType.equalsIgnoreCase("Guardian User")) {
+                        message = "\nYou:" + "\n\n" + smsBody;
+                    }
                     updateInbox(message);
 
                     //Clear message box for future message

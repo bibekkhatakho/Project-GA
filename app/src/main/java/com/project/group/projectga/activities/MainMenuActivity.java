@@ -722,12 +722,15 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     }
 
     public void startBackupService(boolean backupFlag){
-        if(backupFlag){
-            scheduleBackup();
-        }else{
-            cancelBackup();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+        String userType = preferences.getString(Preferences.USER_TYPE, "");
+        if(userType.equalsIgnoreCase("Standard User")) {
+            if (backupFlag) {
+                scheduleBackup();
+            } else {
+                cancelBackup();
+            }
         }
-
     }
 
     public void scheduleBackup() {
