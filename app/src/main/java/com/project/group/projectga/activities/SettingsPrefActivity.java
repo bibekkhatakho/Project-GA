@@ -25,8 +25,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -56,12 +58,19 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getLayoutInflater().inflate(R.layout.toolbar, (ViewGroup)findViewById(android.R.id.content));
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarPref);
+        ImageView icon = (ImageView) findViewById(R.id.backButtonPref);
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsPrefActivity.this, MainMenuActivity.class));
+                finish();
+            }
+        });
         toolbar.setTitle(getString(R.string.app_preferences));
         setSupportActionBar(toolbar);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
 
     }
-
 
     public static class MainPreferenceFragment extends PreferenceFragment {
 

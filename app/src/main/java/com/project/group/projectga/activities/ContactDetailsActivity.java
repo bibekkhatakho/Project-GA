@@ -349,4 +349,9 @@ public class ContactDetailsActivity extends CoreActivity implements View.OnClick
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
 }

@@ -150,7 +150,13 @@
         <activity
             android:name=".activities.SettingsPrefActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait">
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.project.group.projectga.activities.MainMenuActivity" />
+        </activity>
+
         <activity android:name=".activities.SettingsHeaderActivity" />
     </application>
 

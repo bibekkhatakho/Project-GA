@@ -15,11 +15,15 @@ import com.project.group.projectga.preferences.Preferences;
 public class SplashActivity extends AppCompatActivity{
 
     FirebaseAuth firebaseAuth;
+    String userType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
+        userType = sharedPreferences.getString(Preferences.USER_TYPE, "");
 
         firebaseAuth = FirebaseAuth.getInstance();
         Thread splashThread = new Thread(){
@@ -30,7 +34,7 @@ public class SplashActivity extends AppCompatActivity{
                     e.printStackTrace();
                 }
                 finally {
-                    if(firebaseAuth.getCurrentUser() != null){
+                    if(firebaseAuth.getCurrentUser() != null && userType != null){
                         Intent mainMenuIntent = new Intent(SplashActivity.this, MainMenuActivity.class);
                         mainMenuIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(mainMenuIntent);

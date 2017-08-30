@@ -166,4 +166,9 @@ public class AddGuardianActivity extends CoreActivity{
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
+
 }

@@ -110,7 +110,6 @@ public class PhotosActivity extends CoreActivity{
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
         voice = new Voice(getApplicationContext());
 
         gridView = (GridView)findViewById(R.id.gv_folder);

@@ -62,22 +62,22 @@ public class BackupService extends IntentService {
     }
 
     protected void onHandleIntent(Intent intent) {
-        getInfo();
-        backupPhotos(this);
-    }
-
-    public void getInfo(){
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String userIdPref = sharedPreferences.getString(Preferences.USERID, "");
 
         if (userIdPref !=null) {
             userId = userIdPref;
+            getInfo();
+            backupPhotos(this);
+        }else{
+            Log.d("Empty User Id", "Backup Service");
+        }
+    }
+
+    public void getInfo(){
             firebaseAuth = FirebaseAuth.getInstance();
             storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
-        } else {
-        }
     }
 
     public void backupPhotos(Context context) {
