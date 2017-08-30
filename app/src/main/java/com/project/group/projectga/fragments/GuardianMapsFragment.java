@@ -5,23 +5,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -52,17 +46,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Date;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 public class GuardianMapsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, OnMapReadyCallback, ResultCallback<Status> {
@@ -74,7 +61,6 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     private Circle mCircle1;
     private Circle mCircle2;
     private Circle mCircle3;
-    LocationManager locationManager;
     double geofenceradius[] = new double[]{10000, 20000, 25000};
     ArrayList<LatLng> arrayPoints;
     boolean geoSetAlready;
@@ -117,7 +103,6 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         if (getUid() != null) {
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
-            //databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Geofence Location");
             databaseReferenceGuardian = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails");
             databaseReferenceEmail = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
             databaseReference = FirebaseDatabase.getInstance().getReference().child("guardians").child("guardianEmails").child(thisEmail);
@@ -198,9 +183,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         }
         mMap.setMyLocationEnabled(true);
         if (geoFenceLocationExists) {
-            //Toast.makeText(getContext(), "Going inside geoexist true", Toast.LENGTH_SHORT).show();
             if(!geoSetAlready) {
-              //  Toast.makeText(getContext(), "Going inside geoexist set already", Toast.LENGTH_SHORT).show();
                 setMap(testLL);
             }
         } else {
@@ -208,7 +191,6 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                 @Override
                 public void onMapLongClick(LatLng latLng) {
 
-                    //mapFragment.getView().setAlpha(1.0f);
                     mapFragment.getView().setBackgroundColor(getResources().getColor(R.color.loginbackground));
                     clickMap.setVisibility(View.GONE);
                     databaseReference.child("latitude").setValue(latLng.latitude);
@@ -401,15 +383,11 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                             lat = lModel.getLatitude();
                             lon = lModel.getLongitude();
                             testLL = new LatLng(lat,lon);
-                           // Toast.makeText(getContext(), testLL.toString(), Toast.LENGTH_SHORT).show();
                             if(lat != 0.0 && lon != 0.0) {
                                 geoFenceLocationExists = true;
                             }else{
-                              //  Toast.makeText(getContext(), "Lat Long not set", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        //   Toast.makeText(getContext(), "The latitude from Guardiann" + lat + geoFenceLocationExists, Toast.LENGTH_SHORT).show();
-                        // Toast.makeText(getContext(), "The longitude from Guardiann" + lon, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

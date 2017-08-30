@@ -2,20 +2,15 @@ package com.project.group.projectga.service;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.project.group.projectga.R;
 import com.project.group.projectga.preferences.Preferences;
 
 import java.util.List;
@@ -122,7 +117,6 @@ public class ActivityRecognizedService extends IntentService {
             }
         }
         databaseReference.setValue(status);
-        //Toast.makeText(this, "status set", Toast.LENGTH_SHORT).show();
     }
 
 }

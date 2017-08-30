@@ -1,12 +1,7 @@
 package com.project.group.projectga.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.project.group.projectga.R;
-import com.project.group.projectga.preferences.Preferences;
 
 import static java.lang.Thread.sleep;
 
@@ -61,7 +55,6 @@ public class IntroDialogActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 startActivity(mainMenuIntent);
-                //finish();
             }
         });
 
@@ -81,7 +74,6 @@ public class IntroDialogActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     startActivity(mainMenuIntent);
-                    //finish();
                 }
             }
         });

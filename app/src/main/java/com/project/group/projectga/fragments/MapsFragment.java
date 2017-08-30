@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -18,17 +17,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -57,9 +51,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
-import com.project.group.projectga.activities.MainMenuActivity;
 import com.project.group.projectga.activities.MapMarkerActivity;
-import com.project.group.projectga.models.GeolocationModel;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.MapMarkers;
 import com.project.group.projectga.models.Profile;
@@ -79,7 +71,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
 
-    private Context context;
     private static final String TAG = GuardianMapsFragment.class.getSimpleName();
 
     private Marker geoFenceMarker;
@@ -88,15 +79,11 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private Location lastLocation;
 
     private LatLng testLL = new LatLng(32.7115575,-97.1130897);
-    private double currentLatitude;
-    private double currentLongitude;
 
     String inString[] = new String[]{"a","b","c"};
     int count = 0;
     private static final long GEO_DURATION = Geofence.NEVER_EXPIRE;
-    private static final String GEOFENCE_REQ_ID = "My Geofence";
     double geoRadius[] = new double[]{100,200,300};
-    private List<Geofence> mGeoList;
     private Circle geoFenceLimits;
 
     private final int UPDATE_INTERVAL =  3 * 60 * 1000;
@@ -108,8 +95,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private final String KEY_GEOFENCE_LAT = "GEOFENCE LATITUDE";
     private final String KEY_GEOFENCE_LON = "GEOFENCE LONGITUDE";
     public static final int SEND_SMS = 101;
-    private final int GEOFENCE_REQ_CODE = 0;
-
 
     private PendingIntent geoFencePendingIntent1;
     private PendingIntent geoFencePendingIntent2;
@@ -181,7 +166,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(R.string.mapLabel);
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
-        //getGuardianNumber();
         return view;
     }
 
@@ -388,23 +372,13 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         Log.i(TAG, "markerForGeofence(" + latLng + ")");
         String title = latLng.latitude + ", " + latLng.longitude;
         // Define marker options
-        //Toast.makeText(getContext(),"geo created",Toast.LENGTH_SHORT).show();
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                 .title(title);
 
-
-
-
-        // startGeofence();
-
         if (mMap != null) {
-            // Remove last geoFenceMarker
             if (geoFenceMarker == null)
-                // geoFenceMarker.remove();
-                // Toast.makeText(this.getContext(), "checking marker", Toast.LENGTH_SHORT).show();
                 geoFenceMarker = mMap.addMarker(markerOptions);
         }
         startGeofence();
@@ -413,7 +387,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     // Create a Geofence
     private Geofence createGeofence(LatLng latLng, float radius,String reqCode ) {
         Log.d(TAG, "createGeofence");
-        //Toast.makeText(getContext(),"geo building",Toast.LENGTH_SHORT).show();
 
         return new Geofence.Builder()
                 .setRequestId(reqCode)
@@ -437,7 +410,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         Log.d(TAG, "createGeofencePendingIntent");
 
         if(myRange == 3) {
-            // Toast.makeText(getContext(), "creating intent 3", Toast.LENGTH_SHORT).show();
             final Intent intent3 = new Intent(getContext(), GeofenceTransitionService.class);
             intent3.putExtra("region", inString[2]);
             return geoFencePendingIntent3 = PendingIntent.getService(
@@ -445,7 +417,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
         }
         if(myRange == 1) {
-            // Toast.makeText(getContext(), "creating intent 1", Toast.LENGTH_SHORT).show();
             final Intent intent1 = new Intent(getContext(), GeofenceTransitionService.class);
             intent1.putExtra("region", inString[0]);
             return geoFencePendingIntent1 = PendingIntent.getService(
@@ -454,34 +425,28 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         }
 
         if(myRange == 2) {
-            //  Toast.makeText(getContext(), "creating intent 2", Toast.LENGTH_SHORT).show();
             final Intent intent2 = new Intent(getContext(), GeofenceTransitionService.class);
             intent2.putExtra("region", inString[1]);
             return geoFencePendingIntent2 = PendingIntent.getService(
                     getContext(), 3, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         }
-        // Toast.makeText(getContext(), "leaving my geofence", Toast.LENGTH_SHORT).show();
         return null;
     }
 
     // Add the created GeofenceRequest to the device's monitoring list
     private void addGeofence(GeofencingRequest request,int range) {
         Log.d(TAG, "addGeofence");
-        // Toast.makeText(this.getContext(), "adding geo" + range, Toast.LENGTH_SHORT).show();
         if (checkPermission())
-            // Toast.makeText(this.getContext(), "checing permision", Toast.LENGTH_SHORT).show();
             LocationServices.GeofencingApi.addGeofences(
                     googleApiClient,
                     request,
                     createGeofencePendingIntent(range)
             );
-        // Toast.makeText(this.getContext(), "adding geo", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onResult(@NonNull Status status) {
-        //Toast.makeText(getContext(),"inside onresult",Toast.LENGTH_SHORT).show();
         Log.i(TAG, "onResult: " + status);
         if ( status.isSuccess() ) {
             saveGeofence();
@@ -496,7 +461,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
         if ( geoFenceLimits != null )
             geoFenceLimits.remove();
-        // Toast.makeText(this.getContext(), "drawing geo", Toast.LENGTH_SHORT).show();
         CircleOptions circleOptions = new CircleOptions()
                 .center( geoFenceMarker.getPosition())
                 .strokeColor(Color.argb(50, 70,70,70))
@@ -526,7 +490,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     // Start Geofence creation process
     private void startGeofence() {
         Log.i(TAG, "startGeofence()");
-        //  Toast.makeText(this.getContext(), "start geofence" + geoFenceMarker.getPosition().toString(), Toast.LENGTH_SHORT).show();
         if( geoFenceMarker != null ) {
             Geofence geofence = createGeofence( geoFenceMarker.getPosition(),100,"first geofence");
             GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
@@ -541,13 +504,11 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
             addGeofence( geofenceRequest3 ,3);
         } else {
             Log.e(TAG, "Geofence marker is null");
-            //  Toast.makeText(this.getContext(), "marker is null", Toast.LENGTH_SHORT).show();
         }
     }
 
     // Saving GeoFence marker with prefs mng
     private void saveGeofence() {
-        //Toast.makeText(getContext(),"saving",Toast.LENGTH_SHORT).show();
         Log.d(TAG, "saveGeofence()");
         SharedPreferences sharedPref = getActivity().getPreferences( Context.MODE_PRIVATE );
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -560,16 +521,12 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     // Recovering last Geofence marker
     private void recoverGeofenceMarker() {
         Log.d(TAG, "recoverGeofenceMarker");
-        // Toast.makeText(getContext(),"recovering",Toast.LENGTH_SHORT).show();
         SharedPreferences sharedPref = getActivity().getPreferences( Context.MODE_PRIVATE );
 
         if ( sharedPref.contains( KEY_GEOFENCE_LAT ) && sharedPref.contains( KEY_GEOFENCE_LON )) {
             double lat = Double.longBitsToDouble( sharedPref.getLong( KEY_GEOFENCE_LAT, -1 ));
             double lon = Double.longBitsToDouble( sharedPref.getLong( KEY_GEOFENCE_LON, -1 ));
             LatLng latLng = new LatLng( lat, lon );
-            //  markerForGeofence(testLL);
-            //  drawGeofence();
-            // markerForGeofence(testLL2);
 
         }
     }
@@ -632,13 +589,9 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     // GoogleApiClient.ConnectionCallbacks connected
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        //Log.i(TAG, "onConnected()");
         getLastKnownLocation();
 
-        // Toast.makeText(getActivity(), "outside on connected" + geoFenceLocationExists, Toast.LENGTH_SHORT).show();
-
         if(geoFenceLocationExists) {
-            //  Toast.makeText(getActivity(), "inside on connected" + testLL.toString(), Toast.LENGTH_SHORT).show();
             markerForGeofence(testLL);
             drawGeofence();
             recoverGeofenceMarker();
@@ -677,8 +630,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                             testLL = new LatLng(lat,lon);
                             geoFenceLocationExists = true;
                         }
-                        //   Toast.makeText(getContext(), "The latitude from Guardiann" + lat + geoFenceLocationExists, Toast.LENGTH_SHORT).show();
-                        // Toast.makeText(getContext(), "The longitude from Guardiann" + lon, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -686,7 +637,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
                     }
                 });
-                //  Toast.makeText(getContext(),"g email "+ guardianEmail,Toast.LENGTH_SHORT).show();
             }
 
             @Override

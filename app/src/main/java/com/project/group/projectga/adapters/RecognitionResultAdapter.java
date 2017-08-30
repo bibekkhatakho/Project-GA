@@ -55,7 +55,6 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
         holder.personRelation.setText(importantPeople.getRelation());
         holder.shortDescription.setText(importantPeople.getShortDescription());
         holder.longDescription.setText(importantPeople.getLongDescription());
-//        holder.importantPeoplesKey.setText(importantPeople.getKey());
         holder.play.setOnClickListener(new View.OnClickListener() {
             String shortPersonName  = importantPeople.getName().replaceAll("\\.","");
             String shortRelation  = importantPeople.getRelation().replaceAll("\\.","");
@@ -106,7 +105,7 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView personName, personRelation, shortDescription, longDescription/*, importantPeoplesKey*/;
+        TextView personName, personRelation, shortDescription, longDescription;
         CircularImageView profilePicture;
         ImageView play;
 
@@ -118,7 +117,6 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
             personRelation = (TextView) v.findViewById(R.id.personRelation);
             shortDescription = (TextView) v.findViewById(R.id.shortDescription);
             longDescription = (TextView) v.findViewById(R.id.longDescription);
-//            importantPeoplesKey = (TextView) v.findViewById(R.id.people_key);
             play = (ImageView)v.findViewById(R.id.playInfoView);
         }
     }

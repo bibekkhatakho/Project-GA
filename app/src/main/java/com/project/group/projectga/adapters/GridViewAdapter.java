@@ -5,7 +5,6 @@ package com.project.group.projectga.adapters;
  */
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.project.group.projectga.R;
-import com.project.group.projectga.activities.FullScreenViewActivity;
 import com.project.group.projectga.models.Model_images;
 
 

@@ -96,10 +96,6 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".activities.RecognitionActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".activities.MapMarkerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"/>
@@ -152,12 +148,11 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
 
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.project.group.projectga.activities.MainMenuActivity" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.project.group.projectga.activities.MainMenuActivity" />
         </activity>
 
-        <activity android:name=".activities.SettingsHeaderActivity" />
     </application>
 
 </manifest>

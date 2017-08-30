@@ -16,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -27,15 +26,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,9 +62,7 @@ import com.project.group.projectga.fragments.TagLocateFragment;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
-import com.project.group.projectga.service.ActivityRecognizedService;
 import com.project.group.projectga.service.BackupReceiver;
-import com.project.group.projectga.service.BackupService;
 import com.project.group.projectga.service.CurrentLocation;
 import com.squareup.picasso.Picasso;
 
@@ -88,9 +80,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
     private Drawer result = null;
     AccountHeader headerResult;
-    private static final int REQUEST_LOCATION = 127;
     private static final int REQUEST_PERMISSIONS = 128;
-
 
     boolean drivingcheckPrimary = true;
     String userStatus;
@@ -117,7 +107,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     String numberPlus;
 
     boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false, backupFlag;
-    String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,10 +144,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.container_gaFragments, mapsFragment).commit();
                     break;
-                // fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                //        fragmentTransaction.addToBackStack(mapsFragment.toString());
-                //          fragmentTransaction.commit();
-                //      Toast.makeText(this,"last case",Toast.LENGTH_SHORT).show();
 
                 case "gasstation":
                     Uri gmmIntentUri = Uri.parse("geo:0,0?q=gas station");
@@ -214,10 +199,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
         final String userType = preferences.getString(Preferences.USER_TYPE, "");
-        //final boolean notificationFlag = preferences.getBoolean(getString(R.string.notifications_new_message), false);
-        //loadPreferences();
-
-        //startProactiveFunctionality(notificationFlag);
 
         Log.d("userTypeMain", userType);
 
@@ -420,7 +401,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                             break;
                         case 3:
                             fragment = new GalleryHomeFragment();
-                            //gaFragmentStack.add(gallery);
                             break;
                         case 4:
                             fragment = new RecognitionFragment();
@@ -473,8 +453,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.clear();
                     editor.apply();
-                    //stopService(new Intent(MainMenuActivity.this, BackupService.class));
-                    //stopService(new Intent(MainMenuActivity.this, ActivityRecognizedService.class));
                     intent = new Intent(MainMenuActivity.this, SplashActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -535,7 +513,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
         if(userType.equalsIgnoreCase("Standard User")) {
             if (notificationState) {
-                //if (!proactiveFunctionlaity) {
                 if (timer == null) {
                     timer = new Timer();
                 }
@@ -559,15 +536,8 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
                 };
 
-// schedule the task to run starting now and then every hour...
                 timer.schedule(hourlyTask, 0l, 1000*60*10);
-                //proactiveFunctionlaity = true;
-//            }else{
-//                Toast.makeText(this, "Inside Outside", Toast.LENGTH_SHORT).show();
-//
-//            }
             } else {
-                //  Toast.makeText(this, "Notifications turned off", Toast.LENGTH_SHORT).show();
                 if (timer != null) {
                     timer.cancel();
                     timer.purge();
@@ -588,11 +558,9 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Profile model = dataSnapshot.getValue(Profile.class);
                             if (model != null) {
-                                //Toast.makeText(getBaseContext(), "inside find status", Toast.LENGTH_SHORT).show();
                                 userStatus = model.getUserStatus();
 
                             }
-                            // Toast.makeText(getApplicationContext(), "user is" + userStatus, Toast.LENGTH_SHORT).show();
                             if (notificationState) {
                                 if (timerToAskFuel == null) {
                                     timerToAskFuel = new Timer();
@@ -701,7 +669,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
             Log.e("ElseMain","Else");
             startBackupService(backupFlag);
         }
-        //startBackupService(backupFlag);
     }
 
     @Override
@@ -734,13 +701,23 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     }
 
     public void scheduleBackup() {
-        Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
-        myIntent.setAction("com.project.group.projectga.service.BACKUP");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        boolean alarmSet = (PendingIntent.getBroadcast(MainMenuActivity.this, 0,
+                new Intent(MainMenuActivity.this, BackupReceiver.class), PendingIntent.FLAG_NO_CREATE) != null);
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime(), 3600000 * 24, pendingIntent);
-        //Toast.makeText(this, "Backup Scheduled", Toast.LENGTH_SHORT).show();
+        if (alarmSet)
+        {
+            Log.d("MainMenuActivity", "Alarm is already set for the day");
+        } else {
+            ActivityCompat.requestPermissions(MainMenuActivity.this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
+
+            Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
+            myIntent.setAction("com.project.group.projectga.service.BACKUP");
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+            alarmManager.setInexactRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime(), 3600000 * 24, pendingIntent);
+        }
     }
 
     public void cancelBackup() {
@@ -750,8 +727,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
 
         alarmManager.cancel(pendingIntent);
-
-        //Toast.makeText(this, "Backup Cancelled", Toast.LENGTH_SHORT).show();
     }
 
 

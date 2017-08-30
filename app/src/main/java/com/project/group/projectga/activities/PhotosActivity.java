@@ -2,42 +2,32 @@ package com.project.group.projectga.activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.speech.RecognizerIntent;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.UploadTask;
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.GridViewAdapter;
 import com.project.group.projectga.adapters.Voice;
@@ -47,11 +37,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.project.group.projectga.models.Memory;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Created by ramjiseetharaman on 7/12/17.
@@ -150,12 +141,6 @@ public class PhotosActivity extends CoreActivity{
             public void onItemClick(final AdapterView<?> parent, final View view, final int position, long id) {
 
                 CharSequence options[] = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?", "Fullscreen Slideshow"};
-//                if(position == 0) {
-                    //options = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?", "Fullscreen Slideshow"};
-//                }else{
-//                    options = new CharSequence[]{"Add a Memory", "Listen Short Memory?", "Listen Long Memory?"};
-//                }
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(PhotosActivity.this);
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
@@ -206,6 +191,7 @@ public class PhotosActivity extends CoreActivity{
                                                     eventDate.setText(startDate);
                                                 }
                                             }, mYear, mMonth, mDay);
+                                    datePickerDialog.getDatePicker().setMaxDate(new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000).getTime());
                                     datePickerDialog.show();
                                 }
                             });
@@ -340,10 +326,20 @@ public class PhotosActivity extends CoreActivity{
     private void writeMemory() {
         showProgressDialog("Saving memory details...Please wait");
 
-        memory.setName(eventName.getText().toString().trim());
-        memory.setDate(eventDate.getText().toString().trim());
-        memory.setShortDescription(shortDescription.getText().toString().trim());
-        memory.setLongDescription(longDescription.getText().toString().trim());
+        String eventNameString = eventName.getText().toString().trim();
+        String eventDateString = eventDate.getText().toString().trim();
+        String shortDescriptionString = shortDescription.getText().toString().trim();
+        String longDescriptionString = longDescription.getText().toString().trim();
+
+        if (!validateForm(eventNameString, eventDateString, shortDescriptionString, longDescriptionString)) {
+            hideProgressDialog();
+            return;
+        }
+
+        memory.setName(eventNameString);
+        memory.setDate(eventDateString);
+        memory.setShortDescription(shortDescriptionString);
+        memory.setLongDescription(longDescriptionString);
 
         if (memoryKey.equals("")) {
             databaseReference.push().setValue(memory);
@@ -354,6 +350,46 @@ public class PhotosActivity extends CoreActivity{
             hideProgressDialog();
             Toast.makeText(PhotosActivity.this, "Memory Information Updated!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean validateForm(String eventName, String eventDate, String shortDescription, String longDescription) {
+        boolean valid = true;
+
+        String textOnlyRegex = "^[\\p{L} .'-]+$";
+
+        if (TextUtils.isEmpty(eventName)) {
+            eventNameLayout.setError("Name cannot be empty");
+            valid = false;
+        } else {
+            eventNameLayout.setError(null);
+        }
+        if (TextUtils.isEmpty(eventName) || !Pattern.matches(textOnlyRegex, eventName)) {
+            eventNameLayout.setError("Please enter a valid name");
+            valid = false;
+        } else {
+            eventNameLayout.setError(null);
+        }
+        if (TextUtils.isEmpty(shortDescription)) {
+            shortDescriptionLayout.setError("Short Description cannot be empty");
+            valid = false;
+        } else {
+            shortDescriptionLayout.setError(null);
+        }
+        if(TextUtils.isEmpty(eventDate)){
+            eventDateLayout.setError("Event Date cannot be empty");
+            valid = false;
+        }else{
+            eventDateLayout.setError(null);
+        }
+
+        if(TextUtils.isEmpty(longDescription)){
+            longDescriptionLayout.setError("Long Description cannot be empty");
+            valid = false;
+        }else{
+            longDescriptionLayout.setError(null);
+        }
+
+        return valid;
     }
 
     private void onAuthFailure() {

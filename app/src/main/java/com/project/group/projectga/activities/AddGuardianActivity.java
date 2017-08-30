@@ -93,7 +93,7 @@ public class AddGuardianActivity extends CoreActivity{
                 if (!TextUtils.isEmpty(guardianUserEmail)) {
                     BackgroundMail.newBuilder(AddGuardianActivity.this)
                             .withUsername("projectgateam@gmail.com")
-                            .withPassword("projectga1234")
+                            .withPassword("projectga0409")
                             .withMailto(guardianUserEmail)
                             .withType(BackgroundMail.TYPE_PLAIN)
                             .withSubject(subject)

@@ -69,10 +69,7 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseReference;
-    private StorageReference storageReference;
     private final int REQ_CODE_SPEECH_INPUT_SHORT = 129;
-    private final int REQ_CODE_SPEECH_INPUT_LONG = 130;
-
 
     MapMarkers mapMarkers;
     ValueEventListener valueEventListener;
@@ -161,7 +158,6 @@ public class MapMarkerActivity extends CoreActivity implements View.OnFocusChang
             userId = getUid();
             firebaseAuth = FirebaseAuth.getInstance();
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Map Markers");
-            storageReference = FirebaseStorage.getInstance().getReference();
 
         } else {
             onAuthFailure();

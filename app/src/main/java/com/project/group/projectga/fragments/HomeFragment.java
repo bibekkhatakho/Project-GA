@@ -12,9 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.pm.ActivityInfoCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -41,8 +39,6 @@ public class HomeFragment extends Fragment implements GoogleApiClient.Connection
 	GoogleApiClient mApiClient;
 
     private static final String TAG = "HomeFragment";
-
-    int counter=0;
 
     public HomeFragment() {
 

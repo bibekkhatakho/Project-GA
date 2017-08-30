@@ -17,15 +17,10 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -49,13 +44,11 @@ import com.project.group.projectga.preferences.Preferences;
 import java.io.File;
 
 public class SettingsPrefActivity extends AppCompatPreferenceActivity{
-    private static final String TAG = SettingsPrefActivity.class.getSimpleName();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         getLayoutInflater().inflate(R.layout.toolbar, (ViewGroup)findViewById(android.R.id.content));
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbarPref);
         ImageView icon = (ImageView) findViewById(R.id.backButtonPref);
@@ -102,7 +95,6 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
             Preference myPref = findPreference(getString(R.string.key_send_feedback));
             myPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Preference changed and clicked", Toast.LENGTH_SHORT).show();
                     sendFeedback(getActivity());
                     return true;
                 }
@@ -209,9 +201,6 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
         userId =sharedPreferences.getString(Preferences.USERID, "");
         databaseReferencePhotos = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
         storageReferencePhotos = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
-
-
-        //Toast.makeText(context, "Restore Photos Start", Toast.LENGTH_SHORT).show();
         databaseReferencePhotos.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

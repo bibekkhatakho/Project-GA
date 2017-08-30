@@ -4,7 +4,6 @@ package com.project.group.projectga.models;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
-import android.graphics.drawable.Drawable;
 import android.media.FaceDetector;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +14,6 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.*;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 
 import android.support.v4.app.Fragment;
@@ -26,8 +24,6 @@ import android.widget.TextView;
 
 import com.project.group.projectga.fragments.RecognitionFragment;
 import com.project.group.projectga.fragments.RecognitionResultFragment;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.bytedeco.javacpp.DoublePointer;
 import org.bytedeco.javacpp.IntPointer;
@@ -47,8 +43,6 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-//import static org.bytedeco.javacpp.opencv_face.createEigenFaceRecognizer;
-//import static org.bytedeco.javacpp.opencv_face.createFisherFaceRecognizer;
 import static org.bytedeco.javacpp.opencv_face.createLBPHFaceRecognizer;
 
 public class Recognition {
@@ -66,9 +60,6 @@ public class Recognition {
 
     FirebaseStorage storage;
 
-
-    //    opencv_face.FaceRecognizer eigenFR;
-//    opencv_face.FaceRecognizer fisherFR;
     private opencv_face.FaceRecognizer LBPHFR = createLBPHFaceRecognizer();
 
     private List<Label> labels = new ArrayList<>();
@@ -79,9 +70,6 @@ public class Recognition {
         int id;
     }
 
-
-
-
     private class TrainingSet {
         opencv_core.MatVector images;
         opencv_core.Mat labels;
@@ -91,31 +79,6 @@ public class Recognition {
 
     private TrainingSet training = new TrainingSet();
 
-    //    public void waitForLock() {
-//        Log.d(TAG, "waitForLock: start");
-//        synchronized (LOCK) {
-//            while (wait) {
-//                Log.d(TAG, "waitForLock: wait is true, moving to wait()");
-//                try {
-//                    LOCK.wait();
-//                } catch (InterruptedException e) {
-//                    Log.d(TAG, "waitForLock: interrupted exception");
-//                }
-//            }
-//        }
-//    }
-//    private void lock() {
-//        synchronized (LOCK) {
-//            wait = true;
-//        }
-//    }
-//
-//    private void unlock() {
-//        synchronized (LOCK) {
-//            wait = false;
-//            LOCK.notifyAll();
-//        }
-//    }
     public static Bitmap cropToFace(Bitmap source) {
         Bitmap result = source.copy(Bitmap.Config.RGB_565, true);
         Log.d(TAG, "cropToFace: image of size: " + result.getWidth() + " * " + result.getHeight());
@@ -260,12 +223,6 @@ public class Recognition {
         loadingCard.setVisibility(View.GONE);
         fragment.setCamButton();
 
-//        eigenFR = createEigenFaceRecognizer();
-//        fisherFR = createFisherFaceRecognizer();
-//        if (training.size > 1) {
-//            eigenFR.train(training.images,training.labels);
-//            fisherFR.train(training.images,training.labels);
-//        }
     }
 
     public void predict(Bitmap bmp) {
@@ -298,9 +255,6 @@ public class Recognition {
             // nothing for now
         }
 
-//        String path = getPathFromURI(Uri.fromFile(f));
-
-//        Mat result = new Mat();
 
         Mat result = imread(f.getAbsolutePath(), CV_LOAD_IMAGE_GRAYSCALE);
 
@@ -328,53 +282,4 @@ public class Recognition {
         }
         return null;
     }
-
-//    String getPathFromURI(Uri uri) {
-//        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-//        cursor.moveToFirst();
-//        String document_id = cursor.getString(0);
-//        document_id = document_id.substring(document_id.lastIndexOf(":")+1);
-//        cursor.close();
-//
-//        cursor = context.getContentResolver().query(
-//                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                null, MediaStore.Images.Media._ID + " = ? ", new String[]{document_id}, null);
-//        cursor.moveToFirst();
-//        String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-//        cursor.close();
-//
-//        return path;
-//    }
-
-//    private Bitmap getBitmapFromURL(String src) {
-//        Picasso.with(context).load(src)
-//                .into(new Target() {
-//                    @Override
-//                    public void onBitmapLoaded (final Bitmap bitmap, Picasso.LoadedFrom from){
-//                        if (fc.getMaxFaces() != 1) fc.setMaxFaces(1);
-//
-//                        training.images.put(bitmapToMat(fc.getCroppedImage(bitmap)));
-//                        count++;
-//                    }
-//
-//                    @Override
-//                    public void onBitmapFailed(Drawable errorDrawable) {
-//                    }
-//
-//                    @Override
-//                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-//                    }
-//                });
-////        try {
-////            URL url = new URL(src);
-////            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-////            connection.setDoInput(true);
-////            connection.connect();
-////            InputStream input = connection.getInputStream();
-////            return BitmapFactory.decodeStream(input);
-////        } catch (IOException e) {
-////            Log.d(TAG, "getBitmapFromURL: Bitmap from URL threw an exception...");
-////            return null;
-////        }
-//    }
 }

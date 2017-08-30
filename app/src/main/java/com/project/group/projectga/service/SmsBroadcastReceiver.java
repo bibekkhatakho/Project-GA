@@ -1,26 +1,19 @@
 package com.project.group.projectga.service;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.NotificationCompat;
 import android.telephony.SmsMessage;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
-import com.project.group.projectga.Manifest;
 import com.project.group.projectga.R;
 import com.project.group.projectga.activities.MainMenuActivity;
 import com.project.group.projectga.fragments.MessagesFragment;
-import com.project.group.projectga.fragments.TagLocateFragment;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
@@ -35,13 +28,11 @@ public class SmsBroadcastReceiver extends BroadcastReceiver
     private NotificationManager notificationManager;
     private int notification_id;
     private String smsBody,address;
-    private static final int request_code = 150;
     private RemoteViews remoteViews;
     SmsMessage smsMessage = null;
 
     public void onReceive(Context context, Intent intent)
     {
-        //Toast.makeText(context, "Message Received!", Toast.LENGTH_SHORT).show();
 
         Bundle intentExtras = intent.getExtras();
 

@@ -4,15 +4,10 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.FullScreenImageAdapter;
-import com.project.group.projectga.adapters.GridViewAdapter;
 import com.project.group.projectga.fragments.GalleryFragment;
-import com.project.group.projectga.models.Model_images;
 
 import java.util.ArrayList;
 

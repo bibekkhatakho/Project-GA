@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -51,9 +50,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -103,7 +100,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
     @BindView(R.id.gallButtonPeople)
     protected FancyButton galleryButton;
 
-    String imgURL;
     Voice voice;
     boolean isPlaying;
 
@@ -249,7 +245,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                     //Do nothing for now
                 }
                 //Adding code for cropping the image taken from Camera intent - End
-                //startActivityForResult(intent, RC_CAMERA_CODE);
             }
         });
 
@@ -292,7 +287,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                         shortDescrptionTextInputEditText.setText(importantPeople.getShortDescription());
                         longDescriptionTextInputEditText.setText(importantPeople.getLongDescription());
                         Picasso.with(getApplicationContext()).load(importantPeople.getProfile()).placeholder(R.drawable.ic_account_circle_white_24dp).error(R.drawable.ic_error_outline_black_24dp).into(personImage);
-                        //imgURL = importantPeople.getProfile();
                     }
                 }
                 @Override
@@ -341,9 +335,6 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         personsListMap.put("relation", personRelation);
         personsListMap.put("shortDescription", shortDescription);
         personsListMap.put("longDescription", longDescription);
-        //personsListMap.put("profile",imgURL);
-
-        //personsListMap.put("profile", String.valueOf(personImage));
         if(peoples_key.getText().toString().equals("")) {
 
             databaseReference.push().setValue(personsListMap);
@@ -570,7 +561,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
     private boolean validateShortDescription(String shortDescription) {
         if (shortDescription.isEmpty()) {
-            shortDescriptionTextInputLayout.setError("Quick Description cannot be empty. Please enter a valid Quick Descriprtion");
+            shortDescriptionTextInputLayout.setError("Please enter a valid Quick Memory");
             return false;
         } else {
             shortDescriptionTextInputLayout.setError(null);
@@ -580,7 +571,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
     private boolean validateLongDescription(String longDescription) {
         if (longDescription.isEmpty()) {
-            longDescriptionTextInputLayout.setError("Detailed Description cannot be empty. Please enter a valid Detailed Description");
+            longDescriptionTextInputLayout.setError("Please enter a valid Detailed Memory");
             return false;
         } else {
             longDescriptionTextInputLayout.setError(null);

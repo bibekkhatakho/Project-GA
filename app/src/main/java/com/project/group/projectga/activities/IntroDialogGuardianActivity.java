@@ -55,7 +55,6 @@ public class IntroDialogGuardianActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 startActivity(mainMenuIntent);
-                //finish();
             }
         });
 
@@ -75,7 +74,6 @@ public class IntroDialogGuardianActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     startActivity(mainMenuIntent);
-                    //finish();
                 }
             }
         });

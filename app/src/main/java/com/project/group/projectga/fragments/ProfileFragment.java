@@ -83,7 +83,6 @@ public class ProfileFragment extends Fragment {
     DatabaseReference databaseReferenceGuardian;
     private StorageReference storageReference;
 
-    public static Uri mediaFile;
     public ProfileFragment() {
 
     }

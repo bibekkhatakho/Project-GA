@@ -29,7 +29,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
-import com.satsuware.usefulviews.LabelledSpinner;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static java.lang.Thread.sleep;
 
 public class ContactDetailsActivity extends CoreActivity implements View.OnClickListener {
 
