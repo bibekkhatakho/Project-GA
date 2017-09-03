@@ -1,5 +1,9 @@
 package com.project.group.projectga.activities;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,12 +15,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,13 +44,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.project.group.projectga.Manifest;
 import com.project.group.projectga.R;
 import com.project.group.projectga.models.Photos;
 import com.project.group.projectga.preferences.Preferences;
+import com.project.group.projectga.service.BackupReceiver;
+import com.project.group.projectga.service.BackupService;
 
 import java.io.File;
 
 public class SettingsPrefActivity extends AppCompatPreferenceActivity{
+
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +75,14 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
         setSupportActionBar(toolbar);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
 
+
+
     }
 
     public static class MainPreferenceFragment extends PreferenceFragment {
 
         Toolbar toolbar;
+        private static final int REQUEST_READ_WRITE = 689;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +90,7 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
             View v = super.onCreateView(inflater, container, savedInstanceState);
             if(v != null) {
                 ListView lv = (ListView) v.findViewById(android.R.id.list);
-                lv.setPadding(0, 150, 0, 30);
+                lv.setPadding(0, 170, 0, 30);
             }
             return v;
         }
@@ -105,6 +120,26 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     restorePhotos(getActivity().getApplicationContext());
+                    return true;
+                }
+            });
+
+            Preference backupPref = findPreference(getString(R.string.backup_key));
+            backupPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @TargetApi(Build.VERSION_CODES.M)
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{
+                                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_READ_WRITE);
+                    } else {
+                        Log.e("DB", "PERMISSION GRANTED");
+                        startBackup(getActivity().getApplicationContext());
+                    }
                     return true;
                 }
             });
@@ -204,20 +239,16 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
         databaseReferencePhotos.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(context, "Inside DataChange", Toast.LENGTH_SHORT).show();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Photos photos = snapshot.getValue(Photos.class);
                     String key = snapshot.getKey();
-                    Toast.makeText(context, "Inside DataChange key" + key, Toast.LENGTH_SHORT).show();
                     photos.setKey(key);
                     String folder = photos.getFolder();
-                    Toast.makeText(context, "Inside DataChange Folder " + folder, Toast.LENGTH_SHORT).show();
                     String keyPeriod = key.replace(",",".");
                     String firebaseStor = folder + "/" + key.replace(",",".");
                     File path = Environment.getExternalStoragePublicDirectory(
                             Environment.DIRECTORY_DCIM + File.separator + folder + File.separator);
                     photoRef[0] = storageReferencePhotos.child(firebaseStor);
-                    Toast.makeText(context, "Inside DataChange Path " + path, Toast.LENGTH_SHORT).show();
                     final File myPhoto = new File(path, keyPeriod);
 
 
@@ -248,5 +279,24 @@ public class SettingsPrefActivity extends AppCompatPreferenceActivity{
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+    public static void startBackup(final Context context) {
+
+        Intent myIntent = new Intent(context, BackupService.class);
+        //myIntent.setAction("com.project.group.projectga.service.BACKUP");
+        context.startService(myIntent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        for (int i = 0; i < grantResults.length; i++) {
+            if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                startBackup(getApplicationContext());
+            } else {
+                Toast.makeText(getApplicationContext(), "The app was not allowed to read or write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

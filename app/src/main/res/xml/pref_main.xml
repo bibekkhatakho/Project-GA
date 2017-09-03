@@ -3,8 +3,8 @@
 
     <PreferenceCategory android:title="@string/general_title_label">
 
-        <CheckBoxPreference
-            android:defaultValue="true"
+        <Preference
+            android:summary="@string/backup_summary"
             android:title="@string/backupLabel"
             android:key="@string/backup_key"/>
 

@@ -270,7 +270,7 @@ public class ProfileFragment extends Fragment {
                     new String[]{MediaStore.Images.Media.DATA,
                             MediaStore.Images.Media.DATE_ADDED,
                             MediaStore.Images.ImageColumns.ORIENTATION},
-                            MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+                    MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
             if(cursor != null && cursor.moveToFirst())
             {
                 do {

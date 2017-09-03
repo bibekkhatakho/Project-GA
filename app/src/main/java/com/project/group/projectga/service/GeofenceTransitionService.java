@@ -117,7 +117,7 @@ public class GeofenceTransitionService extends IntentService {
         }
 
         try {
-                gPhone.addValueEventListener(new ValueEventListener() {
+                gPhone.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         LocationModel myModel = dataSnapshot.getValue(LocationModel.class);

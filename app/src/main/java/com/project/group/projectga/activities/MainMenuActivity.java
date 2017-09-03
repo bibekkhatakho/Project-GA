@@ -1,7 +1,6 @@
 package com.project.group.projectga.activities;
 
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,7 +13,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -22,13 +20,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -62,7 +58,6 @@ import com.project.group.projectga.fragments.TagLocateFragment;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
 import com.project.group.projectga.preferences.Preferences;
-import com.project.group.projectga.service.BackupReceiver;
 import com.project.group.projectga.service.CurrentLocation;
 import com.squareup.picasso.Picasso;
 
@@ -106,7 +101,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     String guardianNumber;
     String numberPlus;
 
-    boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false, backupFlag;
+    boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -175,6 +170,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                                     return;
                                 }
                                 getApplicationContext().startActivity(callIntent);
+                                finish();
                             }
 
                         }
@@ -202,16 +198,16 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
         Log.d("userTypeMain", userType);
 
-        final PrimaryDrawerItem home = new PrimaryDrawerItem().withName("Home").withIdentifier(1).withIcon(GoogleMaterial.Icon.gmd_home);
-        final PrimaryDrawerItem profile = new PrimaryDrawerItem().withName("Profile").withIdentifier(2).withIcon(GoogleMaterial.Icon.gmd_account);
+        final PrimaryDrawerItem home = new PrimaryDrawerItem().withName("Home").withIdentifier(1).withIcon(R.drawable.ic_home_black_24dp);
+        final PrimaryDrawerItem profile = new PrimaryDrawerItem().withName("Profile").withIdentifier(2).withIcon(R.drawable.ic_person_red_24dp);
         final PrimaryDrawerItem gallery = new PrimaryDrawerItem().withName("Gallery").withIdentifier(3).withIcon(R.drawable.ic_perm_media_black_24dp);
-        final PrimaryDrawerItem recognition = new PrimaryDrawerItem().withName("Recognition").withIdentifier(4).withIcon(GoogleMaterial.Icon.gmd_face);
+        final PrimaryDrawerItem recognition = new PrimaryDrawerItem().withName("Recognition").withIdentifier(4).withIcon(R.drawable.ic_face_gray_24dp);
         final PrimaryDrawerItem maps = new PrimaryDrawerItem().withName("Maps").withIdentifier(5).withIcon(R.drawable.ic_place_black_24dp);
         final PrimaryDrawerItem tagAndLocate = new PrimaryDrawerItem().withName("Tag & Locate").withIdentifier(6).withIcon(R.drawable.ic_remove_red_eye_black_24dp);
         final PrimaryDrawerItem gamesAndPuzzle = new PrimaryDrawerItem().withName("Games & Puzzles").withIdentifier(7).withIcon(R.drawable.ic_casino_black_24dp);
-        final PrimaryDrawerItem prefSettings = new PrimaryDrawerItem().withName("Preferences").withIdentifier(8).withIcon(GoogleMaterial.Icon.gmd_settings);
+        final PrimaryDrawerItem prefSettings = new PrimaryDrawerItem().withName("Preferences").withIdentifier(8).withIcon(R.drawable.ic_settings_gray_24dp);
 
-        final PrimaryDrawerItem logout = new PrimaryDrawerItem().withName("Logout").withIdentifier(9).withIcon(FontAwesome.Icon.faw_sign_out);
+        final PrimaryDrawerItem logout = new PrimaryDrawerItem().withName("Logout").withIdentifier(9).withIcon(R.drawable.ic_exit_to_app_gray_24dp);
 
         DrawerImageLoader.init(new AbstractDrawerImageLoader() {
             @Override
@@ -236,7 +232,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                 AlertDialog.Builder alertDialogBuilder;
                 alertDialogBuilder = new AlertDialog.Builder(MainMenuActivity.this);
                 alertDialogBuilder.setTitle("Welcome " + name + "!!");
-                alertDialogBuilder.setIcon(R.drawable.ic_home_black_24dp);
+                alertDialogBuilder.setIcon(R.drawable.ic_home_red_24dp);
                 alertDialogBuilder.setMessage(R.string.privacyInfo);
                 alertDialogBuilder.setPositiveButton("Go to Preferences", new DialogInterface.OnClickListener() {
                     @Override
@@ -647,87 +643,77 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     public void loadPreferences() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         notificationFlag = preferences.getBoolean(getString(R.string.notifications_new_message), false);
-        backupFlag = preferences.getBoolean(getString(R.string.backup_key), true);
+        //backupFlag = preferences.getBoolean(getString(R.string.backup_key), true);
 
         preferences.registerOnSharedPreferenceChangeListener(MainMenuActivity.this);
 
         startProactiveFunctionality(notificationFlag);
         startProactiveFunctionalityForFuel(notificationFlag);
-        if ((ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-            if ((ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) && (ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE))) {
-
-            } else {
-                ActivityCompat.requestPermissions(MainMenuActivity.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_PERMISSIONS);
-            }
-        }else {
-            Log.e("ElseMain","Else");
-            startBackupService(backupFlag);
-        }
+//        if ((ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(this,
+//                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+//            if ((ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) && (ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
+//                    Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//
+//            } else {
+//                ActivityCompat.requestPermissions(MainMenuActivity.this,
+//                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+//                        REQUEST_PERMISSIONS);
+//            }
+//        }else {
+//            Log.e("ElseMain","Else");
+//            startBackupService(backupFlag);
+//        }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        switch (requestCode) {
+//            case REQUEST_PERMISSIONS: {
+//                for (int i = 0; i < grantResults.length; i++) {
+//                    if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+//                        startBackupService(backupFlag);
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), "The app was not allowed to read or write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-        switch (requestCode) {
-            case REQUEST_PERMISSIONS: {
-                for (int i = 0; i < grantResults.length; i++) {
-                    if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        startBackupService(backupFlag);
-                    } else {
-                        Toast.makeText(getApplicationContext(), "The app was not allowed to read or write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-        }
-    }
-
-    public void startBackupService(boolean backupFlag){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
-        String userType = preferences.getString(Preferences.USER_TYPE, "");
-        if(userType.equalsIgnoreCase("Standard User")) {
-            if (backupFlag) {
-                scheduleBackup();
-            } else {
-                cancelBackup();
-            }
-        }
-    }
-
-    public void scheduleBackup() {
-        boolean alarmSet = (PendingIntent.getBroadcast(MainMenuActivity.this, 0,
-                new Intent(MainMenuActivity.this, BackupReceiver.class), PendingIntent.FLAG_NO_CREATE) != null);
-
-        if (alarmSet)
-        {
-            Log.d("MainMenuActivity", "Alarm is already set for the day");
-        } else {
-            ActivityCompat.requestPermissions(MainMenuActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},1);
-
-            Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
-            myIntent.setAction("com.project.group.projectga.service.BACKUP");
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-            alarmManager.setInexactRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime(), 3600000 * 24, pendingIntent);
-        }
-    }
-
-    public void cancelBackup() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
-        myIntent.setAction("com.project.group.projectga.service.BACKUP");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
-
-        alarmManager.cancel(pendingIntent);
-    }
+//    public void startBackupService(boolean backupFlag){
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
+//        String userType = preferences.getString(Preferences.USER_TYPE, "");
+//        if(userType.equalsIgnoreCase("Standard User")) {
+//            if (backupFlag) {
+//                scheduleBackup();
+//            } else {
+//                cancelBackup();
+//            }
+//        }
+//    }
+//
+//    public void scheduleBackup() {
+//        Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
+//        myIntent.setAction("com.project.group.projectga.service.BACKUP");
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//
+//        alarmManager.setInexactRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime(), 3600000 * 24, pendingIntent);
+//        //Toast.makeText(this, "Backup Scheduled", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    public void cancelBackup() {
+//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
+//        myIntent.setAction("com.project.group.projectga.service.BACKUP");
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
+//
+//        alarmManager.cancel(pendingIntent);
+//    }
 
 
     public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
