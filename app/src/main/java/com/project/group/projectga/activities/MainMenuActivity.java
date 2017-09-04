@@ -102,6 +102,10 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     String guardianNumber;
     String numberPlus;
 
+    int notificationIdFuel;
+    int notificationId;
+    int notificationIdMsg;
+
     boolean profileFlag, homeFlag = true, importantPeopleFlag = false, firstTime = false, mapMarkerFlag = false, notificationFlag = false;
 
     @Override
@@ -115,13 +119,14 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         Bundle extrasNotification = getIntent().getExtras();
 
         if(extrasNotification != null) {
-            int notificationIdMsg = getIntent().getExtras().getInt("notification_id");
-            Toast.makeText(this, notificationIdMsg + "", Toast.LENGTH_SHORT).show();
+            notificationIdMsg = getIntent().getExtras().getInt("notification_id");
+            notificationId = getIntent().getExtras().getInt("notificationId");
+            notificationIdFuel = getIntent().getExtras().getInt("notificationIdFuel");
         }
 
-        NotificationManager notificatioMng =
-                (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
-        notificatioMng.cancelAll();
+//        final NotificationManager notificatioMng =
+//                (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
+//        notificatioMng.cancelAll();
 
         if (getUid() != null) {
             String userId = getUid();
@@ -144,11 +149,15 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
         String type = getIntent().getStringExtra("Maps");
 
         if (type != null) {
+            final NotificationManager notificatioMng =
+                    (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
             switch (type) {
+
                 case "mapsFragment":
                     Fragment mapsFragment = new MapsFragment();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.replace(R.id.container_gaFragments, mapsFragment).commit();
+                    notificatioMng.cancel(notificationId);
                     break;
 
                 case "gasstation":
@@ -156,6 +165,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
+                    notificatioMng.cancel(notificationIdFuel);
                     break;
                 case "geofenceCall":
                     databaseReferenceGuardian.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -181,6 +191,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                                     return;
                                 }
                                 getApplicationContext().startActivity(callIntent);
+                                notificatioMng.cancelAll();
                             }
 
                         }
@@ -532,10 +543,11 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                         PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
 
                         // Creating and sending Notification
+                        notificationId = 1;
                         NotificationManager notificatioMng =
                                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         notificatioMng.notify(
-                                1,
+                                notificationId,
                                 createNotification("aaa", notificationPendingIntent));
                     }
 
@@ -584,10 +596,11 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
 
                                                 // Creating and sending Notification
+                                                notificationIdFuel = 2;
                                                 NotificationManager notificatioMng =
                                                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                                                 notificatioMng.notify(
-                                                        2,
+                                                        notificationIdFuel,
                                                         createNotificationForFuel("bbb", notificationPendingIntentFuel));
 
                                             }
@@ -663,6 +676,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         intent.putExtra("Maps", "mapsFragment");
+        intent.putExtra("notificationId", notificationId);
 
         PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
@@ -683,6 +697,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 	    public Notification createNotificationForFuel(String msg, PendingIntent notificationPendingIntent) {
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
         intent.putExtra("Maps", "gasstation");
+            intent.putExtra("notificationIdFuel", notificationIdFuel);
 
         PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext());
