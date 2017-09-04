@@ -34,7 +34,7 @@ import static com.mikepenz.iconics.Iconics.TAG;
 
 public class RecognitionResultFragment extends Fragment {
 
-    public static final double THRESHOLD = 70;
+    public static final double THRESHOLD = 100;
 
     Toolbar toolbar;
     ArrayList<ImportantPeople> importantPeoplesList;
@@ -80,7 +80,10 @@ public class RecognitionResultFragment extends Fragment {
         ImageView img = (ImageView) getView().findViewById(R.id.testPhoto);
         img.setImageBitmap(Recognition.testImage);
 
-        Log.d(TAG, "onStart: recognition result distance: " + Recognition.distance);
+//        TextView txt = (TextView) getView().findViewById(R.id.suggestionText);
+//        txt.setText("Distance: " + Recognition.distance);
+        Log.v(TAG, "onStart: recognition result: " + Recognition.result);
+        Log.v(TAG, "onStart: recognition result distance: " + Recognition.distance);
 
         getView().findViewById(R.id.retakeButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +113,8 @@ public class RecognitionResultFragment extends Fragment {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         ImportantPeople importantPeople = snapshot.getValue(ImportantPeople.class);
+//                    String key=snapshot.getKey();
+//                    importantPeople.setKey(key);
                         Log.d("Important People", "Invoked");
                         importantPeoplesList.add(importantPeople);
                     }

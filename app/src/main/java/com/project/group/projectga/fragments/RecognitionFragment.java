@@ -33,6 +33,7 @@ import com.project.group.projectga.R;
 import com.project.group.projectga.models.Recognition;
 
 
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ public class RecognitionFragment extends Fragment {
     String photoPath;
     Uri mImageCaptureUri;
     CircularImageView personImage;
+    Button retryButton;
 
 
     private ProgressBar spinner;
@@ -77,6 +79,8 @@ public class RecognitionFragment extends Fragment {
         loadingCard = (CardView) getView().findViewById(R.id.loadingCard);
         loadingText = (TextView) getView().findViewById(R.id.loadingText);
         personImage = (CircularImageView) getView().findViewById(R.id.personImage);
+        retryButton = (Button) getView().findViewById(R.id.retryButton);
+        retryButton.setVisibility(View.GONE);
 
         spinner.isIndeterminate();
 
@@ -96,48 +100,63 @@ public class RecognitionFragment extends Fragment {
                 result = Recognition.cropToFace(result);
                 Log.d(TAG, "onPictureTaken: after face cropping");
 
-                loadingText.setText("Converting image...");
+                if (Recognition.faceFound) {
+                    loadingText.setText("Converting image...");
 
-                File f = new File(getActivity().getExternalFilesDir(null), "temp.jpg");
-                mImageCaptureUri = Uri.fromFile(f);
-                try {
-                    OutputStream out = new FileOutputStream(f);
-                    result.compress(Bitmap.CompressFormat.JPEG, 100, out);
-                    out.flush();
-                    out.close();
+                    File f = new File(getActivity().getExternalFilesDir(null), "temp.jpg");
+                    mImageCaptureUri = Uri.fromFile(f);
+                    try {
+                        OutputStream out = new FileOutputStream(f);
+                        result.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        out.flush();
+                        out.close();
+                    } catch (Exception e) {
+                        // nothing for now
+                    }
+
+                    Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            new String[]{MediaStore.Images.Media.DATA,
+                                    MediaStore.Images.Media.DATE_ADDED,
+                                    MediaStore.Images.ImageColumns.ORIENTATION},
+                            MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+                    if (cursor != null && cursor.moveToFirst()) {
+                        do {
+                            uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+                            photoPath = uri.toString();
+                        } while (cursor.moveToNext());
+                        cursor.close();
+                    }
+                    //result = rotateImage(result);
+                    personImage.setImageBitmap(result);
+
+                    personImage.setDrawingCacheEnabled(true);
+                    personImage.buildDrawingCache();
+                    Bitmap bitmap = personImage.getDrawingCache();
+
+                    //Wysie_Soh: Delete the temporary file
+                    f = new File(mImageCaptureUri.getPath());
+                    if (f.exists()) {
+                        f.delete();
+                    }
+
+                    loadingText.setText("Recognizing face...");
+                    recognizer.predict(bitmap);
                 }
-                catch (Exception e) {
-                    // nothing for now
+                else {
+                    loadingText.setText("No face was found in this photo.");
+                    getView().findViewById(R.id.progressBar).setVisibility(View.GONE);
+                    snap.setVisibility(View.GONE);
+                    retryButton.setVisibility(View.VISIBLE);
+                    retryButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getView().findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                            retryButton.setVisibility(View.GONE);
+                            loadingCard.setVisibility(View.GONE);
+                            snap.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
-
-                Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        new String[]{MediaStore.Images.Media.DATA,
-                                MediaStore.Images.Media.DATE_ADDED,
-                                MediaStore.Images.ImageColumns.ORIENTATION},
-                        MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
-                if(cursor != null && cursor.moveToFirst())
-                {
-                    do {
-                        uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
-                        photoPath = uri.toString();
-                    }while(cursor.moveToNext());
-                    cursor.close();
-                }
-                //result = rotateImage(result);
-                personImage.setImageBitmap(result);
-
-                personImage.setDrawingCacheEnabled(true);
-                personImage.buildDrawingCache();
-                Bitmap bitmap = personImage.getDrawingCache();
-
-                //Wysie_Soh: Delete the temporary file
-                f = new File(mImageCaptureUri.getPath());
-                if (f.exists()) {
-                    f.delete();
-                }
-
-                loadingText.setText("Recognizing face...");
-                recognizer.predict(bitmap);
             }
         });
 

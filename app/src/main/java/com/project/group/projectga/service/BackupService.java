@@ -109,7 +109,12 @@ public class BackupService extends IntentService {
             }
 
             storageReference = storageReference.child(fileUri);
-            UploadTask uploadTask = storageReference.putBytes(data);
+            if (data != null) {
+                UploadTask uploadTask = storageReference.putBytes(data);
+            }
+            else {
+                Log.d("", "backupPhotos: data is null...");
+            }
             databaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("Photos");
             storageReference = FirebaseStorage.getInstance().getReference().child(userId).child("Gallery");
         }

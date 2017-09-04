@@ -46,6 +46,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.project.group.projectga.R;
 import com.project.group.projectga.adapters.Voice;
 import com.project.group.projectga.models.ImportantPeople;
+import com.project.group.projectga.models.Recognition;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -126,9 +127,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
     private InputFilter mInputFilter;
 
-    //Code test for imageCropping
-    private Uri mImageCaptureUri;
-    public static final int CROP_FROM_CAMERA = 126;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -223,6 +222,11 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                             ".jpg",         /* suffix */
                             storageDir      /* directory */
                     );
+
+                    photoPath = image.getAbsolutePath();
+                    uri = FileProvider.getUriForFile(getApplicationContext(), "com.example.projectga.fileprovider", image);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+
                     ContentValues values = new ContentValues();
 
                     values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
@@ -233,18 +237,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //Adding code for cropping the image taken from Camera intent - Start
-                mImageCaptureUri = FileProvider.getUriForFile(getApplicationContext(),
-                        "com.example.projectga.fileprovider",
-                        image);
-                intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-                try {
-                    intent.putExtra("return-data", true);
                     startActivityForResult(intent, RC_CAMERA_CODE);
-                } catch (ActivityNotFoundException e) {
-                    //Do nothing for now
-                }
-                //Adding code for cropping the image taken from Camera intent - End
             }
         });
 
@@ -363,7 +356,7 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
 
             Bitmap bitmapGallery = useImage(selectedImageUri);
             photoPath = selectedImageUri.getPath();
-            personImage.setImageBitmap(bitmapGallery);
+            personImage.setImageBitmap(Recognition.cropToFace(bitmapGallery));
             personImage.setDrawingCacheEnabled(true);
             personImage.buildDrawingCache();
             Bitmap personBitmap = personImage.getDrawingCache();
@@ -381,88 +374,69 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
             });
         }
 
-        //Adding code for Testing Image Cropping - Start
+        if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
 
-        if (resultCode != RESULT_OK) {
-            return;
-        }
+            Bitmap bitmapGallery = useImage(uri);
+            photoPath = uri.getPath();
+            personImage.setImageBitmap(Recognition.cropToFace(bitmapGallery));
+            personImage.setDrawingCacheEnabled(true);
+            personImage.buildDrawingCache();
+            Bitmap personBitmap = personImage.getDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            personBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] d = baos.toByteArray();
 
-        switch (requestCode) {
+            final StorageReference photoref = storageReference.child(userId).child(photoPath);
+            photoref.putBytes(d).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
 
-            case CROP_FROM_CAMERA: {
-                //Wysie_Soh: After a picture is taken, it will go to PICK_FROM_CAMERA, which will then come here
-                //after the image is cropped.
-
-                final Bundle extras = data.getExtras();
-
-                if (extras != null) {
-                    Bitmap photo = extras.getParcelable("data");
-                    Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            new String[]{MediaStore.Images.Media.DATA,
-                                    MediaStore.Images.Media.DATE_ADDED,
-                                    MediaStore.Images.ImageColumns.ORIENTATION},
-                            MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
-                    if(cursor != null && cursor.moveToFirst())
-                    {
-                        do {
-                            uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
-                            photoPath = uri.toString();
-                        }while(cursor.moveToNext());
-                        cursor.close();
-                    }
-                    photo = rotateImage(photo);
-                    personImage.setImageBitmap(photo);
                 }
-                personImage.setDrawingCacheEnabled(true);
-                personImage.buildDrawingCache();
-                Bitmap bitmap = personImage.getDrawingCache();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] d = baos.toByteArray();
+            });
 
-                final UploadTask uploadTask = storageReference.child(userId).child(photoPath).putBytes(d);
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("fail", "fail");
-                    }
-                });
-
-                //Wysie_Soh: Delete the temporary file
-                File f = new File(mImageCaptureUri.getPath());
-                if (f.exists()) {
-                    f.delete();
-                }
-
-                InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                mgr.showSoftInput(personImage, InputMethodManager.SHOW_IMPLICIT);
-
-                break;
-            }
-
-            case RC_CAMERA_CODE: {
-                //Wysie_Soh: After an image is taken and saved to the location of mImageCaptureUri, come here
-                //and load the crop editor, with the necessary parameters (96x96, 1:1 ratio)
-
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setClassName("com.project.group.projectga", "com.android.camera.CropImage");
-
-                intent.setData(mImageCaptureUri);
-                intent.putExtra("outputX", 96);
-                intent.putExtra("outputY", 96);
-                intent.putExtra("aspectX", 1);
-                intent.putExtra("aspectY", 1);
-                intent.putExtra("scale", true);
-                intent.putExtra("return-data", true);
-                startActivityForResult(intent, CROP_FROM_CAMERA);
-
-                break;
-
-            }
+//            final Bundle extras = data.getExtras();
+//
+//                if (extras != null) {
+//                    Bitmap photo = extras.getParcelable("data");
+//                    Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                            new String[]{MediaStore.Images.Media.DATA,
+//                                    MediaStore.Images.Media.DATE_ADDED,
+//                                    MediaStore.Images.ImageColumns.ORIENTATION},
+//                            MediaStore.Images.Media.DATE_ADDED, null, "date_added ASC");
+//                    if(cursor != null && cursor.moveToFirst())
+//                    {
+//                        do {
+//                            uri = Uri.parse(cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA)));
+//                            photoPath = uri.toString();
+//                        }while(cursor.moveToNext());
+//                        cursor.close();
+//                    }
+//                    photo = rotateImage(photo);
+//                    Bitmap croppedPhoto = Recognition.cropToFace(photo);
+//                    personImage.setImageBitmap(croppedPhoto);
+//                }
+//                personImage.setDrawingCacheEnabled(true);
+//                personImage.buildDrawingCache();
+//                Bitmap bitmap = personImage.getDrawingCache();
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+//                byte[] d = baos.toByteArray();
+//
+//                final UploadTask uploadTask = storageReference.child(userId).child(photoPath).putBytes(d);
+//                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {personsListMap.put("profile", taskSnapshot.getDownloadUrl().toString());
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d("fail", "fail");
+//                    }
+//                });
+//
+//                InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                mgr.showSoftInput(personImage, InputMethodManager.SHOW_IMPLICIT);
         }
 
         //Adding code for Testing Image Cropping - End

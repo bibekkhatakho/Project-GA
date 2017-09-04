@@ -25,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -111,6 +112,16 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
         setSupportActionBar(toolbar);
 
+        Bundle extrasNotification = getIntent().getExtras();
+
+        if(extrasNotification != null) {
+            int notificationIdMsg = getIntent().getExtras().getInt("notification_id");
+            Toast.makeText(this, notificationIdMsg + "", Toast.LENGTH_SHORT).show();
+        }
+
+        NotificationManager notificatioMng =
+                (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
+        notificatioMng.cancelAll();
 
         if (getUid() != null) {
             String userId = getUid();
@@ -170,7 +181,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                                     return;
                                 }
                                 getApplicationContext().startActivity(callIntent);
-                                finish();
                             }
 
                         }
@@ -521,7 +531,6 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                         stackBuilder.addNextIntent(notificationIntent);
                         PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(1, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
                         // Creating and sending Notification
                         NotificationManager notificatioMng =
                                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -649,72 +658,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
 
         startProactiveFunctionality(notificationFlag);
         startProactiveFunctionalityForFuel(notificationFlag);
-//        if ((ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) && (ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
-//            if ((ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
-//                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) && (ActivityCompat.shouldShowRequestPermissionRationale(MainMenuActivity.this,
-//                    Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//
-//            } else {
-//                ActivityCompat.requestPermissions(MainMenuActivity.this,
-//                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-//                        REQUEST_PERMISSIONS);
-//            }
-//        }else {
-//            Log.e("ElseMain","Else");
-//            startBackupService(backupFlag);
-//        }
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        switch (requestCode) {
-//            case REQUEST_PERMISSIONS: {
-//                for (int i = 0; i < grantResults.length; i++) {
-//                    if (grantResults.length > 0 && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-//                        startBackupService(backupFlag);
-//                    } else {
-//                        Toast.makeText(getApplicationContext(), "The app was not allowed to read or write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-//    public void startBackupService(boolean backupFlag){
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainMenuActivity.this);
-//        String userType = preferences.getString(Preferences.USER_TYPE, "");
-//        if(userType.equalsIgnoreCase("Standard User")) {
-//            if (backupFlag) {
-//                scheduleBackup();
-//            } else {
-//                cancelBackup();
-//            }
-//        }
-//    }
-//
-//    public void scheduleBackup() {
-//        Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
-//        myIntent.setAction("com.project.group.projectga.service.BACKUP");
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//
-//        alarmManager.setInexactRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime(), 3600000 * 24, pendingIntent);
-//        //Toast.makeText(this, "Backup Scheduled", Toast.LENGTH_SHORT).show();
-//    }
-//
-//    public void cancelBackup() {
-//        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        Intent myIntent = new Intent(MainMenuActivity.this, BackupReceiver.class);
-//        myIntent.setAction("com.project.group.projectga.service.BACKUP");
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, myIntent, 0);
-//
-//        alarmManager.cancel(pendingIntent);
-//    }
-
 
     public Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
         Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
@@ -727,11 +671,11 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                 .setColor(Color.WHITE)
                 .setContentTitle("Your safety")
                 .setContentText("Are you in a safe place? Do you need to navigate?")
+                .setAutoCancel(true)
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .addAction(R.drawable.ic_close_black_24dp, "Dismiss", pIntent)
-                .addAction(R.drawable.ic_map_black_24dp, "Go to Maps", pIntent)
-                .setAutoCancel(true);
+                .addAction(R.drawable.ic_map_black_24dp, "Go to Maps", pIntent);
         return notificationBuilder.build();
 
     }
@@ -747,11 +691,11 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                 .setColor(Color.WHITE)
                 .setContentTitle("Car Fuel Check")
                 .setContentText("Do you have fuel in your car to drive to your location?")
+                .setAutoCancel(true)
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .addAction(R.drawable.ic_close_black_24dp,"Dismiss",pIntent)
-                .addAction(R.drawable.ic_local_gas_station_black_24dp,"Find Gas Station",pIntent)
-                .setAutoCancel(true);
+                .addAction(R.drawable.ic_local_gas_station_black_24dp,"Find Gas Station",pIntent);
         return notificationBuilder.build();
 
     }
