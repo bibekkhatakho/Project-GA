@@ -206,7 +206,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
         googleMap.setMyLocationEnabled(true);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mapMarkerList = new ArrayList<>();
@@ -222,7 +222,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                     LatLng newLocation = new LatLng(lat, lng);
                     String iconNumber = m.getMarkerIcon();
                     Integer iconNum = Integer.parseInt(iconNumber);
-                    int resID = getResources().getIdentifier("com.project.group.projectga:drawable/" + markerIcons[iconNum], null, null);
+                    int resID = getActivity().getResources().getIdentifier("com.project.group.projectga:drawable/" + markerIcons[iconNum], null, null);
                     mMap.addMarker(new MarkerOptions()
                             .position(newLocation)
                             .icon(BitmapDescriptorFactory.fromResource(resID)));

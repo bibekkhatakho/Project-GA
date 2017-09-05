@@ -494,11 +494,9 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
     }
 
     private void startFragment(Fragment fragment) {
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_gaFragments, fragment);
         transaction.commit();
-
     }
 
 
