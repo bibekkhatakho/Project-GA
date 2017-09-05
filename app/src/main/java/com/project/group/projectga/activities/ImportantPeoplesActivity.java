@@ -375,8 +375,8 @@ public class ImportantPeoplesActivity extends CoreActivity implements View.OnFoc
         }
 
         if (requestCode == RC_CAMERA_CODE && resultCode == RESULT_OK) {
-
             Bitmap bitmapGallery = useImage(uri);
+            bitmapGallery = rotateImage(bitmapGallery);
             photoPath = uri.getPath();
             personImage.setImageBitmap(Recognition.cropToFace(bitmapGallery));
             personImage.setDrawingCacheEnabled(true);

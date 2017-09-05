@@ -192,7 +192,7 @@ public class Recognition {
     public void addData(String name, String url) {
         // add the name to the labels
         int id = getIdFromName(name);
-        // add the image and id to the training set
+        // add the image aLnd id to the training set
 
         ids.add(id);
         urls.add(url);

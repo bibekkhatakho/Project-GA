@@ -78,7 +78,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private LocationRequest locationRequest;
     private Location lastLocation;
 
-    private LatLng testLL = new LatLng(32.7115575,-97.1130897);
+    private LatLng testLL;
 
     String inString[] = new String[]{"a","b","c"};
     int count = 0;
@@ -628,7 +628,9 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
                             lat = lModel.getLatitude();
                             lon = lModel.getLongitude();
                             testLL = new LatLng(lat,lon);
-                            geoFenceLocationExists = true;
+                            if(lat != 0.0 && lon != 0.0) {
+                                geoFenceLocationExists = true;
+                            }
                         }
                     }
 
