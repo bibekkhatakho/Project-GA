@@ -19,6 +19,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -166,6 +168,9 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         TextView title = (TextView) getActivity().findViewById(R.id.toolbarTitle);
         title.setText(R.string.mapLabel);
         title.setTextColor(getResources().getColor(R.color.textInputEditTextColor));
+
+        setHasOptionsMenu(true);
+
         return view;
     }
 
@@ -297,7 +302,6 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
     // Write location coordinates on UI
     private void writeActualLocation(Location location) {
-
 
         markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
     }
@@ -450,7 +454,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
         Log.i(TAG, "onResult: " + status);
         if ( status.isSuccess() ) {
             saveGeofence();
-            drawGeofence();
+           // drawGeofence();
         } else {
             // inform about fail
         }
@@ -491,15 +495,15 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
     private void startGeofence() {
         Log.i(TAG, "startGeofence()");
         if( geoFenceMarker != null ) {
-            Geofence geofence = createGeofence( geoFenceMarker.getPosition(),100,"first geofence");
+            Geofence geofence = createGeofence( geoFenceMarker.getPosition(),(float) 1609.344,"first geofence");
             GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
             addGeofence( geofenceRequest,1 );
 
-            Geofence geofence2 = createGeofence( geoFenceMarker.getPosition(), 300,"second geofence");
+            Geofence geofence2 = createGeofence( geoFenceMarker.getPosition(), (float) 3218.688,"second geofence");
             GeofencingRequest geofenceRequest2 = createGeofenceRequest( geofence2 );
             addGeofence( geofenceRequest2 ,2);
 
-            Geofence geofence3 = createGeofence( geoFenceMarker.getPosition(), 500 ,"third geofence");
+            Geofence geofence3 = createGeofence( geoFenceMarker.getPosition(), (float) 8046.72 ,"third geofence");
             GeofencingRequest geofenceRequest3 = createGeofenceRequest( geofence3 );
             addGeofence( geofenceRequest3 ,3);
         } else {
@@ -593,7 +597,7 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
 
         if(geoFenceLocationExists) {
             markerForGeofence(testLL);
-            drawGeofence();
+            //drawGeofence();
             recoverGeofenceMarker();
         }
     }
@@ -645,5 +649,15 @@ public class MapsFragment extends Fragment implements GoogleApiClient.Connection
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // add the search icon to the toolbar
+        menu.add(null).setIcon(R.drawable.ic_android_trans_24dp).setShowAsActionFlags(1);
+
+        // implement search functionality here
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }

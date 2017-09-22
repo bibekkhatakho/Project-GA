@@ -17,14 +17,16 @@ public class LocationModel {
     private double longitude;
     private String guardianPicture;
     private String guardianNumber;
+    private boolean geofenceLocationExists;
 
     public LocationModel() {
     }
 
-    public LocationModel(String currentLat, String currentLong, String patientEmail, String patientName, String guardianName, double latitude, double longitude, String patientPicture, String guardianPicture, String patientNumber, String guardianNumber) {
+    public LocationModel(boolean geofenceLocationExists, String currentLat, String currentLong, String patientEmail, String patientName, String guardianName, double latitude, double longitude, String patientPicture, String guardianPicture, String patientNumber, String guardianNumber) {
         this.currentLat = currentLat;
         this.currentLong = currentLong;
         this.patientEmail = patientEmail;
+        this.geofenceLocationExists = geofenceLocationExists;
         this.patientName = patientName;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -33,6 +35,14 @@ public class LocationModel {
         this.patientPicture = patientPicture;
         this.guardianName = guardianName;
         this.guardianPicture = guardianPicture;
+    }
+
+    public boolean isGeofenceLocationExists() {
+        return geofenceLocationExists;
+    }
+
+    public void setGeofenceLocationExists(boolean geofenceLocationExists) {
+        this.geofenceLocationExists = geofenceLocationExists;
     }
 
     public void setCurrentLat(String currentLat) { this.currentLat = currentLat; }

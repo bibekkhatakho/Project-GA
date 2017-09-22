@@ -1,0 +1,146 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@drawable/tile_yellow">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/addRadius"
+                android:gravity="center_horizontal"
+                android:textSize="24sp"
+                android:textColor="@color/textInputEditTextColor"
+                android:layout_marginTop="15dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="20dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/safeZoneTextInputLayout"
+                style="@style/textfieldbox"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/safeZoneTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="@color/textInputEditTextColor"
+                    android:hint="@string/safeZoneRadius"
+                    android:inputType="numberDecimal"
+                    tools:ignore="MissingPrefix,UnusedAttribute" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="20dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/cautionZoneTextInputLayout"
+            style="@style/textfieldbox"
+            app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/cautionZoneTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:textColor="@color/textInputEditTextColor"
+                android:hint="@string/cautionZoneRadius"
+                android:inputType="numberDecimal"
+                tools:ignore="MissingPrefix,UnusedAttribute" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="20dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/dangerZoneTextInputLayout"
+                style="@style/textfieldbox"
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/dangerZoneTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:textColor="@color/textInputEditTextColor"
+                    android:hint="@string/dangerZoneRadius"
+                    android:inputType="numberDecimal"
+                    tools:ignore="MissingPrefix,UnusedAttribute" />
+
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/okButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="50dp"
+                android:src="@drawable/ic_done_black_24dp"
+                android:tint="@color/Map"
+                app:backgroundTint="@color/loginbackground"
+                android:translationZ="4dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                app:fabSize="normal" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/cancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@drawable/ic_close_black_24dp"
+                android:tint="@color/Map"
+                android:layout_marginStart="80dp"
+                app:backgroundTint="@color/loginbackground"
+                android:translationZ="4dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                app:fabSize="normal" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -75,7 +75,7 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="close">Close</string>
-    <string name="photoGallery">Photos and Videos</string>
+    <string name="photoGallery">Events and Memories</string>
     <string name="memoryInfo">Memory Information</string>
     <string name="eventName">Name</string>
     <string name="eventDate">Date Taken</string>
@@ -146,6 +146,13 @@
     <string name="addressDescSpecial">Marker Description (10 Words Max)</string>
     <string name="chooseIcon">Choose Icon</string>
     <string name="clickMap">Long press anywhere on the map to add Geofence</string>
+    <string name="addRadius">Add Radius for Geofence</string>
+    <string name="safeZoneRadius">Enter radius in meters for Safe Zone</string>
+    <string name="cautionZoneRadius">Enter radius in meters for Caution Zone</string>
+    <string name="dangerZoneRadius">Enter radius in meters for Danger Zone</string>
+    <string name="oneMile">1 Mile</string>
+    <string name="twoMiles">2 Miles</string>
+    <string name="fiveMiles">5 Miles</string>
 
 
     //Initial Dialog Screen

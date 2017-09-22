@@ -1,6 +1,9 @@
 package com.project.group.projectga.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -9,8 +12,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +54,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.group.projectga.R;
+import com.project.group.projectga.activities.MainMenuActivity;
+import com.project.group.projectga.activities.PhotosActivity;
+import com.project.group.projectga.activities.SettingsPrefActivity;
 import com.project.group.projectga.models.LocationModel;
 import com.project.group.projectga.models.Profile;
 import java.util.ArrayList;
@@ -61,7 +71,7 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     private Circle mCircle1;
     private Circle mCircle2;
     private Circle mCircle3;
-    double geofenceradius[] = new double[]{10000, 20000, 25000};
+    double geofenceradius[] = new double[]{1609.344, 3218.688, 8046.72};
     ArrayList<LatLng> arrayPoints;
     boolean geoSetAlready;
     private GoogleApiClient mGoogleApiClient;
@@ -70,6 +80,8 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
 
     double lat,lon;
     boolean geoFenceLocationExists = false;
+    boolean geoFenceExistsInFirebase;
+    boolean checkroute = false;
     private LatLng testLL;
 
     private static final int REQUEST_PERMISSIONS = 138;
@@ -92,6 +104,19 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     DatabaseReference databaseReference;
     DatabaseReference databaseReferenceGuardian;
     DatabaseReference databaseReferenceEmail;
+
+//    private Dialog dialogAddRadius;
+//    TextInputEditText radiusSafe;
+//    TextInputEditText radiusCaution;
+//    TextInputEditText radiusDanger;
+//
+//    String radiusSafeString;
+//    String radiusCautionString;
+//    String radiusDangerString;
+//
+//    android.support.design.widget.FloatingActionButton okButton;
+//    android.support.design.widget.FloatingActionButton cancelButton;
+
 
     public GuardianMapsFragment() {
     }
@@ -149,10 +174,12 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
         addGeoFence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkroute = true;
                 floatingActionsMenu.collapse();
                 mapFragment.getView().setBackgroundColor(getResources().getColor(android.R.color.transparent));
                 //mapFragment.getView().setAlpha(0.5f);
                 clickMap.setVisibility(View.VISIBLE);
+                addGeofenceGuardian();
             }
         });
 
@@ -163,6 +190,8 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                 removeGeoFences();
             }
         });
+
+        setHasOptionsMenu(true);
 
         return view;
     }
@@ -182,27 +211,11 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
             mMap.setMyLocationEnabled(true);
         }
         mMap.setMyLocationEnabled(true);
-        if (geoFenceLocationExists) {
-            if(!geoSetAlready) {
-                setMap(testLL);
-            }
-        } else {
-            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(LatLng latLng) {
+        if(geoFenceExistsInFirebase){
+            setMap(testLL);
+        }
 
-                    mapFragment.getView().setBackgroundColor(getResources().getColor(R.color.loginbackground));
-                    clickMap.setVisibility(View.GONE);
-                    databaseReference.child("latitude").setValue(latLng.latitude);
-                    databaseReference.child("longitude").setValue(latLng.longitude);
-
-                    if(!geoSetAlready){
-                        setMap(latLng);
-                    }
-                }
-            });
-
-            databaseReferenceEmail.addValueEventListener(new ValueEventListener() {
+        databaseReferenceEmail.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Profile profile = dataSnapshot.getValue(Profile.class);
@@ -225,16 +238,16 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                                     currentLong = locationModel.getCurrentLong();
 
 
-                                Double currentLatDouble = Double.parseDouble(currentLat);
-                                Double currentLongDouble = Double.parseDouble(currentLong);
-                                LatLng newLocation = new LatLng(currentLatDouble, currentLongDouble);
-                                MarkerOptions markerOptions = new MarkerOptions()
-                                        .position(newLocation)
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
-                                        .title("Patient");
-                                patientMarker = mMap.addMarker(markerOptions);
-                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 15);
-                                mMap.animateCamera(cameraUpdate);
+                                    Double currentLatDouble = Double.parseDouble(currentLat);
+                                    Double currentLongDouble = Double.parseDouble(currentLong);
+                                    LatLng newLocation = new LatLng(currentLatDouble, currentLongDouble);
+                                    MarkerOptions markerOptions = new MarkerOptions()
+                                            .position(newLocation)
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                                            .title("Patient");
+                                    patientMarker = mMap.addMarker(markerOptions);
+                                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(newLocation, 11.5f);
+                                    mMap.animateCamera(cameraUpdate);
                                 }
                             }
                         }
@@ -247,6 +260,31 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+
+    public void addGeofenceGuardian(){
+        if (geoFenceLocationExists) {
+            if(!geoSetAlready) {
+                setMap(testLL);
+            }
+        } else {
+            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
+                    if(checkroute) {
+                        mapFragment.getView().setBackgroundColor(getResources().getColor(R.color.loginbackground));
+                        clickMap.setVisibility(View.GONE);
+                        databaseReference.child("latitude").setValue(latLng.latitude);
+                        databaseReference.child("longitude").setValue(latLng.longitude);
+                        databaseReference.child("geofenceLocationExists").setValue(true);
+
+                        if (!geoSetAlready) {
+                            setMap(latLng);
+                        }
+                        checkroute = false;
+                    }
                 }
             });
         }
@@ -270,13 +308,14 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     }
 
     public void setMap(LatLng latLng) {
+
         BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.markericon);
         Bitmap b = bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 200, 200, false);
         latlangForGeo = latLng;
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
-                .title("name display")
+                .title("Geofence for Patient")
                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker));
     CircleOptions circleOptions1 = new CircleOptions()
             .center(latLng)
@@ -317,6 +356,10 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 1000, null);
             geoSetAlready = false;
         }
+
+        databaseReference.child("latitude").removeValue();
+        databaseReference.child("longitude").removeValue();
+        databaseReference.child("geofenceLocationExists").setValue(false);
     }
 
 
@@ -325,7 +368,6 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // add blank icon to the toolbar for integrity of constraints
         menu.add(null).setIcon(R.drawable.ic_android_trans_24dp).setShowAsActionFlags(1);
-
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -382,10 +424,12 @@ public class GuardianMapsFragment extends Fragment implements GoogleApiClient.Co
                         if(lModel !=null){
                             lat = lModel.getLatitude();
                             lon = lModel.getLongitude();
+                            geoFenceExistsInFirebase = lModel.isGeofenceLocationExists();
                             testLL = new LatLng(lat,lon);
-                            if(lat != 0.0 && lon != 0.0) {
+                            if(geoFenceExistsInFirebase) {
                                 geoFenceLocationExists = true;
                             }else{
+                                geoFenceLocationExists = false;
                             }
                         }
                     }

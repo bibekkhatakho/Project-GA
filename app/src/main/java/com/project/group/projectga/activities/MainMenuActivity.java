@@ -332,6 +332,9 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
                     .addDrawerItems(new DividerDrawerItem())
                     .addDrawerItems(logout)
                     .buildForFragment();
+        }else{
+            startActivity(new Intent(MainMenuActivity.this, SplashScreen.class));
+            finish();
         }
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -397,6 +400,7 @@ public class MainMenuActivity extends CoreActivity implements SharedPreferences.
             startFragment(fragment);
             result.setSelection(maps);
         }
+
             result.setOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
             @Override
             public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {

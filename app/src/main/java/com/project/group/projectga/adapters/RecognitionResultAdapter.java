@@ -63,7 +63,7 @@ public class RecognitionResultAdapter extends RecyclerView.Adapter<RecognitionRe
 
             @Override
             public void onClick(View v) {
-                CharSequence options[] = new CharSequence[] {"Quick description?", "Detailed description?"};
+                CharSequence options[] = new CharSequence[] {"Quick Memory?", "Detailed Memory?"};
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setItems(options, new DialogInterface.OnClickListener() {
